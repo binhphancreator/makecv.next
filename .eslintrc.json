@@ -1,0 +1,39 @@
+{
+  "extends": [
+    "eslint:recommended",
+    "plugin:react/recommended",
+    "prettier",
+    "next"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint",
+    "react-hooks"
+  ],
+  "rules": {
+    "jsx-quotes": "off",
+    "quotes": "off",
+    "object-curly-spacing": [
+      "error",
+      "always",
+      {
+        "arraysInObjects": true,
+        "objectsInObjects": true
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": ["*.ts", "*.tsx"],
+      "rules": {
+        "@typescript-eslint/no-shadow": ["error"],
+        "no-shadow": "off",
+        "no-undef": "off",
+        "quotes": ["error", "double"],
+        "react/self-closing-comp": "warn",
+        "no-empty-pattern": "off",
+        "no-unused-vars": "warn"
+      }
+    }
+  ]
+}
