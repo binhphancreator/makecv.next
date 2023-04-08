@@ -32,7 +32,11 @@
         "quotes": ["error", "double"],
         "react/self-closing-comp": "warn",
         "no-empty-pattern": "off",
-        "no-unused-vars": "warn"
+        "no-unused-vars": "warn",
+        "semi": "error",
+        "eol-last": "warn",
+        "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0}],
+        "no-trailing-spaces": "warn"
       }
     }
   ]
