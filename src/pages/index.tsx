@@ -1,11 +1,15 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
-export interface HomeProps {}
+interface Props {
+  children?: ReactNode;
+}
 
-export default function Home({}: HomeProps) {
+const Home = ({}: Props) => {
   return (
     <>
       <div>Home</div>
     </>
   );
-}
+};
+
+export default Home;
