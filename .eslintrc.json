@@ -32,11 +32,14 @@
         "quotes": ["error", "double"],
         "react/self-closing-comp": "warn",
         "no-empty-pattern": "off",
-        "no-unused-vars": "warn",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["error"],
         "semi": "error",
         "eol-last": "warn",
         "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0}],
-        "no-trailing-spaces": "warn"
+        "no-trailing-spaces": "warn",
+        "key-spacing": ["error", { "beforeColon": false }]
+        
       }
     }
   ]
