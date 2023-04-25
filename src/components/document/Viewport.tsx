@@ -1,31 +1,36 @@
-import React, { useLayoutEffect, useMemo, useState } from "react";
+import React, { WheelEvent, useEffect, useMemo, useState } from "react";
 
-interface TouchPaperProps {
+interface ViewportProps {
   position: {
     x: number;
     y: number;
   };
   scale?: number;
+  scrollSpeed?: number;
   children?: React.ReactElement;
 }
 
-const TouchPaper = ({
+const Viewport = ({
   position: initialPosition,
   scale: initialScale,
+  scrollSpeed: initialScrollSpeed,
   children,
-}: TouchPaperProps) => {
+}: ViewportProps) => {
   const [position, setPosition] = useState(initialPosition);
   const [scale, setScale] = useState(initialScale ?? 1);
+  const scrollSpeed = initialScrollSpeed ?? 0.75;
   const viewportRef = React.createRef<HTMLDivElement>();
-  const touchPaperRef = React.createRef<HTMLDivElement>();
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setPosition({
-      x:
-        (viewportRef.current?.clientWidth || 0) / 2 -
-        (touchPaperRef.current?.clientWidth || 0) / 2,
+      x: (viewportRef.current?.clientWidth || 0) / 2,
       y: 16,
     });
+    const preventDefault = (e: globalThis.WheelEvent) => e.preventDefault();
+    viewportRef.current?.addEventListener("wheel", preventDefault);
+    return () => {
+      viewportRef.current?.removeEventListener("wheel", preventDefault);
+    };
   }, []);
 
   const handleMouseDown = (event: any) => {
@@ -48,7 +53,14 @@ const TouchPaper = ({
     window.addEventListener("mouseup", handleMouseUp);
   };
 
-  const touchPaperStyle = useMemo<React.CSSProperties>(() => {
+  const handleOnWheel = (e: WheelEvent) => {
+    setPosition({
+      x: position.x - e.deltaX * scrollSpeed,
+      y: position.y - e.deltaY * scrollSpeed,
+    });
+  };
+
+  const contentAreaStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {
       left: position?.x ?? 0 + "px",
       top: position?.y ?? 0 + "px",
@@ -58,17 +70,18 @@ const TouchPaper = ({
   }, [position, scale]);
 
   return (
-    <div className="viewport-paper" ref={viewportRef}>
-      <div
-        className={"touch-paper"}
-        style={touchPaperStyle}
-        onMouseDown={handleMouseDown}
-        ref={touchPaperRef}
-      >
-        {children}
+    <div className="viewport" onWheel={handleOnWheel} ref={viewportRef}>
+      <div className={"touch-area"}>
+        <div
+          style={contentAreaStyle}
+          onMouseDown={handleMouseDown}
+          className="content-area"
+        >
+          {children}
+        </div>
       </div>
     </div>
   );
 };
 
-export default TouchPaper;
+export default Viewport;

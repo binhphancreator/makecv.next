@@ -12,7 +12,7 @@ export type PaperSize = {
 };
 
 const Paper = ({ size: intialSize, style }: PaperProps) => {
-  const findSizePage = () => {
+  const originalSize = useMemo(() => {
     var defaultSize: PaperSize = {
       width: 545,
       height: 842,
@@ -23,9 +23,9 @@ const Paper = ({ size: intialSize, style }: PaperProps) => {
     }
 
     return defaultSize;
-  };
+  }, [intialSize]);
 
-  const [size, setSize] = useState<PaperSize>(findSizePage());
+  const [size, setSize] = useState<PaperSize>(originalSize);
   const paperRef = React.createRef<HTMLDivElement>();
 
   const paperStyle = useMemo<React.CSSProperties>(() => {

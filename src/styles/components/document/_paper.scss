@@ -1,15 +1,3 @@
-.viewport-paper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: auto;
-
-  .touch-paper {
-    position: absolute;
-    transform-origin: top left;
-  }
-
-  .paper {
-    @apply bg-white flex items-center justify-center;
-  }
+.paper {
+  @apply bg-white flex items-center justify-center;
 }
