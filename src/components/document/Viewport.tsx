@@ -71,6 +71,8 @@ const Viewport = ({
 
   return (
     <div className="viewport" onWheel={handleOnWheel} ref={viewportRef}>
+      <div className="scrollbar-vertical" />
+      <div className="scrollbar-horizontal" />
       <div className={"touch-area"}>
         <div
           style={contentAreaStyle}

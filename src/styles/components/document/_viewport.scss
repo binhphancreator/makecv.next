@@ -20,4 +20,21 @@
     top: 0;
     overflow: visible;
   }
+
+  .scrollbar-horizontal,
+  .scrollbar-vertical {
+    position: absolute;
+    border-radius: 9999px;
+    background-color: $slate300;
+  }
+
+  .scrollbar-horizontal {
+    bottom: 8px;
+    height: 8px;
+  }
+
+  .scrollbar-vertical {
+    right: 8px;
+    width: 8px;
+  }
 }
