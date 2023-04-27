@@ -1,4 +1,6 @@
 import React, { WheelEvent, useEffect, useMemo, useState } from "react";
+import { resolveComponent } from "~/utils/document";
+import data from "~/data/render";
 
 interface ViewportProps {
   position: {
@@ -7,18 +9,19 @@ interface ViewportProps {
   };
   scale?: number;
   scrollSpeed?: number;
-  children?: React.ReactElement;
+  scaleSpeed?: number;
 }
 
 const Viewport = ({
   position: initialPosition,
   scale: initialScale,
   scrollSpeed: initialScrollSpeed,
-  children,
+  scaleSpeed: initialScaleSpeed,
 }: ViewportProps) => {
   const [position, setPosition] = useState(initialPosition);
   const [scale, setScale] = useState(initialScale ?? 1);
   const scrollSpeed = initialScrollSpeed ?? 0.75;
+  const scaleSpeed = initialScaleSpeed ?? 0.01;
   const viewportRef = React.createRef<HTMLDivElement>();
 
   useEffect(() => {
@@ -33,7 +36,12 @@ const Viewport = ({
     };
   }, []);
 
-  const handleMouseDown = (event: any) => {
+  const handleMouseDown = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    if (event.button === 2) {
+      return;
+    }
     const startX = event.pageX - position?.x;
     const startY = event.pageY - position?.y;
 
@@ -53,11 +61,16 @@ const Viewport = ({
     window.addEventListener("mouseup", handleMouseUp);
   };
 
-  const handleOnWheel = (e: WheelEvent) => {
-    setPosition({
-      x: position.x - e.deltaX * scrollSpeed,
-      y: position.y - e.deltaY * scrollSpeed,
-    });
+  const handleOnWheel = (event: WheelEvent) => {
+    console.log(event);
+    if (event.ctrlKey) {
+      setScale(scale - scale * event.deltaY * scaleSpeed);
+    } else {
+      setPosition({
+        x: position.x - event.deltaX * scrollSpeed,
+        y: position.y - event.deltaY * scrollSpeed,
+      });
+    }
   };
 
   const contentAreaStyle = useMemo<React.CSSProperties>(() => {
@@ -79,7 +92,18 @@ const Viewport = ({
           onMouseDown={handleMouseDown}
           className="content-area"
         >
-          {children}
+          {data.map((_, index) => {
+            const Component = resolveComponent(_.component);
+            const options = _.options ?? {};
+            return (
+              <Component
+                {...options}
+                size={_.size}
+                position={_.position}
+                key={index.toString()}
+              />
+            );
+          })}
         </div>
       </div>
     </div>
