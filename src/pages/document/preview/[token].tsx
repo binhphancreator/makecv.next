@@ -1,18 +1,34 @@
-import React from "react";
-import { NextPage } from "next";
+import React, { useEffect } from "react";
 import Viewport from "~/components/document/Viewport";
-import Paper from "~/components/document/Paper";
+import data from "~/data/render";
+import { DataRender } from "~/types/document";
+import { useAppDispatch } from "~/hook";
+import { initDataRender } from "~/redux/documentSlice";
 
-interface PreviewProps {}
+interface PreviewProps {
+  data: DataRender[];
+}
 
-const Preview: NextPage = ({}: PreviewProps) => {
+const Preview = ({ data: initialData }: PreviewProps) => {
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(initDataRender({ data: initialData }));
+  }, []);
+
   return (
     <div className="document-preview-page">
-      <Viewport position={{ x: 0, y: 0 }}>
-        <Paper size={"A4"} />
-      </Viewport>
+      <Viewport position={{ x: 16, y: 16 }} />
     </div>
   );
 };
+
+export function getServerSideProps() {
+  const props: PreviewProps = {
+    data,
+  };
+  return {
+    props,
+  };
+}
 
 export default Preview;

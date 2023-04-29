@@ -1,19 +1,15 @@
 import React, { useMemo, useState } from "react";
+import { Size } from "~/types/document";
 
 interface PaperProps {
   children?: React.ReactElement;
-  size: "A3" | "A4" | "A5" | PaperSize;
+  size: "A3" | "A4" | "A5" | Size;
   style?: React.CSSProperties;
 }
 
-export type PaperSize = {
-  width: number;
-  height: number;
-};
-
 const Paper = ({ size: intialSize, style }: PaperProps) => {
   const originalSize = useMemo(() => {
-    var defaultSize: PaperSize = {
+    var defaultSize: Size = {
       width: 545,
       height: 842,
     };
@@ -25,7 +21,7 @@ const Paper = ({ size: intialSize, style }: PaperProps) => {
     return defaultSize;
   }, [intialSize]);
 
-  const [size, setSize] = useState<PaperSize>(originalSize);
+  const [size, setSize] = useState<Size>(originalSize);
   const paperRef = React.createRef<HTMLDivElement>();
 
   const paperStyle = useMemo<React.CSSProperties>(() => {

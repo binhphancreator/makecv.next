@@ -1,6 +1,8 @@
 import React from "react";
 
 export type DataRender = {
+  key?: string,
+  parentKey?: string,
   component: string,
   options?: {
     [key: string]: object,

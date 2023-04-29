@@ -1,6 +1,12 @@
-import React, { WheelEvent, useEffect, useMemo, useState } from "react";
-import { resolveComponent } from "~/utils/document";
-import data from "~/data/render";
+import React, {
+  ForwardedRef,
+  WheelEvent,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
+import { useAppSelector } from "~/hook";
+import { renderComponent } from "~/utils/document";
 
 interface ViewportProps {
   position: {
@@ -12,23 +18,33 @@ interface ViewportProps {
   scaleSpeed?: number;
 }
 
-const Viewport = ({
-  position: initialPosition,
-  scale: initialScale,
-  scrollSpeed: initialScrollSpeed,
-  scaleSpeed: initialScaleSpeed,
-}: ViewportProps) => {
+export interface ViewportMethods {
+  scrollTo(): void;
+}
+
+const ViewportComponent = (
+  {
+    position: initialPosition,
+    scale: initialScale,
+    scrollSpeed: initialScrollSpeed,
+    scaleSpeed: initialScaleSpeed,
+  }: ViewportProps,
+  forwardRef: ForwardedRef<ViewportMethods>
+) => {
   const [position, setPosition] = useState(initialPosition);
   const [scale, setScale] = useState(initialScale ?? 1);
   const scrollSpeed = initialScrollSpeed ?? 0.75;
   const scaleSpeed = initialScaleSpeed ?? 0.01;
   const viewportRef = React.createRef<HTMLDivElement>();
+  const dataRender = useAppSelector((state) => state.documentState.dataRender);
+
+  React.useImperativeHandle(forwardRef, () => ({
+    scrollTo: () => {
+      console.log("Scroll To");
+    },
+  }));
 
   useEffect(() => {
-    setPosition({
-      x: (viewportRef.current?.clientWidth || 0) / 2,
-      y: 16,
-    });
     const preventDefault = (e: globalThis.WheelEvent) => e.preventDefault();
     viewportRef.current?.addEventListener("wheel", preventDefault);
     return () => {
@@ -62,7 +78,6 @@ const Viewport = ({
   };
 
   const handleOnWheel = (event: WheelEvent) => {
-    console.log(event);
     if (event.ctrlKey) {
       setScale(scale - scale * event.deltaY * scaleSpeed);
     } else {
@@ -92,22 +107,16 @@ const Viewport = ({
           onMouseDown={handleMouseDown}
           className="content-area"
         >
-          {data.map((_, index) => {
-            const Component = resolveComponent(_.component);
-            const options = _.options ?? {};
-            return (
-              <Component
-                {...options}
-                size={_.size}
-                position={_.position}
-                key={index.toString()}
-              />
-            );
-          })}
+          {renderComponent(dataRender)}
         </div>
       </div>
     </div>
   );
 };
+
+const Viewport: React.FC<ViewportProps> = React.forwardRef<
+  ViewportMethods,
+  ViewportProps
+>(ViewportComponent);
 
 export default Viewport;
