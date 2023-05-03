@@ -6,6 +6,10 @@ const data: DataRender[] = [
     size: {
       width: 545,
       height: 842,
+    },
+    position: {
+      x: 0,
+      y: 0,
     }
   },
 ];

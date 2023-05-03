@@ -1,11 +1,23 @@
 import React from "react";
 import { ComponentMap } from "~/configs/document";
-import { DataRender } from "~/types/document";
+import { DataRender, Position } from "~/types/document";
 import shortUUID from "short-uuid";
 import Renderer from "~/components/document/Renderer";
 
 export const resolveComponent = (component: string) => {
   return ComponentMap[component];
+};
+
+export const recursiveForeach = (
+  data: DataRender[],
+  callbackfn: (item: DataRender) => void
+) => {
+  data.forEach((_) => {
+    callbackfn(_);
+    if (_.children && _.children.length) {
+      recursiveForeach(_.children, callbackfn);
+    }
+  });
 };
 
 export const transformRenderData = (data: DataRender[], parentKey?: string) => {
@@ -30,4 +42,16 @@ export const renderComponent = (data?: DataRender[]) => {
   return data.map((_, index) => {
     return <Renderer key={index.toString()} data={_} />;
   });
+};
+
+export const calcNewPositionAfterScale = (
+  position: Position,
+  originPosition: Position,
+  scale: number
+): Position => {
+  const newPosition: Position = {
+    x: scale * (position.x - originPosition.x) + originPosition.x,
+    y: scale * (position.y - originPosition.y) + originPosition.y,
+  };
+  return newPosition;
 };

@@ -17,7 +17,7 @@ const Preview = ({ data: initialData }: PreviewProps) => {
 
   return (
     <div className="document-preview-page">
-      <Viewport position={{ x: 16, y: 16 }} />
+      <Viewport />
     </div>
   );
 };

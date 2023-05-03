@@ -8,7 +8,7 @@ export type DataRender = {
     [key: string]: object,
   }
   style?: React.CSSProperties,
-  position?: "center" | Position,
+  position?: Position,
   size?: Size,
   children?: DataRender[],
 }
