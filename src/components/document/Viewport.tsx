@@ -24,7 +24,6 @@ const ViewportComponent = (
   forwardRef: ForwardedRef<ViewportMethods>
 ) => {
   const dispatch = useAppDispatch();
-  const scale = useAppSelector((state) => state.documentState.viewport.scale);
   const scrollSpeed = useAppSelector(
     (state) => state.documentState.viewport.scrollSpeed
   );
@@ -55,7 +54,7 @@ const ViewportComponent = (
       );
       setOriginPosition({ x: 0, y: 0 });
       setOriginScale(1);
-    }, 50);
+    }, 250);
     return () => clearTimeout(timer);
   }, [originPosition]);
 
@@ -96,7 +95,7 @@ const ViewportComponent = (
     style.left = `${position.x}px`;
     style.top = `${position.y}px`;
     return style;
-  }, [position, scale]);
+  }, [position]);
 
   const touchAreaStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};

@@ -22,8 +22,8 @@ const initialState: DocumentState = {
     scrollSpeed: 0.5,
     scaleSpeed: 0.007,
     position: {
-      x: 32,
-      y: 32,
+      x: 0,
+      y: 0,
     },
   },
 };

@@ -1,7 +1,7 @@
 import React from "react";
 import { ComponentMap } from "~/configs/document";
 import { DataRender, Position } from "~/types/document";
-import shortUUID from "short-uuid";
+import { nanoid } from "nanoid";
 import Renderer from "~/components/document/Renderer";
 
 export const resolveComponent = (component: string) => {
@@ -23,7 +23,7 @@ export const recursiveForeach = (
 export const transformRenderData = (data: DataRender[], parentKey?: string) => {
   data.forEach &&
     data.forEach((render) => {
-      render.key = shortUUID.generate();
+      render.key = nanoid(10);
       if (parentKey && parentKey.length) {
         render.parentKey = parentKey;
       }
