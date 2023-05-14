@@ -15,7 +15,8 @@
     transform-origin: 0 0;
   }
 
-  .content-area {
+  .content-area,
+  .trigger-area {
     position: absolute;
     left: 0;
     top: 0;
@@ -39,40 +40,6 @@
       left: 0;
       top: 0;
       transform-origin: 0 0;
-    }
-
-    .rendered-border span {
-      position: absolute;
-      background-color: $sky600;
-      display: block;
-    }
-
-    .rendered-border span.top {
-      top: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-    }
-
-    .rendered-border span.bottom {
-      bottom: 0;
-      left: 0;
-      right: 0;
-      height: 1px;
-    }
-
-    .rendered-border span.left {
-      top: 0;
-      bottom: 0;
-      left: 0;
-      width: 1px;
-    }
-
-    .rendered-border span.right {
-      top: 0;
-      bottom: 0;
-      right: 0;
-      width: 1px;
     }
   }
 

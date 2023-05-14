@@ -117,6 +117,7 @@ const ViewportComponent = (
         <div style={contentAreaStyle} className="content-area">
           {renderComponent(dataRender)}
         </div>
+        <div className="trigger-area" />
       </div>
     </div>
   );

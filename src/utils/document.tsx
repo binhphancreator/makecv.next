@@ -1,6 +1,6 @@
 import React from "react";
 import { ComponentMap } from "~/configs/document";
-import { DataRender, Position } from "~/types/document";
+import { Color, DataRender, Position } from "~/types/document";
 import { nanoid } from "nanoid";
 import Renderer from "~/components/document/Renderer";
 
@@ -54,4 +54,18 @@ export const calcNewPositionAfterScale = (
     y: scale * (position.y - originPosition.y) + originPosition.y,
   };
   return newPosition;
+};
+
+export const findColor = (color: Color, colorPalettes: string[]): string => {
+  if (color && color.length) {
+    if (/color_palette\.[0-9]+/.test(color)) {
+      const colorIndex = parseInt(color.split(".")[1]);
+      if (colorIndex && colorPalettes[colorIndex]) {
+        return colorPalettes[colorIndex];
+      }
+    } else {
+      return color;
+    }
+  }
+  return "#000000";
 };

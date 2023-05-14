@@ -2,7 +2,11 @@ import React, { ForwardedRef, useMemo, useState } from "react";
 import { DataRender } from "~/types/document";
 import { resolveComponent } from "~/utils/document";
 import { useAppDispatch, useAppSelector } from "~/hook";
-import { setPositionComponentByKey } from "~/redux/documentSlice";
+import {
+  addHoveringKey,
+  removeHoveringKey,
+  setPositionComponentByKey,
+} from "~/redux/documentSlice";
 
 interface RendererProps {
   data: DataRender;
@@ -15,10 +19,9 @@ const RendererComponent = (
   forwardRef: ForwardedRef<RendererMethods>
 ) => {
   const dispatch = useAppDispatch();
-  const [isHovered, setIsHovered] = useState(false);
   const scale = useAppSelector((state) => state.documentState.viewport.scale);
-  const viewportPosition = useAppSelector(
-    (state) => state.documentState.viewport.position
+  const hoveringKeys = useAppSelector(
+    (state) => state.documentState.hoveringKeys
   );
 
   React.useImperativeHandle(forwardRef, () => ({}));
@@ -30,7 +33,7 @@ const RendererComponent = (
       style.top = `${data.position.y}px`;
     }
     return style;
-  }, [data, scale, viewportPosition]);
+  }, [data.position, scale]);
 
   const renderedComponentStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
@@ -41,6 +44,25 @@ const RendererComponent = (
     }
     return style;
   }, [scale, data]);
+
+  const isHovered = useMemo<boolean>(() => {
+    if (!data.key) return false;
+    if (hoveringKeys.includes(data.key)) {
+      return true;
+    }
+    return false;
+  }, [hoveringKeys]);
+
+  const hoveredBorderStyle = useMemo<React.CSSProperties>(() => {
+    const style: React.CSSProperties = {};
+    if (data.size) {
+      style.left = "-2px";
+      style.top = "-2px";
+      style.width = `${data.size.width * scale + 4}px`;
+      style.height = `${data.size.height * scale + 4}px`;
+    }
+    return style;
+  }, [data.size, scale]);
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -81,20 +103,15 @@ const RendererComponent = (
         className="rendered-block"
         onMouseDown={handleMouseDown}
       >
+        {isHovered && (
+          <div className="rendered-hover-border" style={hoveredBorderStyle} />
+        )}
         <div
-          onMouseOver={() => setIsHovered(true)}
-          onMouseOut={() => setIsHovered(false)}
+          onMouseEnter={() => dispatch(addHoveringKey({ key: data.key }))}
+          onMouseLeave={() => dispatch(removeHoveringKey({ key: data.key }))}
           className="rendered-component"
           style={renderedComponentStyle}
         >
-          {isHovered && (
-            <div className="rendered-border">
-              <span className="top" />
-              <span className="left" />
-              <span className="right" />
-              <span className="bottom" />
-            </div>
-          )}
           <ComponentRender
             {...data.options}
             childrenDataRender={data.children}

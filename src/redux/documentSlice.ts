@@ -12,6 +12,8 @@ export interface DocumentState {
     scaleSpeed: number,
     position: Position,
   },
+  colorPalettes: string[],
+  hoveringKeys: string[],
 }
 
 const initialState: DocumentState = {
@@ -26,6 +28,13 @@ const initialState: DocumentState = {
       y: 0,
     },
   },
+  colorPalettes: [
+    "#000000",
+    "#262A56",
+    "#B8621B",
+    "#E3CCAE",
+  ],
+  hoveringKeys: [],
 };
 
 const slice = createSlice({
@@ -56,7 +65,7 @@ const slice = createSlice({
         x: newViewportPosition.x - state.viewport.position.x,
         y: newViewportPosition.y - state.viewport.position.y
       };
-      recursiveForeach(state.dataRender, _ => {
+      state.dataRender.forEach(_ => {
         if (_.position) {
           const newPosition = calcNewPositionAfterScale({ x: _.position.x + state.viewport.position.x, y: _.position.y + state.viewport.position.y }, payload.originPosition, payload.scale);
           _.position = {
@@ -67,7 +76,21 @@ const slice = createSlice({
       });
       state.viewport.scale = state.viewport.scale * payload.scale;
       state.viewport.position = newViewportPosition;
-    }
+    },
+    addHoveringKey(state, { payload }: PayloadAction<{key?: string}>) {
+      if (!payload.key || !payload.key.length)
+        return;
+      if (!state.hoveringKeys.includes(payload.key)) {
+        state.hoveringKeys = [...state.hoveringKeys, payload.key];
+      }
+    },
+    removeHoveringKey(state, { payload }: PayloadAction<{key?: string}>) {
+      if (!payload.key || !payload.key.length)
+        return;
+      if (state.hoveringKeys.includes(payload.key)) {
+        state.hoveringKeys = state.hoveringKeys.filter((key) => key !== payload.key);
+      }
+    },
   }
 });
 
@@ -76,7 +99,9 @@ export const {
   setPositionComponentByKey,
   setViewportScale,
   setViewportPosition,
-  reupdateAfterTouchEnd
+  reupdateAfterTouchEnd,
+  addHoveringKey,
+  removeHoveringKey,
 } = slice.actions;
 
 export default slice.reducer;

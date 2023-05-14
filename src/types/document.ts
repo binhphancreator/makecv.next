@@ -5,7 +5,7 @@ export type DataRender = {
   parentKey?: string,
   component: string,
   options?: {
-    [key: string]: object,
+    [key: string]: any,
   }
   style?: React.CSSProperties,
   position?: Position,
@@ -22,3 +22,5 @@ export type Size = {
   width: number,
   height: number,
 }
+
+export type Color = string;
