@@ -3,6 +3,7 @@ import React from "react";
 export type DataRender = {
   key?: string,
   parentKey?: string,
+  name?: string,
   component: string,
   options?: {
     [key: string]: any,

@@ -9,3 +9,9 @@ export type NextPageWithLayout<P = {}, IP = P> = NextPage<P, IP> & {
 export type AppPropsWithLayout = AppProps & {
   Component: NextPageWithLayout
 }
+
+export type SvgProps = {
+  width?: number | string,
+  height?: number | string,
+  color?: string,
+}

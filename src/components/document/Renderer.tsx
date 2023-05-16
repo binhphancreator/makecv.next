@@ -64,6 +64,13 @@ const RendererComponent = (
     return style;
   }, [data.size, scale]);
 
+  const renderedName = useMemo<string>(() => {
+    if (data.name && data.name.trim().length) {
+      return data.name;
+    }
+    return data.component;
+  }, [data.name, data.component]);
+
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
@@ -112,6 +119,7 @@ const RendererComponent = (
           className="rendered-component"
           style={renderedComponentStyle}
         >
+          <div className="rendered-name">{renderedName}</div>
           <ComponentRender
             {...data.options}
             childrenDataRender={data.children}

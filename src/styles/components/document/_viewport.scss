@@ -41,6 +41,15 @@
       top: 0;
       transform-origin: 0 0;
     }
+
+    .rendered-name {
+      font-weight: 400;
+      font-size: 20px;
+      color: $slate300;
+      position: absolute;
+      top: -32px;
+      font-family: Alexandria, sans-serif;
+    }
   }
 
   .scrollbar-horizontal,

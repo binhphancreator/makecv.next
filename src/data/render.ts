@@ -25,6 +25,17 @@ const data: DataRender[] = [
     options: {
       backgroundColor: "color_palette.1",
     }
+  },
+  {
+    component: "DocumentImage",
+    size: {
+      width: 250,
+      height: 250,
+    },
+    position: {
+      x: 64,
+      y: 500,
+    },
   }
 ];
 
