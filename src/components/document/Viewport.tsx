@@ -68,10 +68,21 @@ const ViewportComponent = (
   }));
 
   useEffect(() => {
-    const preventDefault = (e: globalThis.WheelEvent) => e.preventDefault();
-    viewportRef.current?.addEventListener("wheel", preventDefault);
+    const preventDefaultScroll = (e: globalThis.WheelEvent) =>
+      e.preventDefault();
+    const preventDefaultContextMenu = (e: globalThis.MouseEvent) =>
+      e.ctrlKey && e.preventDefault();
+    viewportRef.current?.addEventListener("wheel", preventDefaultScroll);
+    viewportRef.current?.addEventListener(
+      "contextmenu",
+      preventDefaultContextMenu
+    );
     return () => {
-      viewportRef.current?.removeEventListener("wheel", preventDefault);
+      viewportRef.current?.removeEventListener("wheel", preventDefaultScroll);
+      viewportRef.current?.removeEventListener(
+        "wheel",
+        preventDefaultContextMenu
+      );
     };
   }, []);
 

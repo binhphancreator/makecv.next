@@ -29,11 +29,8 @@ const RendererComponent = (
   const selectingKeys = useAppSelector(
     (state) => state.documentState.selectingKeys
   );
-  const renderedBlockRef = useRef<HTMLDivElement>(null);
 
   React.useImperativeHandle(forwardRef, () => ({}));
-
-  useEffect(() => {}, []);
 
   const renderedBlockStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
@@ -130,7 +127,6 @@ const RendererComponent = (
         style={renderedBlockStyle}
         className="rendered-block"
         onMouseDown={handleMouseDown}
-        ref={renderedBlockRef}
       >
         {(hovering || selecting) && (
           <div className="active-border" style={activeBorderStyle} />
