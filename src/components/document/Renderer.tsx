@@ -1,9 +1,12 @@
-import React, { ForwardedRef, useMemo } from "react";
+import React, { ForwardedRef, useEffect, useMemo, useRef } from "react";
+import classNames from "classnames";
 import { DataRender } from "~/types/document";
 import { resolveComponent } from "~/utils/document";
 import { useAppDispatch, useAppSelector } from "~/hook";
 import {
   addHoveringKey,
+  addSelectingKey,
+  refreshSelectingKeys,
   removeHoveringKey,
   setPositionComponentByKey,
 } from "~/redux/documentSlice";
@@ -23,8 +26,14 @@ const RendererComponent = (
   const hoveringKeys = useAppSelector(
     (state) => state.documentState.hoveringKeys
   );
+  const selectingKeys = useAppSelector(
+    (state) => state.documentState.selectingKeys
+  );
+  const renderedBlockRef = useRef<HTMLDivElement>(null);
 
   React.useImperativeHandle(forwardRef, () => ({}));
+
+  useEffect(() => {}, []);
 
   const renderedBlockStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
@@ -45,15 +54,23 @@ const RendererComponent = (
     return style;
   }, [scale, data]);
 
-  const isHovered = useMemo<boolean>(() => {
+  const hovering = useMemo<boolean>(() => {
     if (!data.key) return false;
     if (hoveringKeys.includes(data.key)) {
       return true;
     }
     return false;
-  }, [hoveringKeys]);
+  }, [hoveringKeys, data.key]);
 
-  const hoveredBorderStyle = useMemo<React.CSSProperties>(() => {
+  const selecting = useMemo<boolean>(() => {
+    if (!data.key) return false;
+    if (selectingKeys.includes(data.key)) {
+      return true;
+    }
+    return false;
+  }, [selectingKeys, data.key]);
+
+  const activeBorderStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
     if (data.size) {
       style.left = "-2px";
@@ -96,6 +113,10 @@ const RendererComponent = (
     const handleMouseUp = () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
+      if (!event.shiftKey) {
+        dispatch(refreshSelectingKeys());
+      }
+      dispatch(addSelectingKey({ key: data.key }));
     };
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -109,9 +130,10 @@ const RendererComponent = (
         style={renderedBlockStyle}
         className="rendered-block"
         onMouseDown={handleMouseDown}
+        ref={renderedBlockRef}
       >
-        {isHovered && (
-          <div className="rendered-hover-border" style={hoveredBorderStyle} />
+        {(hovering || selecting) && (
+          <div className="active-border" style={activeBorderStyle} />
         )}
         <div
           onMouseEnter={() => dispatch(addHoveringKey({ key: data.key }))}
@@ -119,7 +141,14 @@ const RendererComponent = (
           className="rendered-component"
           style={renderedComponentStyle}
         >
-          <div className="rendered-name">{renderedName}</div>
+          <div
+            className={classNames({
+              "rendered-name": true,
+              active: selecting || hovering,
+            })}
+          >
+            {renderedName}
+          </div>
           <ComponentRender
             {...data.options}
             childrenDataRender={data.children}

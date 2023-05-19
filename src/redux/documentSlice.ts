@@ -14,6 +14,7 @@ export interface DocumentState {
   },
   colorPalettes: string[],
   hoveringKeys: string[],
+  selectingKeys: string[]
 }
 
 const initialState: DocumentState = {
@@ -35,6 +36,7 @@ const initialState: DocumentState = {
     "#E3CCAE",
   ],
   hoveringKeys: [],
+  selectingKeys: [],
 };
 
 const slice = createSlice({
@@ -91,6 +93,23 @@ const slice = createSlice({
         state.hoveringKeys = state.hoveringKeys.filter((key) => key !== payload.key);
       }
     },
+    addSelectingKey(state, { payload }: PayloadAction<{key?: string}>) {
+      if (!payload.key || !payload.key.length)
+        return;
+      if (!state.selectingKeys.includes(payload.key)) {
+        state.selectingKeys = [...state.selectingKeys, payload.key];
+      }
+    },
+    removeSelectingKey(state, { payload }: PayloadAction<{key?: string}>) {
+      if (!payload.key || !payload.key.length)
+        return;
+      if (state.selectingKeys.includes(payload.key)) {
+        state.selectingKeys = state.selectingKeys.filter((key) => key !== payload.key);
+      }
+    },
+    refreshSelectingKeys(state) {
+      state.selectingKeys = [];
+    }
   }
 });
 
@@ -102,6 +121,9 @@ export const {
   reupdateAfterTouchEnd,
   addHoveringKey,
   removeHoveringKey,
+  addSelectingKey,
+  removeSelectingKey,
+  refreshSelectingKeys
 } = slice.actions;
 
 export default slice.reducer;

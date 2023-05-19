@@ -26,32 +26,6 @@
     transform-origin: 0 0;
   }
 
-  .rendered-block {
-    transition: border 0.05s ease-in;
-    position: absolute;
-    overflow: visible;
-    width: fit-content;
-    height: fit-content;
-    box-sizing: border-box;
-    transform-origin: 0 0;
-
-    .rendered-component {
-      position: absolute;
-      left: 0;
-      top: 0;
-      transform-origin: 0 0;
-    }
-
-    .rendered-name {
-      font-weight: 400;
-      font-size: 20px;
-      color: $slate300;
-      position: absolute;
-      top: -32px;
-      font-family: Alexandria, sans-serif;
-    }
-  }
-
   .scrollbar-horizontal,
   .scrollbar-vertical {
     position: absolute;

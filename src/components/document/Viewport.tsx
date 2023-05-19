@@ -7,6 +7,7 @@ import React, {
 } from "react";
 import { useAppDispatch, useAppSelector } from "~/hook";
 import {
+  refreshSelectingKeys,
   reupdateAfterTouchEnd,
   setViewportPosition,
 } from "~/redux/documentSlice";
@@ -105,8 +106,17 @@ const ViewportComponent = (
     return style;
   }, [originScale, originPosition]);
 
+  const refreshOnClickOutside = () => {
+    dispatch(refreshSelectingKeys());
+  };
+
   return (
-    <div className="viewport" onWheel={handleOnWheel} ref={viewportRef}>
+    <div
+      className="viewport"
+      onWheel={handleOnWheel}
+      onMouseDown={refreshOnClickOutside}
+      ref={viewportRef}
+    >
       <div className="scrollbar-vertical" />
       <div className="scrollbar-horizontal" />
       <div
