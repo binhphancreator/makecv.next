@@ -1,4 +1,4 @@
-import React, { ForwardedRef, useEffect, useMemo, useRef } from "react";
+import React, { ForwardedRef, useMemo } from "react";
 import classNames from "classnames";
 import { DataRender } from "~/types/document";
 import { resolveComponent } from "~/utils/document";
@@ -43,13 +43,15 @@ const RendererComponent = (
 
   const renderedComponentStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
-    style.transform = `scale(${scale})`;
+    if (!data.parentKey) {
+      style.transform = `scale(${scale})`;
+    }
     if (data.size) {
       style.width = `${data.size.width}px`;
       style.height = `${data.size.height}px`;
     }
     return style;
-  }, [scale, data]);
+  }, [scale, data.size, data.parentKey]);
 
   const hovering = useMemo<boolean>(() => {
     if (!data.key) return false;
@@ -78,12 +80,27 @@ const RendererComponent = (
     return style;
   }, [data.size, scale]);
 
-  const renderedName = useMemo<string>(() => {
+  const renderedNameElement = useMemo<JSX.Element | null>(() => {
+    var nameComponent = data.component;
     if (data.name && data.name.trim().length) {
-      return data.name;
+      nameComponent = data.name;
     }
-    return data.component;
-  }, [data.name, data.component]);
+
+    if (!data.parentKey || !data.parentKey.length) {
+      return (
+        <div
+          className={classNames({
+            "rendered-name": true,
+            active: selecting || hovering,
+          })}
+        >
+          {nameComponent}
+        </div>
+      );
+    }
+
+    return null;
+  }, [data.name, data.component, data.parentKey]);
 
   const handleMouseDown = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -120,6 +137,13 @@ const RendererComponent = (
     window.addEventListener("mouseup", handleMouseUp);
   };
 
+  const handleMouseEnter = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
+    dispatch(addHoveringKey({ key: data.key }));
+  };
+
   const ComponentRender = resolveComponent(data.component);
   if (ComponentRender) {
     return (
@@ -132,19 +156,12 @@ const RendererComponent = (
           <div className="active-border" style={activeBorderStyle} />
         )}
         <div
-          onMouseEnter={() => dispatch(addHoveringKey({ key: data.key }))}
+          onMouseEnter={handleMouseEnter}
           onMouseLeave={() => dispatch(removeHoveringKey({ key: data.key }))}
           className="rendered-component"
           style={renderedComponentStyle}
         >
-          <div
-            className={classNames({
-              "rendered-name": true,
-              active: selecting || hovering,
-            })}
-          >
-            {renderedName}
-          </div>
+          {renderedNameElement}
           <ComponentRender
             {...data.options}
             childrenDataRender={data.children}

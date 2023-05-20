@@ -1,45 +1,41 @@
-import React, { useMemo, useState } from "react";
-import { Size } from "~/types/document";
+import React, { useMemo } from "react";
+import { useAppSelector } from "~/hook";
+import { Color, DataRender, Size } from "~/types/document";
+import { findColor } from "~/utils/document";
+import { renderComponent } from "~/utils/document";
 
 interface PaperProps {
-  children?: React.ReactElement;
-  size: "A3" | "A4" | "A5" | Size;
+  childrenDataRender?: DataRender[];
+  size: Size;
   style?: React.CSSProperties;
+  backgroundColor?: Color;
 }
 
-const Paper = ({ size: intialSize, style }: PaperProps) => {
-  const originalSize = useMemo(() => {
-    var defaultSize: Size = {
-      width: 545,
-      height: 842,
-    };
+const Paper = ({ size, backgroundColor, childrenDataRender }: PaperProps) => {
+  const colorPaletes = useAppSelector(
+    (state) => state.documentState.colorPalettes
+  );
 
-    if (typeof intialSize === "object") {
-      return intialSize;
-    }
-
-    return defaultSize;
-  }, [intialSize]);
-
-  const [size, setSize] = useState<Size>(originalSize);
   const paperRef = React.createRef<HTMLDivElement>();
 
   const paperStyle = useMemo<React.CSSProperties>(() => {
-    return {
-      width: `${size.width}px`,
-      minHeight: `${size.height}px`,
-      minWidth: `${size.width}px`,
-      maxWidth: `${size.width}px`,
-    };
-  }, [size]);
+    const style: React.CSSProperties = {};
+    style.width = `${size.width}px`;
+    style.minHeight = `${size.height}px`;
+    style.minWidth = `${size.width}px`;
+    style.maxWidth = `${size.width}px`;
+
+    if (backgroundColor && backgroundColor.length) {
+      style.backgroundColor = findColor(backgroundColor, colorPaletes);
+    }
+
+    return style;
+  }, [size, backgroundColor]);
 
   return (
-    <div
-      ref={paperRef}
-      className="paper"
-      style={{ ...paperStyle, ...(style || {}) }}
-    >
-      <h1>Paper</h1>
+    <div ref={paperRef} className="paper" style={paperStyle}>
+      {renderComponent(childrenDataRender ?? [])}
+      <div />
     </div>
   );
 };
