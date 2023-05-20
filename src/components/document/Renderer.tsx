@@ -1,6 +1,5 @@
 import React, { ForwardedRef, useMemo } from "react";
 import classNames from "classnames";
-import { DataRender } from "~/types/document";
 import { resolveComponent } from "~/utils/document";
 import { useAppDispatch, useAppSelector } from "~/hook";
 import {
@@ -12,13 +11,13 @@ import {
 } from "~/redux/documentSlice";
 
 interface RendererProps {
-  data: DataRender;
+  keyRender: string;
 }
 
 export interface RendererMethods {}
 
 const RendererComponent = (
-  { data }: RendererProps,
+  { keyRender }: RendererProps,
   forwardRef: ForwardedRef<RendererMethods>
 ) => {
   const dispatch = useAppDispatch();
@@ -29,6 +28,10 @@ const RendererComponent = (
   const selectingKeys = useAppSelector(
     (state) => state.documentState.selectingKeys
   );
+  const flatDataRender = useAppSelector(
+    (state) => state.documentState.flatDataRender
+  );
+  const data = flatDataRender[keyRender];
 
   React.useImperativeHandle(forwardRef, () => ({}));
 
@@ -43,9 +46,7 @@ const RendererComponent = (
 
   const renderedComponentStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
-    if (!data.parentKey) {
-      style.transform = `scale(${scale})`;
-    }
+    style.transform = `scale(${scale})`;
     if (data.size) {
       style.width = `${data.size.width}px`;
       style.height = `${data.size.height}px`;
@@ -164,7 +165,6 @@ const RendererComponent = (
           {renderedNameElement}
           <ComponentRender
             {...data.options}
-            childrenDataRender={data.children}
             style={data.style}
             size={data.size}
             position={data.position}

@@ -1,11 +1,11 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DataRender, Position } from "~/types/document";
-import { calcNewPositionAfterScale, recursiveForeach, transformRenderData } from "~/utils/document";
+import { calcNewPositionAfterScale, generateKey, recursiveForeach, transformRenderData } from "~/utils/document";
 import cloneDeep from "lodash/cloneDeep";
 
 export interface DocumentState {
   initialDataRender: DataRender[];
-  dataRender: DataRender[];
+  flatDataRender: {[key: string]: DataRender};
   viewport: {
     scale: number,
     scrollSpeed: number,
@@ -19,7 +19,7 @@ export interface DocumentState {
 
 const initialState: DocumentState = {
   initialDataRender: [],
-  dataRender: [],
+  flatDataRender: {},
   viewport: {
     scale: 1,
     scrollSpeed: 0.5,
@@ -44,16 +44,17 @@ const slice = createSlice({
   initialState,
   reducers: {
     initDataRender(state, { payload }: PayloadAction<{data: DataRender[]}>) {
-      const dataRender = transformRenderData(cloneDeep(payload.data));
-      state.initialDataRender = dataRender;
-      state.dataRender = dataRender;
+      state.initialDataRender = cloneDeep(payload.data);
+      transformRenderData(state.initialDataRender);
+      state.flatDataRender = {};
+      recursiveForeach(state.initialDataRender, (_) => {
+        state.flatDataRender[_.key ?? ""] = _;
+      });
     },
     setPositionComponentByKey(state, { payload }: PayloadAction<{key: string, position: Position}>) {
-      recursiveForeach(state.dataRender, (_) => {
-        if (_.key === payload.key) {
-          _.position = payload.position;
-        }
-      });
+      if (state.flatDataRender[payload.key]) {
+        state.flatDataRender[payload.key].position = payload.position;
+      }
     },
     setViewportScale(state, { payload }: PayloadAction<{scale: number}>) {
       state.viewport.scale = payload.scale;
@@ -67,15 +68,16 @@ const slice = createSlice({
         x: newViewportPosition.x - state.viewport.position.x,
         y: newViewportPosition.y - state.viewport.position.y
       };
-      state.dataRender.forEach(_ => {
-        if (_.position) {
+      for (let key in state.flatDataRender) {
+        const _ = state.flatDataRender[key];
+        if (_ && _.position) {
           const newPosition = calcNewPositionAfterScale({ x: _.position.x + state.viewport.position.x, y: _.position.y + state.viewport.position.y }, payload.originPosition, payload.scale);
           _.position = {
             x: _.position.x + (newPosition.x - _.position.x - state.viewport.position.x) - deltaViewportPosition.x,
             y: _.position.y + (newPosition.y - _.position.y - state.viewport.position.y) - deltaViewportPosition.y,
           };
         }
-      });
+      }
       state.viewport.scale = state.viewport.scale * payload.scale;
       state.viewport.position = newViewportPosition;
     },

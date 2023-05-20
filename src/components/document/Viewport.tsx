@@ -12,7 +12,7 @@ import {
   setViewportPosition,
 } from "~/redux/documentSlice";
 import { Position } from "~/types/document";
-import { renderComponent } from "~/utils/document";
+import Renderer from "./Renderer";
 
 interface ViewportProps {}
 
@@ -34,7 +34,9 @@ const ViewportComponent = (
   const position = useAppSelector(
     (state) => state.documentState.viewport.position
   );
-  const dataRender = useAppSelector((state) => state.documentState.dataRender);
+  const flatDataRender = useAppSelector(
+    (state) => state.documentState.flatDataRender
+  );
 
   const [originScale, setOriginScale] = useState<number>(1);
   const [originPosition, setOriginPosition] = useState<Position>({
@@ -136,7 +138,9 @@ const ViewportComponent = (
         current-origin={JSON.stringify(originPosition)}
       >
         <div style={contentAreaStyle} className="content-area">
-          {renderComponent(dataRender)}
+          {Object.keys(flatDataRender).map((key) => (
+            <Renderer key={key} keyRender={key} />
+          ))}
         </div>
         <div className="trigger-area" />
       </div>

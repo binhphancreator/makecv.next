@@ -1,11 +1,13 @@
-import React from "react";
 import { ComponentMap } from "~/configs/document";
 import { Color, DataRender, Position } from "~/types/document";
 import { nanoid } from "nanoid";
-import Renderer from "~/components/document/Renderer";
 
 export const resolveComponent = (component: string) => {
   return ComponentMap[component];
+};
+
+export const generateKey = (size?: number) => {
+  return nanoid(size || 10);
 };
 
 export const recursiveForeach = (
@@ -31,17 +33,6 @@ export const transformRenderData = (data: DataRender[], parentKey?: string) => {
         transformRenderData(render.children, render.key);
       }
     });
-  return data;
-};
-
-export const renderComponent = (data?: DataRender[]) => {
-  if (!data || !data.length) {
-    return null;
-  }
-
-  return data.map((_, index) => {
-    return <Renderer key={index.toString()} data={_} />;
-  });
 };
 
 export const calcNewPositionAfterScale = (

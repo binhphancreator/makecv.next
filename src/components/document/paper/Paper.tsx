@@ -1,17 +1,15 @@
 import React, { useMemo } from "react";
 import { useAppSelector } from "~/hook";
-import { Color, DataRender, Size } from "~/types/document";
+import { Color, Size } from "~/types/document";
 import { findColor } from "~/utils/document";
-import { renderComponent } from "~/utils/document";
 
 interface PaperProps {
-  childrenDataRender?: DataRender[];
   size: Size;
   style?: React.CSSProperties;
   backgroundColor?: Color;
 }
 
-const Paper = ({ size, backgroundColor, childrenDataRender }: PaperProps) => {
+const Paper = ({ size, backgroundColor }: PaperProps) => {
   const colorPaletes = useAppSelector(
     (state) => state.documentState.colorPalettes
   );
@@ -32,12 +30,7 @@ const Paper = ({ size, backgroundColor, childrenDataRender }: PaperProps) => {
     return style;
   }, [size, backgroundColor]);
 
-  return (
-    <div ref={paperRef} className="paper" style={paperStyle}>
-      {renderComponent(childrenDataRender ?? [])}
-      <div />
-    </div>
-  );
+  return <div ref={paperRef} className="paper" style={paperStyle} />;
 };
 
 export default Paper;
