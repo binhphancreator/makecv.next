@@ -38,6 +38,17 @@ const data: DataRender[] = [
       x: 64,
       y: 500,
     },
+  },
+  {
+    component: "Text",
+    size: {
+      width: 250,
+      height: 250,
+    },
+    position: {
+      x: 320,
+      y: 500,
+    },
   }
 ];
 
