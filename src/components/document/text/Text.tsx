@@ -4,6 +4,7 @@ import type Editor from "quill";
 
 interface TextProps {
   size?: Size;
+  content: string;
 }
 interface TextMethods {}
 
@@ -12,7 +13,7 @@ type FalloraEditor = HTMLDivElement & {
 };
 
 const TextComponent = (
-  { size }: TextProps,
+  { size, content }: TextProps,
   forwardRef: ForwardedRef<TextMethods>
 ) => {
   const editorElementRef = useRef<FalloraEditor>(null);
@@ -44,6 +45,8 @@ const TextComponent = (
     if (size) {
       style.width = `${size.width}px`;
       style.height = `${size.height}px`;
+    } else {
+      style.width = "max-content";
     }
     return style;
   }, [size]);
@@ -56,16 +59,11 @@ const TextComponent = (
         }
       });
     }
-  }, []);
+  }, [editorElementRef.current]);
 
   return (
-    <div
-      onMouseDown={(e) => e.stopPropagation()}
-      ref={editorElementRef}
-      className="editor"
-      style={editorContainerStyle}
-    >
-      Xin chao the gioi
+    <div ref={editorElementRef} className="editor" style={editorContainerStyle}>
+      {content}
     </div>
   );
 };

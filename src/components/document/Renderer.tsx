@@ -9,6 +9,7 @@ import {
   removeHoveringKey,
   setPositionComponentByKey,
 } from "~/redux/documentSlice";
+import { ShownNameComponents } from "~/configs/document";
 
 interface RendererProps {
   keyRender: string;
@@ -83,6 +84,9 @@ const RendererComponent = (
 
   const renderedNameElement = useMemo<JSX.Element | null>(() => {
     var nameComponent = data.component;
+    if (!ShownNameComponents.includes(nameComponent)) {
+      return null;
+    }
     if (data.name && data.name.trim().length) {
       nameComponent = data.name;
     }

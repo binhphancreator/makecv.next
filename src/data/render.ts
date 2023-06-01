@@ -41,14 +41,13 @@ const data: DataRender[] = [
   },
   {
     component: "Text",
-    size: {
-      width: 250,
-      height: 250,
-    },
     position: {
       x: 320,
       y: 500,
     },
+    options: {
+      content: "This is a text component",
+    }
   }
 ];
 
