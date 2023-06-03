@@ -25,6 +25,7 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js"],
+      "plugins": ["@typescript-eslint"],
       "rules": {
         "@typescript-eslint/no-shadow": ["error"],
         "no-shadow": "off",
@@ -33,13 +34,14 @@
         "react/self-closing-comp": "warn",
         "no-empty-pattern": "off",
         "no-unused-vars": "off",
-        "@typescript-eslint/no-unused-vars": ["error"],
+        "@typescript-eslint/no-unused-vars": ["warn"],
         "semi": "error",
         "eol-last": "warn",
         "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0}],
         "no-trailing-spaces": "warn",
-        "key-spacing": ["error", { "beforeColon": false }]
-        
+        "key-spacing": ["error", { "beforeColon": false }],
+        "react-hooks/exhaustive-deps": "off",
+        "@typescript-eslint/no-explicit-any": "off"
       }
     }
   ]

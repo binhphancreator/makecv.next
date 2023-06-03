@@ -1,0 +1,44 @@
+.rendered-block {
+  transition: border 0.05s ease-in;
+  position: absolute;
+  overflow: visible;
+  width: fit-content;
+  height: fit-content;
+  box-sizing: border-box;
+  transform-origin: 0 0;
+
+  .rendered-component {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform-origin: 0 0;
+  }
+
+  .rendered-name {
+    font-weight: 400;
+    font-size: 20px;
+    color: $slate300;
+    position: absolute;
+    top: -32px;
+    font-family: Alexandria, sans-serif;
+    user-select: none;
+
+    &.active {
+      color: $sky700;
+    }
+  }
+
+  .active-border {
+    background-image: linear-gradient(to right, $sky600, $sky600),
+      linear-gradient(to bottom, $sky600, $sky600),
+      linear-gradient(to right, $sky600, $sky600),
+      linear-gradient(to bottom, $sky600, $sky600);
+    background-position: top, 100%, bottom, 0;
+    background-repeat: repeat-x, repeat-y, repeat-x, repeat-y;
+    background-size: 2px 2px;
+    contain: strict;
+    position: absolute;
+    will-change: transform;
+    pointer-events: none;
+  }
+}
