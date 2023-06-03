@@ -25,6 +25,7 @@
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js"],
+      "plugins": ["@typescript-eslint"],
       "rules": {
         "@typescript-eslint/no-shadow": ["error"],
         "no-shadow": "off",
@@ -39,7 +40,8 @@
         "no-multiple-empty-lines": ["error", { "max": 1, "maxEOF": 0}],
         "no-trailing-spaces": "warn",
         "key-spacing": ["error", { "beforeColon": false }],
-        "react-hooks/exhaustive-deps": "off"
+        "react-hooks/exhaustive-deps": "off",
+        "@typescript-eslint/no-explicit-any": "off"
       }
     }
   ]

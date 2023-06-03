@@ -11,7 +11,7 @@ const Home: NextPageWithLayout = ({}: Props) => {
   return (
     <>
       <Head>
-        <title>MakeCV Tool</title>
+        <title>Fallora</title>
       </Head>
       <div>Home</div>
     </>
