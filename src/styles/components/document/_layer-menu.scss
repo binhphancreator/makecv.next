@@ -1,0 +1,12 @@
+.layer-menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: $white;
+  box-shadow: 2px 0 50px -3px rgb(0 0 0 / 10%);
+  border-right: 1px solide $gray200;
+  z-index: 10;
+  padding: 16px;
+  overflow-x: auto;
+}
