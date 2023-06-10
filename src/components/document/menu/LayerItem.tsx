@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import SvgIcon from "~/components/icon/SvgIcon";
 import { useAppSelector } from "~/hook";
 import { ComponentIconMap } from "~/configs/document";
+import classNames from "classnames";
 
 interface LayerItemProps {
   keyRender: string;
@@ -9,14 +10,15 @@ interface LayerItemProps {
 }
 
 const LayerItem = ({ keyRender, hierarchy }: LayerItemProps) => {
-  const marginLeft = 22;
+  const paddingLeft = 22;
   const flatDataRender = useAppSelector(
     (state) => state.documentState.flatDataRender
   );
-
-  const dataRender = useAppSelector(
-    (state) => state.documentState.flatDataRender[keyRender]
+  const selectingKeys = useAppSelector(
+    (state) => state.documentState.selectingKeys
   );
+
+  const dataRender = flatDataRender[keyRender];
 
   const layerIconName = useMemo<string>(() => {
     if (ComponentIconMap[dataRender.component]) {
@@ -27,9 +29,16 @@ const LayerItem = ({ keyRender, hierarchy }: LayerItemProps) => {
 
   const layerItemInnerStyle = useMemo<React.CSSProperties>(() => {
     return {
-      marginLeft: `${marginLeft * hierarchy}px`,
+      paddingLeft: `${16 + paddingLeft * hierarchy}px`,
     };
   }, [hierarchy]);
+
+  const selected = useMemo(() => {
+    if (selectingKeys.includes(keyRender)) {
+      return true;
+    }
+    return false;
+  }, [selectingKeys, keyRender]);
 
   const renderLayerItemChild = () => {
     const childDataRender = Object.values(flatDataRender).filter(
@@ -58,7 +67,14 @@ const LayerItem = ({ keyRender, hierarchy }: LayerItemProps) => {
 
   return (
     <div className="layer-item">
-      <div style={layerItemInnerStyle} className="layer-item-inner">
+      <div
+        style={layerItemInnerStyle}
+        className={classNames({
+          "layer-item-inner": true,
+          selected,
+        })}
+      >
+        <div className="layer-overlay" />
         <div className="layer-icon">
           <SvgIcon name={layerIconName} width={16} height={16} />
         </div>

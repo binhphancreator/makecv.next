@@ -15,10 +15,6 @@
 .layer-item {
   transition: background 0.15s ease-in;
 
-  &:hover {
-    background: $blue50;
-  }
-
   &-inner {
     padding: 6px 16px;
     display: flex;
@@ -27,6 +23,19 @@
     column-gap: 6px;
     max-width: 100%;
     overflow-x: hidden;
+    position: relative;
+
+    &:hover,
+    &.selected {
+      background: $blue50;
+    }
+
+    .layer-overlay {
+      position: absolute;
+      inset: 0;
+      background: transparent;
+      cursor: pointer;
+    }
 
     .layer-name {
       font-size: 12px;
