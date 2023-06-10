@@ -1,4 +1,5 @@
 import React, { useMemo, useState } from "react";
+import LayerItem from "./LayerItem";
 import { useAppSelector } from "~/hook";
 
 interface LayerMenuProps {
@@ -11,10 +12,18 @@ const LayerMenu = ({ width: initialWidth }: LayerMenuProps) => {
   const flatDataRender = useAppSelector(
     (state) => state.documentState.flatDataRender
   );
-  const [width] = useState(initialWidth ?? 400);
+  const [width] = useState(initialWidth ?? 300);
 
-  const layerList = useMemo<JSX.Element | null>(() => {
-    return null;
+  const layerList = useMemo<React.ReactNode>(() => {
+    return Object.values(flatDataRender)
+      .filter((_) => !_.parentKey)
+      .map((_) => {
+        if (_.key) {
+          return <LayerItem key={_.key} keyRender={_.key} hierarchy={0} />;
+        } else {
+          return null;
+        }
+      });
   }, [flatDataRender]);
 
   const layerMenuStyle = useMemo<React.CSSProperties>(() => {
@@ -26,7 +35,6 @@ const LayerMenu = ({ width: initialWidth }: LayerMenuProps) => {
   return (
     <div className="layer-menu" style={layerMenuStyle}>
       {layerList}
-      <div />
     </div>
   );
 };

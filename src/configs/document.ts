@@ -17,6 +17,13 @@ export const ComponentMap: {[key: string]: React.FC<any>} = {
   [ComponentName.Text]: Text,
 };
 
+export const ComponentIconMap: {[key: string]: string} = {
+  [ComponentName.Paper]: "frame",
+  [ComponentName.Text]: "text",
+  [ComponentName.DocumentImage]: "image",
+  "default": "shapes",
+};
+
 export const ShownNameComponents = [
   ComponentName.Paper,
 ];

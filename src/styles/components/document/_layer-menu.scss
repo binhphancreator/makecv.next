@@ -7,6 +7,36 @@
   box-shadow: 2px 0 50px -3px rgb(0 0 0 / 10%);
   border-right: 1px solide $gray200;
   z-index: 10;
-  padding: 16px;
+  padding: 16px 0;
   overflow-x: auto;
+  font-family: Inter, sans-serif;
+}
+
+.layer-item {
+  transition: background 0.15s ease-in;
+
+  &:hover {
+    background: $blue50;
+  }
+
+  &-inner {
+    padding: 6px 16px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    column-gap: 6px;
+    max-width: 100%;
+    overflow-x: hidden;
+
+    .layer-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: $gray700;
+      flex: 1;
+    }
+
+    .layer-icon svg {
+      fill: $gray400;
+    }
+  }
 }
