@@ -5,7 +5,7 @@ import Text from "./Text";
 import Shapes from "./Shapes";
 import Image from "./Image";
 
-const SVG_MAP: {[key: string]: React.FC<SvgProps>} = {
+const SVG_MAP = {
   "default-image": DefaultImage,
   "frame": Frame,
   "text": Text,
@@ -13,4 +13,6 @@ const SVG_MAP: {[key: string]: React.FC<SvgProps>} = {
   "image": Image,
 };
 
-export default SVG_MAP;
+export type SvgName = keyof (typeof SVG_MAP);
+
+export default (SVG_MAP as {[key: string]: React.FC<SvgProps>});

@@ -3,6 +3,7 @@ import SvgIcon from "~/components/icon/SvgIcon";
 import { useAppSelector } from "~/hook";
 import { ComponentIconMap } from "~/configs/document";
 import classNames from "classnames";
+import { SvgName } from "~/components/icon/svg";
 
 interface LayerItemProps {
   keyRender: string;
@@ -20,7 +21,7 @@ const LayerItem = ({ keyRender, hierarchy }: LayerItemProps) => {
 
   const dataRender = flatDataRender[keyRender];
 
-  const layerIconName = useMemo<string>(() => {
+  const layerIconName = useMemo<SvgName>(() => {
     if (ComponentIconMap[dataRender.component]) {
       return ComponentIconMap[dataRender.component];
     }
