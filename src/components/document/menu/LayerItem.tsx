@@ -1,9 +1,10 @@
 import React, { useMemo } from "react";
 import SvgIcon from "~/components/icon/SvgIcon";
-import { useAppSelector } from "~/hook";
+import { useAppDispatch, useAppSelector } from "~/hook";
 import { ComponentIconMap } from "~/configs/document";
 import classNames from "classnames";
 import { SvgName } from "~/components/icon/svg";
+import { addSelectingKey } from "~/redux/documentSlice";
 
 interface LayerItemProps {
   keyRender: string;
@@ -11,6 +12,7 @@ interface LayerItemProps {
 }
 
 const LayerItem = ({ keyRender, hierarchy }: LayerItemProps) => {
+  const dispatch = useAppDispatch();
   const paddingLeft = 22;
   const flatDataRender = useAppSelector(
     (state) => state.documentState.flatDataRender
@@ -62,6 +64,13 @@ const LayerItem = ({ keyRender, hierarchy }: LayerItemProps) => {
     }
   };
 
+  const handleOnLayerClick = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    event.stopPropagation();
+    dispatch(addSelectingKey({ key: keyRender }));
+  };
+
   if (!dataRender) {
     return null;
   }
@@ -75,7 +84,7 @@ const LayerItem = ({ keyRender, hierarchy }: LayerItemProps) => {
           selected,
         })}
       >
-        <div className="layer-overlay" />
+        <div className="layer-overlay" onClick={handleOnLayerClick} />
         <div className="layer-icon">
           <SvgIcon name={layerIconName} width={16} height={16} />
         </div>
