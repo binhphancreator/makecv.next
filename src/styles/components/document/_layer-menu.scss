@@ -8,8 +8,33 @@
   border-right: 1px solide $gray200;
   z-index: 10;
   padding: 16px 0;
-  overflow-x: auto;
+  overflow-x: hidden;
   font-family: Inter, sans-serif;
+
+  .menu-tabs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    column-gap: 8px;
+    padding: 8px 16px;
+    border-bottom: 1px solid $gray100;
+
+    .menu-tab-item {
+      font-size: 13px;
+      font-weight: 600;
+      color: $gray700;
+      cursor: pointer;
+    }
+
+    .menu-tab-item.active {
+      color: $sky600;
+    }
+  }
+
+  .tabs-view {
+    position: relative;
+  }
 }
 
 .layer-item {

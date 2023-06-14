@@ -13,7 +13,7 @@ import {
 } from "~/redux/documentSlice";
 import { Position } from "~/types/document";
 import Renderer from "./Renderer";
-import LayerMenu from "./menu/LayerMenu";
+import LayerMenu from "./menu/layer/LayerMenu";
 
 interface ViewportProps {}
 
