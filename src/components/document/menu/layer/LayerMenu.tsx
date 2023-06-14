@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { AnimatePresence, Variants, motion } from "framer-motion";
+import React, { useMemo, useState } from "react";
+import { MotionStyle, motion } from "framer-motion";
 import LayersListTab from "./tabs/LayersListTab";
 import ComponentsTab from "./tabs/ComponentsTab";
 import AssetsTab from "./tabs/AssetsTab";
@@ -19,7 +19,6 @@ const TABS_DATA = [
 const LayerMenu = ({ width: initialWidth }: LayerMenuProps) => {
   const [width] = useState(initialWidth ?? 300);
   const [tabActiveIndex, setTabActiveIndex] = useState(0);
-  const [direction, setDirection] = useState(1);
 
   const layerMenuStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
@@ -27,27 +26,14 @@ const LayerMenu = ({ width: initialWidth }: LayerMenuProps) => {
     return style;
   }, [width]);
 
-  const tabViewStyle = useMemo<React.CSSProperties>(() => {
+  const tabViewInnerStyle = useMemo<MotionStyle>(() => {
     return {
-      width: `${width}px`,
+      width: `${width * TABS_DATA.length}px`,
       position: "absolute",
       left: 0,
-      top: 0,
-      overflow: "hidden",
+      top: "16px",
     };
   }, [width]);
-
-  const tabViewVariants: Variants = {
-    enter: { opacity: 0 },
-    center: {
-      zIndex: 1,
-      opacity: 1,
-    },
-    exit: {
-      zIndex: 0,
-      opacity: 0,
-    },
-  };
 
   const handleOnTabClick = (tabIndex: number) => {
     if (tabIndex === tabActiveIndex) {
@@ -57,29 +43,20 @@ const LayerMenu = ({ width: initialWidth }: LayerMenuProps) => {
   };
 
   const renderTabView = () => {
-    const tabData = TABS_DATA[tabActiveIndex];
-    if (!tabData) {
-      return null;
-    }
-
-    const TabComponent = tabData.component;
-
-    return (
-      <motion.div
-        initial="enter"
-        animate="center"
-        exit="exit"
-        transition={{
-          x: { type: "spring", stiffness: 300, damping: 30 },
-          opacity: { duration: 0.2 },
-        }}
-        variants={tabViewVariants}
-        style={tabViewStyle}
-        key={tabData.name}
-      >
-        <TabComponent />
-      </motion.div>
-    );
+    return TABS_DATA.map((tabData, index) => {
+      const TabComponent = tabData.component;
+      const tabViewStyle: React.CSSProperties = {
+        position: "absolute",
+        width: `${width}px`,
+        top: 0,
+        left: index * width,
+      };
+      return (
+        <div key={tabData.name} style={tabViewStyle}>
+          <TabComponent />
+        </div>
+      );
+    });
   };
 
   return (
@@ -98,9 +75,15 @@ const LayerMenu = ({ width: initialWidth }: LayerMenuProps) => {
         })}
       </div>
       <div className="tabs-view">
-        <AnimatePresence initial={false} mode="sync">
+        <motion.div
+          animate={{ x: -tabActiveIndex * width }}
+          transition={{
+            x: { ease: "easeIn", duration: 0.2 },
+          }}
+          style={tabViewInnerStyle}
+        >
           {renderTabView()}
-        </AnimatePresence>
+        </motion.div>
       </div>
     </div>
   );
