@@ -1,15 +1,32 @@
-import React from "react";
-import SVG_MAP, { SvgName } from "./svg";
+import React, { useMemo } from "react";
+import { SvgName, SvgType, REGULAR_ICONS, SOLID_ICONS } from "./svg";
 import { SvgProps } from "~/types/app";
 
 type SvgIconProps = {
   name: SvgName;
+  type?: SvgType;
 } & SvgProps;
 
-const SvgIcon = ({ name, width, height, color }: SvgIconProps) => {
+const SvgIcon = ({
+  name,
+  type: initialType,
+  width,
+  height,
+  color,
+}: SvgIconProps) => {
   const defaultColor = "currentColor";
 
-  const SvgComponent = SVG_MAP[name];
+  const SvgComponent = useMemo<React.FC<SvgProps> | null>(() => {
+    const type = initialType ?? "regular";
+    switch (type) {
+      case "regular":
+        return REGULAR_ICONS[name];
+      case "solid":
+        return SOLID_ICONS[name];
+      default:
+        return null;
+    }
+  }, [name, initialType]);
 
   if (!SvgComponent) {
     return null;
