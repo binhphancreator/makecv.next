@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { SvgName, SvgType, REGULAR_ICONS, SOLID_ICONS } from "./svg";
+import React from "react";
+import IconsMap, { SvgName, SvgType } from "./svg";
 import { SvgProps } from "~/types/app";
 
 type SvgIconProps = {
@@ -7,30 +7,14 @@ type SvgIconProps = {
   type?: SvgType;
 } & SvgProps;
 
-const SvgIcon = ({
-  name,
-  type: initialType,
-  width,
-  height,
-  color,
-}: SvgIconProps) => {
+const SvgIcon = ({ name, type, width, height, color }: SvgIconProps) => {
   const defaultColor = "currentColor";
 
-  const SvgComponent = useMemo<React.FC<SvgProps> | null>(() => {
-    const type = initialType ?? "regular";
-    switch (type) {
-      case "regular":
-        return REGULAR_ICONS[name];
-      case "solid":
-        return SOLID_ICONS[name];
-      default:
-        return null;
-    }
-  }, [name, initialType]);
-
-  if (!SvgComponent) {
+  if (!IconsMap[type ?? "regular"] || !IconsMap[type ?? "regular"][name]) {
     return null;
   }
+
+  const SvgComponent = IconsMap[type ?? "regular"][name];
 
   return (
     <div className="svg-icon">

@@ -13,7 +13,7 @@ export const ComponentName = {
   Shape: "Shape",
 };
 
-export const ComponentMap: {[key: string]: React.FC<any>} = {
+export const ComponentMap: { [key: string]: React.FC<any> } = {
   [ComponentName.Paper]: Paper,
   [ComponentName.PaperBackground]: PaperBackground,
   [ComponentName.DocumentImage]: DocumentImage,
@@ -21,14 +21,12 @@ export const ComponentMap: {[key: string]: React.FC<any>} = {
   [ComponentName.Shape]: Shape,
 };
 
-export const ComponentIconMap: {[key: string]: SvgName} = {
+export const ComponentIconMap: { [key: string]: SvgName } = {
   [ComponentName.Paper]: "frame",
   [ComponentName.Text]: "text",
   [ComponentName.DocumentImage]: "image",
   [ComponentName.Shape]: "shapes",
-  "default": "shapes",
+  default: "shapes",
 };
 
-export const ShownNameComponents = [
-  ComponentName.Paper,
-];
+export const ShownNameComponents = [ComponentName.Paper];

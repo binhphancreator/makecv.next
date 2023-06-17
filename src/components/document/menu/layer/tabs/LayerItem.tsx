@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import SvgIcon from "~/components/icon/SvgIcon";
 import { useAppDispatch, useAppSelector } from "~/hook";
-import { ComponentIconMap } from "~/configs/document";
+import { ComponentIconMap } from "~/components/document";
 import classNames from "classnames";
 import { SvgName } from "~/components/icon/svg";
 import { addSelectingKey } from "~/redux/documentSlice";

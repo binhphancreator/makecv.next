@@ -5,20 +5,22 @@ import Text from "./regular/Text";
 import Shapes from "./regular/Shapes";
 import Image from "./regular/Image";
 
-const REGULAR_ICONS_SVG = {
-  "default-image": DefaultImage,
-  "frame": Frame,
-  "text": Text,
-  "shapes": Shapes,
-  "image": Image,
+const IconsMap = {
+  regular: {
+    "default-image": DefaultImage,
+    frame: Frame,
+    text: Text,
+    shapes: Shapes,
+    image: Image,
+  },
+  solid: {},
 };
 
-const SOLID_ICONS_SVG = {
+export type SvgName =
+  | keyof typeof IconsMap.regular
+  | keyof typeof IconsMap.solid;
+export type SvgType = keyof typeof IconsMap;
 
+export default IconsMap as {
+  [key: string]: { [key: string]: React.FC<SvgProps> };
 };
-
-export type SvgName = keyof typeof REGULAR_ICONS_SVG;
-export type SvgType = "regular" | "solid";
-
-export const REGULAR_ICONS = (REGULAR_ICONS_SVG as {[key: string]: React.FC<SvgProps>});
-export const SOLID_ICONS = (SOLID_ICONS_SVG as {[key: string]: React.FC<SvgProps>});

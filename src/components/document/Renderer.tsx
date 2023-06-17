@@ -9,7 +9,7 @@ import {
   removeHoveringKey,
   setPositionComponentByKey,
 } from "~/redux/documentSlice";
-import { ShownNameComponents } from "~/configs/document";
+import { ShownNameComponents } from "~/components/document";
 
 interface RendererProps {
   keyRender: string;
