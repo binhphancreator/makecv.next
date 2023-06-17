@@ -14,6 +14,7 @@ import {
 import { Position } from "~/types/document";
 import Renderer from "./Renderer";
 import LayerMenu from "./menu/layer/LayerMenu";
+import EditMenu from "./menu/edit/EditMenu";
 
 interface ViewportProps {}
 
@@ -132,6 +133,7 @@ const ViewportComponent = (
       ref={viewportRef}
     >
       <LayerMenu />
+      <EditMenu />
       <div className="scrollbar-vertical" />
       <div className="scrollbar-horizontal" />
       <div

@@ -3,6 +3,10 @@ import { MotionStyle, motion } from "framer-motion";
 import LayersListTab from "./tabs/LayersListTab";
 import ComponentsTab from "./tabs/ComponentsTab";
 import AssetsTab from "./tabs/AssetsTab";
+import {
+  MIN_WIDTH_LAYER_MENU,
+  MAX_WIDTH_LAYER_MENU,
+} from "~/constants/document";
 
 interface LayerMenuProps {
   width?: number;
@@ -17,8 +21,9 @@ const TABS_DATA = [
 ];
 
 const LayerMenu = ({ width: initialWidth }: LayerMenuProps) => {
-  const [width] = useState(initialWidth ?? 300);
+  const [width, setWidth] = useState(initialWidth ?? MIN_WIDTH_LAYER_MENU);
   const [tabActiveIndex, setTabActiveIndex] = useState(0);
+  const refLayerMenu = React.createRef<HTMLDivElement>();
 
   const layerMenuStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
@@ -59,8 +64,34 @@ const LayerMenu = ({ width: initialWidth }: LayerMenuProps) => {
     });
   };
 
+  const handleOnMouseDownResize = (
+    event: React.MouseEvent<HTMLDivElement, MouseEvent>
+  ) => {
+    var startX = event.pageX;
+    const originWidth = width;
+
+    const handleMouseMoveResize = (eventMove: MouseEvent) => {
+      const deltaX = eventMove.pageX - startX;
+      if (
+        originWidth + deltaX <= MAX_WIDTH_LAYER_MENU &&
+        originWidth + deltaX >= MIN_WIDTH_LAYER_MENU
+      ) {
+        setWidth(originWidth + deltaX);
+      }
+    };
+
+    const handleMouseUpResize = () => {
+      window.removeEventListener("mousemove", handleMouseMoveResize);
+      window.removeEventListener("mouseup", handleMouseUpResize);
+    };
+
+    window.addEventListener("mousemove", handleMouseMoveResize);
+    window.addEventListener("mouseup", handleMouseUpResize);
+  };
+
   return (
-    <div className="layer-menu" style={layerMenuStyle}>
+    <div ref={refLayerMenu} className="layer-menu" style={layerMenuStyle}>
+      <div className="resize-area" onMouseDown={handleOnMouseDownResize} />
       <div className="menu-tabs">
         {TABS_DATA.map((tabData, index) => {
           return (

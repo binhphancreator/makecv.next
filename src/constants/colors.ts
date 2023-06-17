@@ -1,4 +1,4 @@
-const ColorPaletes = {
+const ColorPalettes = {
   white: "#fff",
   slate50: "#f8fafc",
   slate100: "#f1f5f9",
@@ -222,4 +222,4 @@ const ColorPaletes = {
   rose900: "#881337",
 };
 
-export default ColorPaletes;
+export default ColorPalettes;

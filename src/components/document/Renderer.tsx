@@ -117,7 +117,7 @@ const RendererComponent = (
     const startX = event.pageX - data.position.x;
     const startY = event.pageY - data.position.y;
 
-    const handleMouseMove = (eventMove: any) => {
+    const handleMouseMove = (eventMove: MouseEvent) => {
       dispatch(
         setPositionComponentByKey({
           position: {
