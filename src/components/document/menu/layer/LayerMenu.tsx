@@ -67,7 +67,7 @@ const LayerMenu = ({ width: initialWidth }: LayerMenuProps) => {
   const handleOnMouseDownResize = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    var startX = event.pageX;
+    const startX = event.pageX;
     const originWidth = width;
 
     const handleMouseMoveResize = (eventMove: MouseEvent) => {
