@@ -20,7 +20,7 @@ const TopMenu = ({}: TopMenuProps) => {
   const topMenuStyle = useMemo<React.CSSProperties>(() => {
     return {
       height: `${height}px`,
-      background: ColorPalettes.neutral800,
+      background: ColorPalettes.midnightblue900,
     };
   }, [height]);
 
