@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo } from "react";
 import { MotionStyle, motion } from "framer-motion";
 import LayersListTab from "./tabs/LayersListTab";
 import ComponentsTab from "./tabs/ComponentsTab";
@@ -7,10 +7,10 @@ import {
   MIN_WIDTH_LAYER_MENU,
   MAX_WIDTH_LAYER_MENU,
 } from "~/constants/document";
+import { useAppDispatch, useAppSelector } from "~/hook";
+import { setWidthLayerMenu } from "~/redux/documentSlice";
 
-interface LayerMenuProps {
-  width?: number;
-}
+interface LayerMenuProps {}
 
 export interface LayerMenuMethods {}
 
@@ -20,32 +20,34 @@ const TABS_DATA = [
   { label: "Assets", component: AssetsTab, name: "assets_tab" },
 ];
 
-const LayerMenu = ({ width: initialWidth }: LayerMenuProps) => {
-  const [width, setWidth] = useState(initialWidth ?? MIN_WIDTH_LAYER_MENU);
-  const [tabActiveIndex, setTabActiveIndex] = useState(0);
+const LayerMenu = ({}: LayerMenuProps) => {
+  const dispatch = useAppDispatch();
+  const heightTopMenu = useAppSelector(
+    (state) => state.documentState.viewport.heightTopMenu
+  );
+  const width = useAppSelector(
+    (state) => state.documentState.viewport.widthLayerMenu
+  );
+  const tabActiveIndex = useAppSelector(
+    (state) => state.documentState.viewport.tabActiveIndexLayerMenu
+  );
   const refLayerMenu = React.createRef<HTMLDivElement>();
 
   const layerMenuStyle = useMemo<React.CSSProperties>(() => {
-    const style: React.CSSProperties = {};
-    style.width = `${width}px`;
-    return style;
-  }, [width]);
+    return {
+      width: `${width}px`,
+      paddingTop: `${heightTopMenu + 16}px`,
+    };
+  }, [width, heightTopMenu]);
 
   const tabViewInnerStyle = useMemo<MotionStyle>(() => {
     return {
       width: `${width * TABS_DATA.length}px`,
       position: "absolute",
       left: 0,
-      top: "16px",
+      top: 0,
     };
   }, [width]);
-
-  const handleOnTabClick = (tabIndex: number) => {
-    if (tabIndex === tabActiveIndex) {
-      return;
-    }
-    setTabActiveIndex(tabIndex);
-  };
 
   const renderTabView = () => {
     return TABS_DATA.map((tabData, index) => {
@@ -67,16 +69,14 @@ const LayerMenu = ({ width: initialWidth }: LayerMenuProps) => {
   const handleOnMouseDownResize = (
     event: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
-    const startX = event.pageX;
-    const originWidth = width;
+    const startX = event.pageX - width;
 
     const handleMouseMoveResize = (eventMove: MouseEvent) => {
-      const deltaX = eventMove.pageX - startX;
       if (
-        originWidth + deltaX <= MAX_WIDTH_LAYER_MENU &&
-        originWidth + deltaX >= MIN_WIDTH_LAYER_MENU
+        eventMove.pageX - startX <= MAX_WIDTH_LAYER_MENU &&
+        eventMove.pageX - startX >= MIN_WIDTH_LAYER_MENU
       ) {
-        setWidth(originWidth + deltaX);
+        dispatch(setWidthLayerMenu({ width: eventMove.pageX - startX }));
       }
     };
 
@@ -92,19 +92,6 @@ const LayerMenu = ({ width: initialWidth }: LayerMenuProps) => {
   return (
     <div ref={refLayerMenu} className="layer-menu" style={layerMenuStyle}>
       <div className="resize-area" onMouseDown={handleOnMouseDownResize} />
-      <div className="menu-tabs">
-        {TABS_DATA.map((tabData, index) => {
-          return (
-            <div
-              key={tabData.name}
-              onClick={() => handleOnTabClick(index)}
-              className="menu-tab-item"
-            >
-              {tabData.label}
-            </div>
-          );
-        })}
-      </div>
       <div className="tabs-view">
         <motion.div
           animate={{ x: -tabActiveIndex * width }}

@@ -5,6 +5,7 @@ import Frame from "./regular/Frame";
 import Text from "./regular/Text";
 import Shapes from "./regular/Shapes";
 import Image from "./regular/Image";
+import LayerGroup from "./regular/LayerGroup";
 
 import SolidObjectsAlignLeft from "./solid/ObjectsAlignLeft";
 import SolidObjectsAlignRight from "./solid/ObjectsAlignRight";
@@ -14,6 +15,7 @@ import SolidObjectsAlignCenterHorizontal from "./solid/ObjectsAlignCenterHorizon
 import SolidObjectsAlignCenterVertical from "./solid/ObjectsAlignCenterVertical";
 import SolidDistributeSpacingHorizontal from "./solid/DistributeSpacingHorizontal";
 import SolidDistributeSpacingVertical from "./solid/DistributeSpacingVertical";
+import SolidBox from "./solid/Box";
 
 const IconsMap = {
   regular: {
@@ -22,6 +24,7 @@ const IconsMap = {
     text: Text,
     shapes: Shapes,
     image: Image,
+    "layer-group": LayerGroup,
   },
   solid: {
     "objects-align-left": SolidObjectsAlignLeft,
@@ -32,6 +35,7 @@ const IconsMap = {
     "objects-align-center-vertical": SolidObjectsAlignCenterVertical,
     "distribute-spacing-horizontal": SolidDistributeSpacingHorizontal,
     "distribute-spacing-vertical": SolidDistributeSpacingVertical,
+    box: SolidBox,
   },
 };
 
