@@ -1,0 +1,69 @@
+.layer-menu {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: $midnightblue800;
+  box-shadow: 2px 0 50px -3px rgb(0 0 0 / 10%);
+  border-right: 1px solide $gray200;
+  z-index: 10;
+  padding: 16px 0;
+  overflow-x: hidden;
+  font-family: Inter, sans-serif;
+  user-select: none;
+
+  * {
+    user-select: none;
+  }
+
+  .resize-area {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    cursor: ew-resize;
+    width: 12px;
+    right: -6px;
+  }
+
+  .tabs-view {
+    position: relative;
+  }
+}
+
+.layer-item {
+  transition: background 0.15s ease-in;
+
+  &-inner {
+    padding: 6px 16px;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    column-gap: 6px;
+    max-width: 100%;
+    overflow-x: hidden;
+    position: relative;
+
+    &:hover,
+    &.selected {
+      background: $midnightblue500;
+    }
+
+    .layer-overlay {
+      position: absolute;
+      inset: 0;
+      background: transparent;
+      cursor: pointer;
+    }
+
+    .layer-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: $neutral50;
+      flex: 1;
+    }
+
+    .layer-icon svg {
+      fill: $neutral50;
+    }
+  }
+}

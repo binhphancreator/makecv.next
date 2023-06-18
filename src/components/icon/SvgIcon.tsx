@@ -1,21 +1,28 @@
 import React from "react";
-import SVG_MAP from "./svg";
+import IconsMap, { SvgName, SvgType } from "./svg";
 import { SvgProps } from "~/types/app";
 
 type SvgIconProps = {
-  name: string;
+  name: SvgName;
+  type?: SvgType;
 } & SvgProps;
 
-const SvgIcon = ({ name, width, height }: SvgIconProps) => {
-  if (!SVG_MAP[name]) {
+const SvgIcon = ({ name, type, width, height, color }: SvgIconProps) => {
+  const defaultColor = "currentColor";
+
+  if (!IconsMap[type ?? "regular"] || !IconsMap[type ?? "regular"][name]) {
     return null;
   }
 
-  const Svg = SVG_MAP[name];
+  const SvgComponent = IconsMap[type ?? "regular"][name];
 
   return (
     <div className="svg-icon">
-      <Svg width={width} height={height} />
+      <SvgComponent
+        width={width}
+        height={height}
+        color={color ?? defaultColor}
+      />
     </div>
   );
 };

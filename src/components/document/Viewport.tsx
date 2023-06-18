@@ -13,6 +13,9 @@ import {
 } from "~/redux/documentSlice";
 import { Position } from "~/types/document";
 import Renderer from "./Renderer";
+import LayerMenu from "./menu/layer/LayerMenu";
+import EditMenu from "./menu/edit/EditMenu";
+import TopMenu from "./menu/top/TopMenu";
 
 interface ViewportProps {}
 
@@ -130,6 +133,9 @@ const ViewportComponent = (
       onMouseDown={refreshOnClickOutside}
       ref={viewportRef}
     >
+      <LayerMenu />
+      <EditMenu />
+      <TopMenu />
       <div className="scrollbar-vertical" />
       <div className="scrollbar-horizontal" />
       <div

@@ -1,7 +1,7 @@
 import React from "react";
-import { Alexandria } from "next/font/google";
+import { Inter } from "next/font/google";
 
-const fontLayout = Alexandria({ subsets: ["latin", "vietnamese"] });
+const fontLayout = Inter({ subsets: ["latin", "vietnamese"] });
 
 interface DefaultLayoutProps {
   children?: React.ReactNode;

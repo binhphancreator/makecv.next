@@ -1,4 +1,4 @@
-import { ComponentMap } from "~/configs/document";
+import { ComponentMap } from "~/components/document";
 import { Color, DataRender, Position } from "~/types/document";
 import { nanoid } from "nanoid";
 

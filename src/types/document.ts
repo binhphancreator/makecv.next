@@ -25,3 +25,9 @@ export type Size = {
 }
 
 export type Color = string;
+
+export type VectorProps = {
+  size: Size,
+  radius?: number | number[],
+  fill: Color,
+}
