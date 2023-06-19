@@ -8,14 +8,16 @@ import React, {
 import { useAppDispatch, useAppSelector } from "~/hook";
 import {
   refreshSelectingKeys,
-  reupdateAfterTouchEnd,
+  setPositionComponentByKey,
   setViewportPosition,
+  setViewportScale,
 } from "~/redux/documentSlice";
 import { Position } from "~/types/document";
 import Renderer from "./Renderer";
 import LayerMenu from "./menu/layer/LayerMenu";
 import EditMenu from "./menu/edit/EditMenu";
 import TopMenu from "./menu/top/TopMenu";
+import { calcNewPositionAfterScale } from "~/utils/document";
 
 interface ViewportProps {}
 
@@ -37,6 +39,7 @@ const ViewportComponent = (
   const position = useAppSelector(
     (state) => state.documentState.viewport.position
   );
+  const scale = useAppSelector((state) => state.documentState.viewport.scale);
   const flatDataRender = useAppSelector(
     (state) => state.documentState.flatDataRender
   );
@@ -52,17 +55,48 @@ const ViewportComponent = (
       return;
     }
     const timer = setTimeout(() => {
-      dispatch(
-        reupdateAfterTouchEnd({
-          scale: originScale,
-          originPosition: originPosition,
-        })
-      );
       setOriginPosition({ x: 0, y: 0 });
       setOriginScale(1);
-    }, 250);
+      reupdatePositionAfterTouchEnd();
+    }, 100);
     return () => clearTimeout(timer);
-  }, [originPosition]);
+  }, [originPosition, originScale]);
+
+  const reupdatePositionAfterTouchEnd = () => {
+    const newViewportPosition = calcNewPositionAfterScale(
+      position,
+      originPosition,
+      originScale
+    );
+    const deltaViewportPosition: Position = {
+      x: newViewportPosition.x - position.x,
+      y: newViewportPosition.y - position.y,
+    };
+    for (let key in flatDataRender) {
+      const _ = flatDataRender[key];
+      if (_ && _.position) {
+        const newPosition = calcNewPositionAfterScale(
+          {
+            x: _.position.x + position.x,
+            y: _.position.y + position.y,
+          },
+          originPosition,
+          originScale
+        );
+        dispatch(
+          setPositionComponentByKey({
+            position: {
+              x: newPosition.x - position.x - deltaViewportPosition.x,
+              y: newPosition.y - position.y - deltaViewportPosition.y,
+            },
+            key: key,
+          })
+        );
+      }
+    }
+    dispatch(setViewportPosition({ position: newViewportPosition }));
+    dispatch(setViewportScale({ scale: scale * originScale }));
+  };
 
   const viewportRef = React.createRef<HTMLDivElement>();
 
