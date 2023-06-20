@@ -41,7 +41,8 @@
         "no-trailing-spaces": "warn",
         "key-spacing": ["error", { "beforeColon": false }],
         "react-hooks/exhaustive-deps": "off",
-        "@typescript-eslint/no-explicit-any": "off"
+        "@typescript-eslint/no-explicit-any": "off",
+        "max-len": ["warn", { "code": 160 }]
       }
     }
   ]

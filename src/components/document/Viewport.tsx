@@ -1,10 +1,4 @@
-import React, {
-  ForwardedRef,
-  WheelEvent,
-  useEffect,
-  useMemo,
-  useRef,
-} from "react";
+import React, { ForwardedRef, WheelEvent, useEffect, useMemo, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "~/hook";
 import {
   refreshSelectingKeys,
@@ -18,6 +12,7 @@ import LayerMenu from "./menu/layer/LayerMenu";
 import EditMenu from "./menu/edit/EditMenu";
 import TopMenu from "./menu/top/TopMenu";
 import { calcNewPositionAfterScale } from "~/utils/document";
+import { MIN_SCALE_VIEWPORT, MAX_SCALE_VIEWPORT } from "~/constants/document";
 
 interface ViewportProps {}
 
@@ -25,24 +20,13 @@ export interface ViewportMethods {
   scrollTo(): void;
 }
 
-const ViewportComponent = (
-  {}: ViewportProps,
-  forwardRef: ForwardedRef<ViewportMethods>
-) => {
+const ViewportComponent = ({}: ViewportProps, forwardRef: ForwardedRef<ViewportMethods>) => {
   const dispatch = useAppDispatch();
-  const scrollSpeed = useAppSelector(
-    (state) => state.documentState.viewport.scrollSpeed
-  );
-  const scaleSpeed = useAppSelector(
-    (state) => state.documentState.viewport.scaleSpeed
-  );
-  const position = useAppSelector(
-    (state) => state.documentState.viewport.position
-  );
+  const scrollSpeed = useAppSelector((state) => state.documentState.viewport.scrollSpeed);
+  const scaleSpeed = useAppSelector((state) => state.documentState.viewport.scaleSpeed);
+  const position = useAppSelector((state) => state.documentState.viewport.position);
   const scale = useAppSelector((state) => state.documentState.viewport.scale);
-  const flatDataRender = useAppSelector(
-    (state) => state.documentState.flatDataRender
-  );
+  const flatDataRender = useAppSelector((state) => state.documentState.flatDataRender);
 
   const originScale = useRef<number>(1);
   const originPosition = useRef<Position>({
@@ -53,11 +37,7 @@ const ViewportComponent = (
   const timerReupdatePosition = useRef<NodeJS.Timeout | null>(null);
 
   const reupdatePositionAfterTouchEnd = () => {
-    const newViewportPosition = calcNewPositionAfterScale(
-      position,
-      originPosition.current,
-      originScale.current
-    );
+    const newViewportPosition = calcNewPositionAfterScale(position, originPosition.current, originScale.current);
     const deltaViewportPosition: Position = {
       x: newViewportPosition.x - position.x,
       y: newViewportPosition.y - position.y,
@@ -98,28 +78,22 @@ const ViewportComponent = (
   }));
 
   useEffect(() => {
-    const preventDefaultScroll = (e: globalThis.WheelEvent) =>
-      e.preventDefault();
-    const preventDefaultContextMenu = (e: globalThis.MouseEvent) =>
-      e.ctrlKey && e.preventDefault();
+    const preventDefaultScroll = (e: globalThis.WheelEvent) => e.preventDefault();
+    const preventDefaultContextMenu = (e: globalThis.MouseEvent) => e.ctrlKey && e.preventDefault();
     viewportRef.current?.addEventListener("wheel", preventDefaultScroll);
-    viewportRef.current?.addEventListener(
-      "contextmenu",
-      preventDefaultContextMenu
-    );
+    viewportRef.current?.addEventListener("contextmenu", preventDefaultContextMenu);
     return () => {
       viewportRef.current?.removeEventListener("wheel", preventDefaultScroll);
-      viewportRef.current?.removeEventListener(
-        "wheel",
-        preventDefaultContextMenu
-      );
+      viewportRef.current?.removeEventListener("wheel", preventDefaultContextMenu);
     };
   }, []);
 
   const handleOnWheel = (event: WheelEvent) => {
     if (event.ctrlKey) {
-      originScale.current =
-        originScale.current - originScale.current * event.deltaY * scaleSpeed;
+      const deltaY = Math.sign(event.deltaY);
+      const newScale = originScale.current - originScale.current * deltaY * scaleSpeed;
+      originScale.current = Math.max(MIN_SCALE_VIEWPORT / scale, newScale);
+      originScale.current = Math.min(MAX_SCALE_VIEWPORT / scale, originScale.current);
       originPosition.current = {
         x: event.clientX,
         y: event.clientY,
@@ -128,10 +102,7 @@ const ViewportComponent = (
       if (timerReupdatePosition.current) {
         clearTimeout(timerReupdatePosition.current);
       }
-      timerReupdatePosition.current = setTimeout(
-        reupdatePositionAfterTouchEnd,
-        100
-      );
+      timerReupdatePosition.current = setTimeout(reupdatePositionAfterTouchEnd, 100);
     } else {
       dispatch(
         setViewportPosition({
@@ -156,12 +127,8 @@ const ViewportComponent = (
       return;
     }
     touchAreaRef.current.style.transform = `scale(${originScale.current})`;
-    touchAreaRef.current.style.left = `${
-      (1 - originScale.current) * originPosition.current.x
-    }px`;
-    touchAreaRef.current.style.top = `${
-      (1 - originScale.current) * originPosition.current.y
-    }px`;
+    touchAreaRef.current.style.left = `${(1 - originScale.current) * originPosition.current.x}px`;
+    touchAreaRef.current.style.top = `${(1 - originScale.current) * originPosition.current.y}px`;
   };
 
   const refreshOriginTouchArea = () => {
@@ -178,12 +145,7 @@ const ViewportComponent = (
   };
 
   return (
-    <div
-      className="viewport"
-      onWheel={handleOnWheel}
-      onMouseDown={refreshOnClickOutside}
-      ref={viewportRef}
-    >
+    <div className="viewport" onWheel={handleOnWheel} onMouseDown={refreshOnClickOutside} ref={viewportRef}>
       <LayerMenu />
       <EditMenu />
       <TopMenu />
@@ -201,9 +163,6 @@ const ViewportComponent = (
   );
 };
 
-const Viewport: React.FC<ViewportProps> = React.forwardRef<
-  ViewportMethods,
-  ViewportProps
->(ViewportComponent);
+const Viewport: React.FC<ViewportProps> = React.forwardRef<ViewportMethods, ViewportProps>(ViewportComponent);
 
 export default Viewport;

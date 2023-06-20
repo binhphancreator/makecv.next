@@ -1,15 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DataRender, Position } from "~/types/document";
-import {
-  calcNewPositionAfterScale,
-  recursiveForeach,
-  transformRenderData,
-} from "~/utils/document";
+import { recursiveForeach, transformRenderData } from "~/utils/document";
 import cloneDeep from "lodash/cloneDeep";
-import {
-  DEFAULT_HEIGHT_TOP_MENU,
-  MIN_WIDTH_LAYER_MENU,
-} from "~/constants/document";
+import { DEFAULT_HEIGHT_TOP_MENU, MIN_WIDTH_LAYER_MENU } from "~/constants/document";
 
 export interface DocumentState {
   initialDataRender: DataRender[];
@@ -34,7 +27,7 @@ const initialState: DocumentState = {
   viewport: {
     scale: 1,
     scrollSpeed: 0.5,
-    scaleSpeed: 0.007,
+    scaleSpeed: 0.15,
     heightTopMenu: DEFAULT_HEIGHT_TOP_MENU,
     widthLayerMenu: MIN_WIDTH_LAYER_MENU,
     tabActiveIndexLayerMenu: 0,
@@ -60,10 +53,7 @@ const slice = createSlice({
         state.flatDataRender[_.key ?? ""] = _;
       });
     },
-    setPositionComponentByKey(
-      state,
-      { payload }: PayloadAction<{ key: string; position: Position }>
-    ) {
+    setPositionComponentByKey(state, { payload }: PayloadAction<{ key: string; position: Position }>) {
       if (state.flatDataRender[payload.key]) {
         state.flatDataRender[payload.key].position = payload.position;
       }
@@ -71,59 +61,14 @@ const slice = createSlice({
     setViewportScale(state, { payload }: PayloadAction<{ scale: number }>) {
       state.viewport.scale = payload.scale;
     },
-    setViewportPosition(
-      state,
-      { payload }: PayloadAction<{ position: Position }>
-    ) {
+    setViewportPosition(state, { payload }: PayloadAction<{ position: Position }>) {
       state.viewport.position = payload.position;
     },
     setWidthLayerMenu(state, { payload }: PayloadAction<{ width: number }>) {
       state.viewport.widthLayerMenu = payload.width;
     },
-    setTabActiveIndexLayerMenu(
-      state,
-      { payload }: PayloadAction<{ tabIndex: number }>
-    ) {
+    setTabActiveIndexLayerMenu(state, { payload }: PayloadAction<{ tabIndex: number }>) {
       state.viewport.tabActiveIndexLayerMenu = payload.tabIndex;
-    },
-    reupdateAfterTouchEnd(
-      state,
-      { payload }: PayloadAction<{ scale: number; originPosition: Position }>
-    ) {
-      const newViewportPosition = calcNewPositionAfterScale(
-        state.viewport.position,
-        payload.originPosition,
-        payload.scale
-      );
-      const deltaViewportPosition: Position = {
-        x: newViewportPosition.x - state.viewport.position.x,
-        y: newViewportPosition.y - state.viewport.position.y,
-      };
-      for (let key in state.flatDataRender) {
-        const _ = state.flatDataRender[key];
-        if (_ && _.position) {
-          const newPosition = calcNewPositionAfterScale(
-            {
-              x: _.position.x + state.viewport.position.x,
-              y: _.position.y + state.viewport.position.y,
-            },
-            payload.originPosition,
-            payload.scale
-          );
-          _.position = {
-            x:
-              _.position.x +
-              (newPosition.x - _.position.x - state.viewport.position.x) -
-              deltaViewportPosition.x,
-            y:
-              _.position.y +
-              (newPosition.y - _.position.y - state.viewport.position.y) -
-              deltaViewportPosition.y,
-          };
-        }
-      }
-      state.viewport.scale = state.viewport.scale * payload.scale;
-      state.viewport.position = newViewportPosition;
     },
     addHoveringKey(state, { payload }: PayloadAction<{ key?: string }>) {
       if (!payload.key || !payload.key.length) return;
@@ -134,9 +79,7 @@ const slice = createSlice({
     removeHoveringKey(state, { payload }: PayloadAction<{ key?: string }>) {
       if (!payload.key || !payload.key.length) return;
       if (state.hoveringKeys.includes(payload.key)) {
-        state.hoveringKeys = state.hoveringKeys.filter(
-          (key) => key !== payload.key
-        );
+        state.hoveringKeys = state.hoveringKeys.filter((key) => key !== payload.key);
       }
     },
     addSelectingKey(state, { payload }: PayloadAction<{ key?: string }>) {
@@ -148,9 +91,7 @@ const slice = createSlice({
     removeSelectingKey(state, { payload }: PayloadAction<{ key?: string }>) {
       if (!payload.key || !payload.key.length) return;
       if (state.selectingKeys.includes(payload.key)) {
-        state.selectingKeys = state.selectingKeys.filter(
-          (key) => key !== payload.key
-        );
+        state.selectingKeys = state.selectingKeys.filter((key) => key !== payload.key);
       }
     },
     refreshSelectingKeys(state) {
@@ -164,7 +105,6 @@ export const {
   setPositionComponentByKey,
   setViewportScale,
   setViewportPosition,
-  reupdateAfterTouchEnd,
   addHoveringKey,
   removeHoveringKey,
   addSelectingKey,
