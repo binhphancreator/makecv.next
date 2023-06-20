@@ -3,7 +3,7 @@ import React, {
   WheelEvent,
   useEffect,
   useMemo,
-  useState,
+  useRef,
 } from "react";
 import { useAppDispatch, useAppSelector } from "~/hook";
 import {
@@ -44,29 +44,19 @@ const ViewportComponent = (
     (state) => state.documentState.flatDataRender
   );
 
-  const [originScale, setOriginScale] = useState<number>(1);
-  const [originPosition, setOriginPosition] = useState<Position>({
+  const originScale = useRef<number>(1);
+  const originPosition = useRef<Position>({
     x: 0,
     y: 0,
   });
-
-  useEffect(() => {
-    if (originScale == 1 && originPosition.x == 0 && originPosition.y == 0) {
-      return;
-    }
-    const timer = setTimeout(() => {
-      setOriginPosition({ x: 0, y: 0 });
-      setOriginScale(1);
-      reupdatePositionAfterTouchEnd();
-    }, 100);
-    return () => clearTimeout(timer);
-  }, [originPosition, originScale]);
+  const touchAreaRef = useRef<HTMLDivElement>(null);
+  const timerReupdatePosition = useRef<NodeJS.Timeout | null>(null);
 
   const reupdatePositionAfterTouchEnd = () => {
     const newViewportPosition = calcNewPositionAfterScale(
       position,
-      originPosition,
-      originScale
+      originPosition.current,
+      originScale.current
     );
     const deltaViewportPosition: Position = {
       x: newViewportPosition.x - position.x,
@@ -80,8 +70,8 @@ const ViewportComponent = (
             x: _.position.x + position.x,
             y: _.position.y + position.y,
           },
-          originPosition,
-          originScale
+          originPosition.current,
+          originScale.current
         );
         dispatch(
           setPositionComponentByKey({
@@ -95,7 +85,8 @@ const ViewportComponent = (
       }
     }
     dispatch(setViewportPosition({ position: newViewportPosition }));
-    dispatch(setViewportScale({ scale: scale * originScale }));
+    dispatch(setViewportScale({ scale: scale * originScale.current }));
+    refreshOriginTouchArea();
   };
 
   const viewportRef = React.createRef<HTMLDivElement>();
@@ -127,8 +118,20 @@ const ViewportComponent = (
 
   const handleOnWheel = (event: WheelEvent) => {
     if (event.ctrlKey) {
-      setOriginScale(originScale - originScale * event.deltaY * scaleSpeed);
-      setOriginPosition({ x: event.clientX, y: event.clientY });
+      originScale.current =
+        originScale.current - originScale.current * event.deltaY * scaleSpeed;
+      originPosition.current = {
+        x: event.clientX,
+        y: event.clientY,
+      };
+      updateOriginTouchArea();
+      if (timerReupdatePosition.current) {
+        clearTimeout(timerReupdatePosition.current);
+      }
+      timerReupdatePosition.current = setTimeout(
+        reupdatePositionAfterTouchEnd,
+        100
+      );
     } else {
       dispatch(
         setViewportPosition({
@@ -148,13 +151,27 @@ const ViewportComponent = (
     return style;
   }, [position]);
 
-  const touchAreaStyle = useMemo<React.CSSProperties>(() => {
-    const style: React.CSSProperties = {};
-    style.transform = `scale(${originScale})`;
-    style.left = `${(1 - originScale) * originPosition.x}px`;
-    style.top = `${(1 - originScale) * originPosition.y}px`;
-    return style;
-  }, [originScale, originPosition]);
+  const updateOriginTouchArea = () => {
+    if (!touchAreaRef.current) {
+      return;
+    }
+    touchAreaRef.current.style.transform = `scale(${originScale.current})`;
+    touchAreaRef.current.style.left = `${
+      (1 - originScale.current) * originPosition.current.x
+    }px`;
+    touchAreaRef.current.style.top = `${
+      (1 - originScale.current) * originPosition.current.y
+    }px`;
+  };
+
+  const refreshOriginTouchArea = () => {
+    originPosition.current = {
+      x: 0,
+      y: 0,
+    };
+    originScale.current = 1;
+    updateOriginTouchArea();
+  };
 
   const refreshOnClickOutside = () => {
     dispatch(refreshSelectingKeys());
@@ -172,11 +189,7 @@ const ViewportComponent = (
       <TopMenu />
       <div className="scrollbar-vertical" />
       <div className="scrollbar-horizontal" />
-      <div
-        className={"touch-area"}
-        style={touchAreaStyle}
-        current-origin={JSON.stringify(originPosition)}
-      >
+      <div className={"touch-area"} ref={touchAreaRef}>
         <div style={contentAreaStyle} className="content-area">
           {Object.keys(flatDataRender).map((key) => (
             <Renderer key={key} keyRender={key} />
