@@ -171,7 +171,13 @@ const RendererComponent = ({ keyRender }: RendererProps, forwardRef: ForwardedRe
           style={renderedComponentStyle}
         >
           {renderedNameElement}
-          <ComponentRender {...data.options} style={data.style} size={data.size} position={data.position} />
+          <ComponentRender
+            {...data.options}
+            keyRender={keyRender}
+            style={data.style}
+            size={data.size}
+            position={data.position}
+          />
         </div>
       </div>
     );

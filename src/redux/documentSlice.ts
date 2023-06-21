@@ -26,6 +26,7 @@ export interface DocumentState {
   colorPalettes: string[];
   hoveringKeys: string[];
   selectingKeys: string[];
+  editingKeys: string[];
 }
 
 const initialState: DocumentState = {
@@ -47,6 +48,7 @@ const initialState: DocumentState = {
   colorPalettes: ["#000000", "#262A56", "#B8621B", "#E3CCAE"],
   hoveringKeys: [],
   selectingKeys: [],
+  editingKeys: [],
 };
 
 const slice = createSlice({
@@ -102,6 +104,18 @@ const slice = createSlice({
         state.selectingKeys = state.selectingKeys.filter((key) => key !== payload.key);
       }
     },
+    addEditingKey(state, { payload }: PayloadAction<{ key?: string }>) {
+      if (!payload.key || !payload.key.length) return;
+      if (!state.editingKeys.includes(payload.key)) {
+        state.editingKeys = [...state.editingKeys, payload.key];
+      }
+    },
+    removeEditingKey(state, { payload }: PayloadAction<{ key?: string }>) {
+      if (!payload.key || !payload.key.length) return;
+      if (state.editingKeys.includes(payload.key)) {
+        state.editingKeys = state.editingKeys.filter((key) => key !== payload.key);
+      }
+    },
     refreshSelectingKeys(state) {
       state.selectingKeys = [];
     },
@@ -124,6 +138,8 @@ export const {
   setWidthLayerMenu,
   setTabActiveIndexLayerMenu,
   setViewportStatus,
+  addEditingKey,
+  removeEditingKey,
 } = slice.actions;
 
 export default slice.reducer;

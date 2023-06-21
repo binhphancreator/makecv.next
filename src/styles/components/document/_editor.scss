@@ -1,11 +1,20 @@
-[contenteditable="true"] {
-  outline: none;
-  border: none;
-}
+.editor {
+  position: relative;
 
-.editor,
-.editor:focus,
-.editor:active {
-  outline: none;
-  border: none;
+  [contenteditable="true"] {
+    outline: none;
+    border: none;
+  }
+
+  &-cover {
+    position: absolute;
+    inset: 0;
+  }
+  
+  .editor-input,
+  .editor-input:focus,
+  .editor-input:active {
+    outline: none;
+    border: none;
+  }
 }
