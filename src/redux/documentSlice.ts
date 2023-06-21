@@ -1,8 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DataRender, Position } from "~/types/document";
+import { ViewportStatusEnum } from "~/types/viewport";
 import { recursiveForeach, transformRenderData } from "~/utils/document";
 import cloneDeep from "lodash/cloneDeep";
-import { DEFAULT_HEIGHT_TOP_MENU, MIN_WIDTH_LAYER_MENU } from "~/constants/document";
+import {
+  DEFAULT_HEIGHT_TOP_MENU,
+  MIN_WIDTH_LAYER_MENU,
+  DEFAULT_SCALE_SPEED_VIEWPORT,
+  DEFAULT_SCALE_VIEWPORT,
+} from "~/constants/document";
 
 export interface DocumentState {
   initialDataRender: DataRender[];
@@ -15,6 +21,7 @@ export interface DocumentState {
     heightTopMenu: number;
     widthLayerMenu: number;
     tabActiveIndexLayerMenu: number;
+    status: ViewportStatusEnum;
   };
   colorPalettes: string[];
   hoveringKeys: string[];
@@ -25,9 +32,9 @@ const initialState: DocumentState = {
   initialDataRender: [],
   flatDataRender: {},
   viewport: {
-    scale: 1,
+    scale: DEFAULT_SCALE_VIEWPORT,
     scrollSpeed: 0.5,
-    scaleSpeed: 0.15,
+    scaleSpeed: DEFAULT_SCALE_SPEED_VIEWPORT,
     heightTopMenu: DEFAULT_HEIGHT_TOP_MENU,
     widthLayerMenu: MIN_WIDTH_LAYER_MENU,
     tabActiveIndexLayerMenu: 0,
@@ -35,6 +42,7 @@ const initialState: DocumentState = {
       x: 0,
       y: 0,
     },
+    status: ViewportStatusEnum.Idle,
   },
   colorPalettes: ["#000000", "#262A56", "#B8621B", "#E3CCAE"],
   hoveringKeys: [],
@@ -97,6 +105,9 @@ const slice = createSlice({
     refreshSelectingKeys(state) {
       state.selectingKeys = [];
     },
+    setViewportStatus(state, { payload }: PayloadAction<{ status: ViewportStatusEnum }>) {
+      state.viewport.status = payload.status;
+    },
   },
 });
 
@@ -112,6 +123,7 @@ export const {
   refreshSelectingKeys,
   setWidthLayerMenu,
   setTabActiveIndexLayerMenu,
+  setViewportStatus,
 } = slice.actions;
 
 export default slice.reducer;

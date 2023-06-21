@@ -8,8 +8,10 @@ import {
   refreshSelectingKeys,
   removeHoveringKey,
   setPositionComponentByKey,
+  setViewportStatus,
 } from "~/redux/documentSlice";
 import { ShownNameComponents } from "~/components/document";
+import { ViewportStatusEnum } from "~/types/viewport";
 
 interface RendererProps {
   keyRender: string;
@@ -17,21 +19,13 @@ interface RendererProps {
 
 export interface RendererMethods {}
 
-const RendererComponent = (
-  { keyRender }: RendererProps,
-  forwardRef: ForwardedRef<RendererMethods>
-) => {
+const RendererComponent = ({ keyRender }: RendererProps, forwardRef: ForwardedRef<RendererMethods>) => {
   const dispatch = useAppDispatch();
+  const viewportStatus = useAppSelector((state) => state.documentState.viewport.status);
   const scale = useAppSelector((state) => state.documentState.viewport.scale);
-  const hoveringKeys = useAppSelector(
-    (state) => state.documentState.hoveringKeys
-  );
-  const selectingKeys = useAppSelector(
-    (state) => state.documentState.selectingKeys
-  );
-  const flatDataRender = useAppSelector(
-    (state) => state.documentState.flatDataRender
-  );
+  const hoveringKeys = useAppSelector((state) => state.documentState.hoveringKeys);
+  const selectingKeys = useAppSelector((state) => state.documentState.selectingKeys);
+  const flatDataRender = useAppSelector((state) => state.documentState.flatDataRender);
   const data = flatDataRender[keyRender];
 
   React.useImperativeHandle(forwardRef, () => ({}));
@@ -71,6 +65,13 @@ const RendererComponent = (
     return false;
   }, [selectingKeys, data.key]);
 
+  const showActiveBorder = useMemo<boolean>(() => {
+    if ((hovering || selecting) && viewportStatus === ViewportStatusEnum.Idle) {
+      return true;
+    }
+    return false;
+  }, [hovering, selecting, viewportStatus]);
+
   const activeBorderStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
     if (data.size) {
@@ -107,12 +108,11 @@ const RendererComponent = (
     return null;
   }, [data.name, data.component, data.parentKey]);
 
-  const handleMouseDown = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  const handleMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (event.button === 2 || !data.position) {
       return;
     }
+    dispatch(setViewportStatus({ status: ViewportStatusEnum.MovingComponent }));
     event.stopPropagation();
     const startX = event.pageX - data.position.x;
     const startY = event.pageY - data.position.y;
@@ -136,43 +136,42 @@ const RendererComponent = (
         dispatch(refreshSelectingKeys());
       }
       dispatch(addSelectingKey({ key: data.key }));
+      dispatch(setViewportStatus({ status: ViewportStatusEnum.Idle }));
     };
 
     window.addEventListener("mousemove", handleMouseMove);
     window.addEventListener("mouseup", handleMouseUp);
   };
 
-  const handleMouseEnter = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  const handleMouseEnter = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
+    if (viewportStatus !== ViewportStatusEnum.Idle) {
+      return;
+    }
     dispatch(addHoveringKey({ key: data.key }));
+  };
+
+  const handleMouseLeave = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
+    if (viewportStatus !== ViewportStatusEnum.Idle) {
+      return;
+    }
+    dispatch(removeHoveringKey({ key: data.key }));
   };
 
   const ComponentRender = resolveComponent(data.component);
   if (ComponentRender) {
     return (
-      <div
-        style={renderedBlockStyle}
-        className="rendered-block"
-        onMouseDown={handleMouseDown}
-      >
-        {(hovering || selecting) && (
-          <div className="active-border" style={activeBorderStyle} />
-        )}
+      <div style={renderedBlockStyle} className="rendered-block" onMouseDown={handleMouseDown}>
+        {showActiveBorder && <div className="active-border" style={activeBorderStyle} />}
         <div
           onMouseEnter={handleMouseEnter}
-          onMouseLeave={() => dispatch(removeHoveringKey({ key: data.key }))}
+          onMouseLeave={handleMouseLeave}
           className="rendered-component"
           style={renderedComponentStyle}
         >
           {renderedNameElement}
-          <ComponentRender
-            {...data.options}
-            style={data.style}
-            size={data.size}
-            position={data.position}
-          />
+          <ComponentRender {...data.options} style={data.style} size={data.size} position={data.position} />
         </div>
       </div>
     );
@@ -180,8 +179,6 @@ const RendererComponent = (
   return null;
 };
 
-const Renderer = React.forwardRef<RendererMethods, RendererProps>(
-  RendererComponent
-);
+const Renderer = React.forwardRef<RendererMethods, RendererProps>(RendererComponent);
 
 export default Renderer;

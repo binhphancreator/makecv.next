@@ -5,6 +5,7 @@ import {
   setPositionComponentByKey,
   setViewportPosition,
   setViewportScale,
+  setViewportStatus,
 } from "~/redux/documentSlice";
 import { Position } from "~/types/document";
 import Renderer from "./Renderer";
@@ -13,6 +14,7 @@ import EditMenu from "./menu/edit/EditMenu";
 import TopMenu from "./menu/top/TopMenu";
 import { calcNewPositionAfterScale } from "~/utils/document";
 import { MIN_SCALE_VIEWPORT, MAX_SCALE_VIEWPORT } from "~/constants/document";
+import { ViewportStatusEnum } from "~/types/viewport";
 
 interface ViewportProps {}
 
@@ -67,6 +69,7 @@ const ViewportComponent = ({}: ViewportProps, forwardRef: ForwardedRef<ViewportM
     dispatch(setViewportPosition({ position: newViewportPosition }));
     dispatch(setViewportScale({ scale: scale * originScale.current }));
     refreshOriginTouchArea();
+    dispatch(setViewportStatus({ status: ViewportStatusEnum.Idle }));
   };
 
   const viewportRef = React.createRef<HTMLDivElement>();
@@ -99,6 +102,7 @@ const ViewportComponent = ({}: ViewportProps, forwardRef: ForwardedRef<ViewportM
         y: event.clientY,
       };
       updateOriginTouchArea();
+      dispatch(setViewportStatus({ status: ViewportStatusEnum.ZoomingTouchArea }));
       if (timerReupdatePosition.current) {
         clearTimeout(timerReupdatePosition.current);
       }
