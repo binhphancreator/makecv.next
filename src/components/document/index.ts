@@ -1,5 +1,4 @@
 import Paper from "~/components/document/paper/Paper";
-import PaperBackground from "~/components/document/paper/Background";
 import DocumentImage from "~/components/document/image/Image";
 import Text from "~/components/document/text/Text";
 import Shape from "~/components/document/paper/shape/Shape";
@@ -15,7 +14,6 @@ export const ComponentName = {
 
 export const ComponentMap: { [key: string]: React.FC<any> } = {
   [ComponentName.Paper]: Paper,
-  [ComponentName.PaperBackground]: PaperBackground,
   [ComponentName.DocumentImage]: DocumentImage,
   [ComponentName.Text]: Text,
   [ComponentName.Shape]: Shape,

@@ -13,7 +13,7 @@ const data: TemplateDataRender[] = [
     },
     children: [
       {
-        component: "PaperBackground",
+        component: "Shape",
         size: {
           width: 545,
           height: 200,
@@ -23,7 +23,9 @@ const data: TemplateDataRender[] = [
           y: 0,
         },
         options: {
-          backgroundColor: "color_palette.1",
+          fill: "color_palette.1",
+          vector: "rectangle",
+          radius: 15,
         },
       },
     ],
