@@ -1,8 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { DataRender, Position } from "~/types/document";
+import { FlatMapDataRender, Position } from "~/types/document";
 import { ViewportStatusEnum } from "~/types/viewport";
-import { recursiveForeach, transformRenderData } from "~/utils/document";
-import cloneDeep from "lodash/cloneDeep";
 import {
   DEFAULT_HEIGHT_TOP_MENU,
   MIN_WIDTH_LAYER_MENU,
@@ -11,8 +9,7 @@ import {
 } from "~/constants/document";
 
 export interface DocumentState {
-  initialDataRender: DataRender[];
-  flatDataRender: { [key: string]: DataRender };
+  flatDataRender: FlatMapDataRender;
   viewport: {
     scale: number;
     scrollSpeed: number;
@@ -30,7 +27,6 @@ export interface DocumentState {
 }
 
 const initialState: DocumentState = {
-  initialDataRender: [],
   flatDataRender: {},
   viewport: {
     scale: DEFAULT_SCALE_VIEWPORT,
@@ -55,13 +51,8 @@ const slice = createSlice({
   name: "documentState",
   initialState,
   reducers: {
-    initDataRender(state, { payload }: PayloadAction<{ data: DataRender[] }>) {
-      state.initialDataRender = cloneDeep(payload.data);
-      transformRenderData(state.initialDataRender);
-      state.flatDataRender = {};
-      recursiveForeach(state.initialDataRender, (_) => {
-        state.flatDataRender[_.key ?? ""] = _;
-      });
+    initDataRender(state, { payload }: PayloadAction<{ flatDataRender: FlatMapDataRender }>) {
+      state.flatDataRender = payload.flatDataRender;
     },
     setPositionComponentByKey(state, { payload }: PayloadAction<{ key: string; position: Position }>) {
       if (state.flatDataRender[payload.key]) {

@@ -1,6 +1,6 @@
-import { DataRender } from "~/types/document";
+import { TemplateDataRender } from "~/types/document";
 
-const data: DataRender[] = [
+const data: TemplateDataRender[] = [
   {
     component: "Paper",
     size: {
@@ -24,9 +24,9 @@ const data: DataRender[] = [
         },
         options: {
           backgroundColor: "color_palette.1",
-        }
+        },
       },
-    ]
+    ],
   },
   {
     component: "DocumentImage",
@@ -47,8 +47,8 @@ const data: DataRender[] = [
     },
     options: {
       content: "This is a text component",
-    }
-  }
+    },
+  },
 ];
 
 export default data;

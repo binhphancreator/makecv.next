@@ -1,6 +1,6 @@
 import React from "react";
 
-export type DataRender = {
+export type TemplateDataRender = {
   key?: string;
   parentKey?: string;
   name?: string;
@@ -11,7 +11,16 @@ export type DataRender = {
   style?: React.CSSProperties;
   position?: Position;
   size?: Size;
+  children?: TemplateDataRender[];
+};
+
+export type DataRender = TemplateDataRender & {
+  key: string;
   children?: DataRender[];
+};
+
+export type FlatMapDataRender = {
+  [key: string]: DataRender;
 };
 
 export type Position = {

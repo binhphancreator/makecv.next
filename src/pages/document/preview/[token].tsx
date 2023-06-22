@@ -1,18 +1,19 @@
 import React, { useEffect } from "react";
 import Viewport from "~/components/document/Viewport";
 import data from "~/data/render";
-import { DataRender } from "~/types/document";
 import { useAppDispatch } from "~/hook";
 import { initDataRender } from "~/redux/documentSlice";
+import { TemplateDataRender } from "~/types/document";
+import { transformTemplateDataRender } from "~/utils/document";
 
 interface PreviewProps {
-  data: DataRender[];
+  data: TemplateDataRender[];
 }
 
 const Preview = ({ data: initialData }: PreviewProps) => {
   const dispatch = useAppDispatch();
   useEffect(() => {
-    dispatch(initDataRender({ data: initialData }));
+    dispatch(initDataRender({ flatDataRender: transformTemplateDataRender(initialData) }));
   }, []);
 
   return (

@@ -5,19 +5,13 @@ import { useAppSelector } from "~/hook";
 interface LayersListTabProps {}
 
 const LayersListTab = ({}: LayersListTabProps) => {
-  const flatDataRender = useAppSelector(
-    (state) => state.documentState.flatDataRender
-  );
+  const flatDataRender = useAppSelector((state) => state.documentState.flatDataRender);
 
   const layerList = useMemo<React.ReactNode>(() => {
     return Object.values(flatDataRender)
       .filter((_) => !_.parentKey)
       .map((_) => {
-        if (_.key) {
-          return <LayerItem key={_.key} keyRender={_.key} hierarchy={0} />;
-        } else {
-          return null;
-        }
+        return <LayerItem key={_.key} keyRender={_.key} hierarchy={0} />;
       });
   }, [flatDataRender]);
 
