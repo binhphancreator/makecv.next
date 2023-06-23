@@ -18,9 +18,7 @@ import { ViewportStatusEnum } from "~/types/viewport";
 
 interface ViewportProps {}
 
-export interface ViewportMethods {
-  scrollTo(): void;
-}
+export interface ViewportMethods {}
 
 const ViewportComponent = ({}: ViewportProps, forwardRef: ForwardedRef<ViewportMethods>) => {
   const dispatch = useAppDispatch();
@@ -74,11 +72,7 @@ const ViewportComponent = ({}: ViewportProps, forwardRef: ForwardedRef<ViewportM
 
   const viewportRef = React.createRef<HTMLDivElement>();
 
-  React.useImperativeHandle(forwardRef, () => ({
-    scrollTo: () => {
-      console.log("Scroll To");
-    },
-  }));
+  React.useImperativeHandle(forwardRef, () => ({}));
 
   useEffect(() => {
     const preventDefaultScroll = (e: globalThis.WheelEvent) => e.preventDefault();
@@ -106,7 +100,7 @@ const ViewportComponent = ({}: ViewportProps, forwardRef: ForwardedRef<ViewportM
       if (timerReupdatePosition.current) {
         clearTimeout(timerReupdatePosition.current);
       }
-      timerReupdatePosition.current = setTimeout(reupdatePositionAfterTouchEnd, 100);
+      timerReupdatePosition.current = setTimeout(reupdatePositionAfterTouchEnd, 200);
     } else {
       dispatch(
         setViewportPosition({

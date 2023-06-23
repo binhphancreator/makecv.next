@@ -16,6 +16,7 @@ export type TemplateDataRender = {
 
 export type DataRender = TemplateDataRender & {
   key: string;
+  boundingSize?: Size;
   children?: DataRender[];
 };
 
@@ -39,4 +40,8 @@ export type VectorProps = {
   size: Size;
   radius?: number | number[];
   fill: Color;
+};
+
+export type EditingContext = {
+  key: string;
 };

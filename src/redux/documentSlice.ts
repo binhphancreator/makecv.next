@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { FlatMapDataRender, Position } from "~/types/document";
+import { EditingContext, FlatMapDataRender, Position, Size } from "~/types/document";
 import { ViewportStatusEnum } from "~/types/viewport";
 import {
   DEFAULT_HEIGHT_TOP_MENU,
@@ -23,7 +23,7 @@ export interface DocumentState {
   colorPalettes: string[];
   hoveringKeys: string[];
   selectingKeys: string[];
-  editingKeys: string[];
+  editingContexts: { [key: string]: EditingContext };
 }
 
 const initialState: DocumentState = {
@@ -44,7 +44,7 @@ const initialState: DocumentState = {
   colorPalettes: ["#000000", "#262A56", "#B8621B", "#E3CCAE"],
   hoveringKeys: [],
   selectingKeys: [],
-  editingKeys: [],
+  editingContexts: {},
 };
 
 const slice = createSlice({
@@ -95,23 +95,24 @@ const slice = createSlice({
         state.selectingKeys = state.selectingKeys.filter((key) => key !== payload.key);
       }
     },
-    addEditingKey(state, { payload }: PayloadAction<{ key?: string }>) {
+    addEditingKey(state, { payload }: PayloadAction<{ key?: string; context: EditingContext }>) {
       if (!payload.key || !payload.key.length) return;
-      if (!state.editingKeys.includes(payload.key)) {
-        state.editingKeys = [...state.editingKeys, payload.key];
-      }
+      state.editingContexts[payload.key] = payload.context;
     },
     removeEditingKey(state, { payload }: PayloadAction<{ key?: string }>) {
       if (!payload.key || !payload.key.length) return;
-      if (state.editingKeys.includes(payload.key)) {
-        state.editingKeys = state.editingKeys.filter((key) => key !== payload.key);
-      }
+      delete state.editingContexts[payload.key];
     },
     refreshSelectingKeys(state) {
       state.selectingKeys = [];
     },
     setViewportStatus(state, { payload }: PayloadAction<{ status: ViewportStatusEnum }>) {
       state.viewport.status = payload.status;
+    },
+    updateBoundingSizeComponent(state, { payload }: PayloadAction<{ key: string; boundingSize: Size }>) {
+      if (state.flatDataRender[payload.key]) {
+        state.flatDataRender[payload.key].boundingSize = payload.boundingSize;
+      }
     },
   },
 });
@@ -131,6 +132,7 @@ export const {
   setViewportStatus,
   addEditingKey,
   removeEditingKey,
+  updateBoundingSizeComponent,
 } = slice.actions;
 
 export default slice.reducer;

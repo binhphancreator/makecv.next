@@ -13,7 +13,7 @@ interface TextMethods {}
 
 const TextComponent = ({ size, content, keyRender }: TextProps, forwardRef: ForwardedRef<TextMethods>) => {
   const dispatch = useAppDispatch();
-  const editingKeys = useAppSelector((state) => state.documentState.editingKeys);
+  const editingContexts = useAppSelector((state) => state.documentState.editingContexts);
 
   const editorInputRef = useRef<HTMLDivElement>(null);
   React.useImperativeHandle(forwardRef, () => ({}));
@@ -37,13 +37,20 @@ const TextComponent = ({ size, content, keyRender }: TextProps, forwardRef: Forw
 
   const editorCoverStyle = useMemo<React.CSSProperties>(() => {
     return {
-      visibility: editingKeys.includes(keyRender) ? "hidden" : "visible",
+      visibility: Object.keys(editingContexts).includes(keyRender) ? "hidden" : "visible",
     };
-  }, [editingKeys, keyRender]);
+  }, [editingContexts, keyRender]);
 
   const handleOnDoubleClick = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
-    dispatch(addEditingKey({ key: keyRender }));
+    dispatch(
+      addEditingKey({
+        key: keyRender,
+        context: {
+          key: keyRender,
+        },
+      })
+    );
     selectAll();
   };
 
@@ -62,15 +69,10 @@ const TextComponent = ({ size, content, keyRender }: TextProps, forwardRef: Forw
     dispatch(removeEditingKey({ key: keyRender }));
   };
 
-  const handleOnInput = () => {
-    console.log(editorInputRef.current?.getBoundingClientRect());
-  };
-
   return (
     <div className="editor">
       <div onDoubleClick={handleOnDoubleClick} className="editor-cover" style={editorCoverStyle} />
       <div
-        onInput={handleOnInput}
         onBlur={handleOnBlur}
         ref={editorInputRef}
         className="editor-input"
