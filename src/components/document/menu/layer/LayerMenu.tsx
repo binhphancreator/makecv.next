@@ -4,7 +4,7 @@ import LayersListTab from "./tabs/LayersListTab";
 import ComponentsTab from "./tabs/ComponentsTab";
 import AssetsTab from "./tabs/AssetsTab";
 import { MIN_WIDTH_LAYER_MENU, MAX_WIDTH_LAYER_MENU } from "~/constants/document";
-import { useAppDispatch, useAppSelector } from "~/hook";
+import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import { setViewportStatus, setWidthLayerMenu } from "~/redux/documentSlice";
 import { ViewportStatusEnum } from "~/types/viewport";
 

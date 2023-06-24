@@ -1,5 +1,5 @@
 import { ComponentMap } from "~/components/document";
-import { Color, FlatMapDataRender, Position, TemplateDataRender } from "~/types/document";
+import { FlatMapDataRender, Position, TemplateDataRender } from "~/types/document";
 import { nanoid } from "nanoid";
 
 export const resolveComponent = (component: string) => {
@@ -43,18 +43,4 @@ export const calcNewPositionAfterScale = (position: Position, originPosition: Po
     x: scale * (position.x - originPosition.x) + originPosition.x,
     y: scale * (position.y - originPosition.y) + originPosition.y,
   };
-};
-
-export const findColor = (color: Color, colorPalettes: string[]): string => {
-  if (color && color.length) {
-    if (/color_palette\.[0-9]+/.test(color)) {
-      const colorIndex = parseInt(color.split(".")[1]);
-      if (colorIndex && colorPalettes[colorIndex]) {
-        return colorPalettes[colorIndex];
-      }
-    } else {
-      return color;
-    }
-  }
-  return "#000000";
 };

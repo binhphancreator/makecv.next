@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import SvgIcon from "~/components/icon/SvgIcon";
 import classNames from "classnames";
 import ColorPalettes from "~/constants/colors";
-import { useAppDispatch, useAppSelector } from "~/hook";
+import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import { setTabActiveIndexLayerMenu } from "~/redux/documentSlice";
 
 interface TopMenuProps {}
@@ -10,12 +10,8 @@ interface TopMenuProps {}
 const TopMenu = ({}: TopMenuProps) => {
   const dispatch = useAppDispatch();
 
-  const height = useAppSelector(
-    (state) => state.documentState.viewport.heightTopMenu
-  );
-  const tabActiveIndexLayerMenu = useAppSelector(
-    (state) => state.documentState.viewport.tabActiveIndexLayerMenu
-  );
+  const height = useAppSelector((state) => state.documentState.viewport.heightTopMenu);
+  const tabActiveIndexLayerMenu = useAppSelector((state) => state.documentState.viewport.tabActiveIndexLayerMenu);
 
   const topMenuStyle = useMemo<React.CSSProperties>(() => {
     return {
@@ -41,12 +37,7 @@ const TopMenu = ({}: TopMenuProps) => {
             active: tabActiveIndexLayerMenu === 0,
           })}
         >
-          <SvgIcon
-            name="layer-group"
-            width={20}
-            height={20}
-            color={ColorPalettes.neutral100}
-          />
+          <SvgIcon name="layer-group" width={20} height={20} color={ColorPalettes.neutral100} />
         </button>
         <button
           onClick={() => handleChangeTabActiveIndexLayerMenu(1)}
@@ -55,12 +46,7 @@ const TopMenu = ({}: TopMenuProps) => {
             active: tabActiveIndexLayerMenu === 1,
           })}
         >
-          <SvgIcon
-            name="shapes"
-            width={20}
-            height={20}
-            color={ColorPalettes.neutral100}
-          />
+          <SvgIcon name="shapes" width={20} height={20} color={ColorPalettes.neutral100} />
         </button>
         <button
           onClick={() => handleChangeTabActiveIndexLayerMenu(2)}
@@ -69,13 +55,7 @@ const TopMenu = ({}: TopMenuProps) => {
             active: tabActiveIndexLayerMenu === 2,
           })}
         >
-          <SvgIcon
-            type="solid"
-            name="box"
-            width={20}
-            height={20}
-            color={ColorPalettes.neutral100}
-          />
+          <SvgIcon type="solid" name="box" width={20} height={20} color={ColorPalettes.neutral100} />
         </button>
       </div>
     </div>

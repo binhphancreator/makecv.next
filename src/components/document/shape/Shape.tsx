@@ -1,20 +1,14 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { VectorProps } from "~/types/document";
 import VECTOR_MAP, { VectorName } from "./vectors";
-import { useAppSelector } from "~/hook";
-import { findColor } from "~/utils/document";
+import { useDocumentColor } from "~/hooks/document";
 
 type ShapeProps = VectorProps & {
   vector: VectorName;
 };
 
 const Shape = ({ vector, size, radius, fill }: ShapeProps) => {
-  const colorPaletes = useAppSelector((state) => state.documentState.colorPalettes);
-
-  const fillColor = useMemo<string>(() => {
-    return findColor(fill, colorPaletes);
-  }, [fill, colorPaletes]);
-
+  const fillColor = useDocumentColor(fill);
   const VectorComponent = VECTOR_MAP[vector];
 
   if (!VectorComponent) {

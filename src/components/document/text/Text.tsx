@@ -1,5 +1,5 @@
 import React, { ForwardedRef, useEffect, useMemo, useRef } from "react";
-import { useAppDispatch, useAppSelector } from "~/hook";
+import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import { addEditingKey, removeEditingKey } from "~/redux/documentSlice";
 import { Size } from "~/types/document";
 

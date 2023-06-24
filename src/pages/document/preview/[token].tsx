@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import Viewport from "~/components/document/Viewport";
 import data from "~/data/render";
-import { useAppDispatch } from "~/hook";
+import { useAppDispatch } from "~/hooks/app";
 import { initDataRender } from "~/redux/documentSlice";
 import { TemplateDataRender } from "~/types/document";
 import { transformTemplateDataRender } from "~/utils/document";

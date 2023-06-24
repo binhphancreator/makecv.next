@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import LayerItem from "./LayerItem";
-import { useAppSelector } from "~/hook";
+import { useAppSelector } from "~/hooks/app";
 
 interface LayersListTabProps {}
 

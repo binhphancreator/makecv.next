@@ -1,20 +1,17 @@
 import React, { useMemo } from "react";
-import { useAppSelector } from "~/hook";
+import ColorPalettes from "~/constants/colors";
+import { useDocumentColor } from "~/hooks/document";
 import { Color, Size } from "~/types/document";
-import { findColor } from "~/utils/document";
 
 interface PaperProps {
   size: Size;
   style?: React.CSSProperties;
-  backgroundColor?: Color;
+  fill?: Color;
 }
 
-const Paper = ({ size, backgroundColor }: PaperProps) => {
-  const colorPaletes = useAppSelector(
-    (state) => state.documentState.colorPalettes
-  );
-
+const Paper = ({ size, fill }: PaperProps) => {
   const paperRef = React.createRef<HTMLDivElement>();
+  const background = useDocumentColor(fill, ColorPalettes.white);
 
   const paperStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
@@ -22,13 +19,10 @@ const Paper = ({ size, backgroundColor }: PaperProps) => {
     style.minHeight = `${size.height}px`;
     style.minWidth = `${size.width}px`;
     style.maxWidth = `${size.width}px`;
-
-    if (backgroundColor && backgroundColor.length) {
-      style.backgroundColor = findColor(backgroundColor, colorPaletes);
-    }
+    style.background = background;
 
     return style;
-  }, [size, backgroundColor]);
+  }, [size, background]);
 
   return <div ref={paperRef} className="paper" style={paperStyle} />;
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo } from "react";
 import classNames from "classnames";
 import { resolveComponent } from "~/utils/document";
-import { useAppDispatch, useAppSelector } from "~/hook";
+import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import {
   addHoveringKey,
   addSelectingKey,
