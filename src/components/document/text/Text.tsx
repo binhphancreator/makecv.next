@@ -1,7 +1,8 @@
-import React, { ForwardedRef, useEffect, useMemo, useRef } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import { addEditingKey, removeEditingKey } from "~/redux/documentSlice";
 import { Size } from "~/types/document";
+import { useTextEditor } from "./hooks/editor";
 
 interface TextProps {
   size?: Size;
@@ -9,18 +10,20 @@ interface TextProps {
   keyRender: string;
 }
 
-interface TextMethods {}
+export interface TextMethods {}
 
-const TextComponent = ({ size, content, keyRender }: TextProps, forwardRef: ForwardedRef<TextMethods>) => {
+const TextComponent = ({ size, content, keyRender }: TextProps) => {
   const dispatch = useAppDispatch();
   const editingContexts = useAppSelector((state) => state.documentState.editingContexts);
 
-  const editorInputRef = useRef<HTMLDivElement>(null);
-  React.useImperativeHandle(forwardRef, () => ({}));
+  const {
+    editorRef: editorInputRef,
+    selection: { selectAll },
+  } = useTextEditor();
 
   useEffect(() => {
     if (editorInputRef.current) {
-      editorInputRef.current.innerHTML = `<span>${content}</span>`;
+      editorInputRef.current.innerHTML = `<p>${content}<strong>&#xfeff;</strong></p>`;
     }
   }, []);
 
@@ -54,17 +57,6 @@ const TextComponent = ({ size, content, keyRender }: TextProps, forwardRef: Forw
     selectAll();
   };
 
-  const selectAll = () => {
-    if (!editorInputRef.current) {
-      return null;
-    }
-    const range = document.createRange();
-    range.selectNodeContents(editorInputRef.current);
-    const selection = window.getSelection();
-    selection?.removeAllRanges();
-    selection?.addRange(range);
-  };
-
   const handleOnBlur = () => {
     dispatch(removeEditingKey({ key: keyRender }));
   };
@@ -84,6 +76,6 @@ const TextComponent = ({ size, content, keyRender }: TextProps, forwardRef: Forw
   );
 };
 
-const Text = React.forwardRef<TextMethods, TextProps>(TextComponent);
+const Text = TextComponent;
 
 export default Text;

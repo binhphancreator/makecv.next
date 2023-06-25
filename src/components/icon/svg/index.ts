@@ -39,9 +39,7 @@ const IconsMap = {
   },
 };
 
-export type SvgName =
-  | keyof typeof IconsMap.regular
-  | keyof typeof IconsMap.solid;
+export type SvgName = keyof typeof IconsMap.regular | keyof typeof IconsMap.solid;
 
 export type SvgType = keyof typeof IconsMap;
 
