@@ -3,12 +3,10 @@ import { MotionStyle, motion } from "framer-motion";
 import LayersListTab from "./tabs/LayersListTab";
 import ComponentsTab from "./tabs/ComponentsTab";
 import AssetsTab from "./tabs/AssetsTab";
-import {
-  MIN_WIDTH_LAYER_MENU,
-  MAX_WIDTH_LAYER_MENU,
-} from "~/constants/document";
-import { useAppDispatch, useAppSelector } from "~/hook";
-import { setWidthLayerMenu } from "~/redux/documentSlice";
+import { MIN_WIDTH_LAYER_MENU, MAX_WIDTH_LAYER_MENU } from "~/constants/document";
+import { useAppDispatch, useAppSelector } from "~/hooks/app";
+import { setViewportStatus, setWidthLayerMenu } from "~/redux/documentSlice";
+import { ViewportStatusEnum } from "~/types/viewport";
 
 interface LayerMenuProps {}
 
@@ -22,15 +20,9 @@ const TABS_DATA = [
 
 const LayerMenu = ({}: LayerMenuProps) => {
   const dispatch = useAppDispatch();
-  const heightTopMenu = useAppSelector(
-    (state) => state.documentState.viewport.heightTopMenu
-  );
-  const width = useAppSelector(
-    (state) => state.documentState.viewport.widthLayerMenu
-  );
-  const tabActiveIndex = useAppSelector(
-    (state) => state.documentState.viewport.tabActiveIndexLayerMenu
-  );
+  const heightTopMenu = useAppSelector((state) => state.documentState.viewport.heightTopMenu);
+  const width = useAppSelector((state) => state.documentState.viewport.widthLayerMenu);
+  const tabActiveIndex = useAppSelector((state) => state.documentState.viewport.tabActiveIndexLayerMenu);
   const refLayerMenu = React.createRef<HTMLDivElement>();
 
   const layerMenuStyle = useMemo<React.CSSProperties>(() => {
@@ -66,16 +58,12 @@ const LayerMenu = ({}: LayerMenuProps) => {
     });
   };
 
-  const handleOnMouseDownResize = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  const handleOnMouseDownResize = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const startX = event.pageX - width;
+    dispatch(setViewportStatus({ status: ViewportStatusEnum.ResizingLayerMenu }));
 
     const handleMouseMoveResize = (eventMove: MouseEvent) => {
-      if (
-        eventMove.pageX - startX <= MAX_WIDTH_LAYER_MENU &&
-        eventMove.pageX - startX >= MIN_WIDTH_LAYER_MENU
-      ) {
+      if (eventMove.pageX - startX <= MAX_WIDTH_LAYER_MENU && eventMove.pageX - startX >= MIN_WIDTH_LAYER_MENU) {
         dispatch(setWidthLayerMenu({ width: eventMove.pageX - startX }));
       }
     };
@@ -83,6 +71,7 @@ const LayerMenu = ({}: LayerMenuProps) => {
     const handleMouseUpResize = () => {
       window.removeEventListener("mousemove", handleMouseMoveResize);
       window.removeEventListener("mouseup", handleMouseUpResize);
+      dispatch(setViewportStatus({ status: ViewportStatusEnum.Idle }));
     };
 
     window.addEventListener("mousemove", handleMouseMoveResize);

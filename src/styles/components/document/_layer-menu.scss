@@ -3,7 +3,7 @@
   left: 0;
   top: 0;
   bottom: 0;
-  background-color: $midnightblue800;
+  background-color: $neutral700;
   box-shadow: 2px 0 50px -3px rgb(0 0 0 / 10%);
   border-right: 1px solide $gray200;
   z-index: 10;
@@ -45,7 +45,7 @@
 
     &:hover,
     &.selected {
-      background: $midnightblue500;
+      background: $neutral500;
     }
 
     .layer-overlay {

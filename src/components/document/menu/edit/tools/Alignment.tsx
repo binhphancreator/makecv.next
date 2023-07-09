@@ -1,14 +1,12 @@
 import React, { useMemo } from "react";
 import SvgIcon from "~/components/icon/SvgIcon";
 import ColorPalettes from "~/constants/colors";
-import { useAppSelector } from "~/hook";
+import { useAppSelector } from "~/hooks/app";
 
 interface AlignmentProps {}
 
 const Alignment = ({}: AlignmentProps) => {
-  const selectingKeys = useAppSelector(
-    (state) => state.documentState.selectingKeys
-  );
+  const selectingKeys = useAppSelector((state) => state.documentState.selectingKeys);
   const blurColor = ColorPalettes.gray200;
   const activeColor = ColorPalettes.gray600;
   const sizeIcon = 16;

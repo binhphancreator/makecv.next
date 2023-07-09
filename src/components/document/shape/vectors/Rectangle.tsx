@@ -35,7 +35,7 @@ const Rectangle = ({ size, radius: initialRadius, fill }: VectorProps) => {
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} width={width} height={height}>
-      <path d={path} fill={fill} />
+      <path d={path.trim()} fill={fill} />
     </svg>
   );
 };

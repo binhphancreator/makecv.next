@@ -1,6 +1,6 @@
 import React, { useMemo } from "react";
 import SvgIcon from "~/components/icon/SvgIcon";
-import { useAppDispatch, useAppSelector } from "~/hook";
+import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import { ComponentIconMap } from "~/components/document";
 import classNames from "classnames";
 import { SvgName } from "~/components/icon/svg";
@@ -14,12 +14,8 @@ interface LayerItemProps {
 const LayerItem = ({ keyRender, hierarchy }: LayerItemProps) => {
   const dispatch = useAppDispatch();
   const paddingLeft = 22;
-  const flatDataRender = useAppSelector(
-    (state) => state.documentState.flatDataRender
-  );
-  const selectingKeys = useAppSelector(
-    (state) => state.documentState.selectingKeys
-  );
+  const flatDataRender = useAppSelector((state) => state.documentState.flatDataRender);
+  const selectingKeys = useAppSelector((state) => state.documentState.selectingKeys);
 
   const dataRender = flatDataRender[keyRender];
 
@@ -44,29 +40,15 @@ const LayerItem = ({ keyRender, hierarchy }: LayerItemProps) => {
   }, [selectingKeys, keyRender]);
 
   const renderLayerItemChild = () => {
-    const childDataRender = Object.values(flatDataRender).filter(
-      (_) => _.parentKey === keyRender
-    );
+    const childDataRender = Object.values(flatDataRender).filter((_) => _.parentKey === keyRender);
     if (childDataRender && childDataRender.length) {
       return childDataRender.map((_) => {
-        if (_.key) {
-          return (
-            <LayerItem
-              keyRender={_.key}
-              key={_.key}
-              hierarchy={hierarchy + 1}
-            />
-          );
-        } else {
-          return null;
-        }
+        return <LayerItem keyRender={_.key} key={_.key} hierarchy={hierarchy + 1} />;
       });
     }
   };
 
-  const handleOnLayerClick = (
-    event: React.MouseEvent<HTMLDivElement, MouseEvent>
-  ) => {
+  const handleOnLayerClick = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     dispatch(addSelectingKey({ key: keyRender }));
   };
@@ -88,9 +70,7 @@ const LayerItem = ({ keyRender, hierarchy }: LayerItemProps) => {
         <div className="layer-icon">
           <SvgIcon name={layerIconName} width={16} height={16} />
         </div>
-        <div className="layer-name">
-          {dataRender.name ?? dataRender.component}
-        </div>
+        <div className="layer-name">{dataRender.name ?? dataRender.component}</div>
       </div>
       {renderLayerItemChild()}
     </div>
