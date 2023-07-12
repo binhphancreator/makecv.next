@@ -16,15 +16,13 @@ const TextComponent = ({ size, content, keyRender }: TextProps) => {
   const dispatch = useAppDispatch();
   const editingContexts = useAppSelector((state) => state.documentState.editingContexts);
 
-  const {
-    editorRef: editorInputRef,
-    selection: { selectAll },
-  } = useTextEditor();
+  const editor = useTextEditor();
 
   useEffect(() => {
-    if (editorInputRef.current) {
-      editorInputRef.current.innerHTML = `<p>${content}<strong>&#xfeff;</strong></p>`;
-    }
+    editor.empty();
+    editor.insertText(0, {
+      content,
+    });
   }, []);
 
   const editorContainerStyle = useMemo<React.CSSProperties>(() => {
@@ -54,7 +52,7 @@ const TextComponent = ({ size, content, keyRender }: TextProps) => {
         },
       })
     );
-    selectAll();
+    editor.focus(true);
   };
 
   const handleOnBlur = () => {
@@ -66,7 +64,7 @@ const TextComponent = ({ size, content, keyRender }: TextProps) => {
       <div onDoubleClick={handleOnDoubleClick} className="editor-cover" style={editorCoverStyle} />
       <div
         onBlur={handleOnBlur}
-        ref={editorInputRef}
+        ref={editor.ref}
         className="editor-input"
         style={editorContainerStyle}
         contentEditable={true}
