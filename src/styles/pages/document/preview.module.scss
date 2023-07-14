@@ -1,0 +1,9 @@
+
+@import "@/global";
+
+.page {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  background: $gray50;
+}

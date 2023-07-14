@@ -5,6 +5,7 @@ import { useAppDispatch } from "~/hooks/app";
 import { initDataRender } from "~/redux/documentSlice";
 import { TemplateDataRender } from "~/types/document";
 import { transformTemplateDataRender } from "~/utils/document";
+import styles from "@/pages/document/preview.module.scss";
 
 interface PreviewProps {
   data: TemplateDataRender[];
@@ -17,7 +18,7 @@ const Preview = ({ data: initialData }: PreviewProps) => {
   }, []);
 
   return (
-    <div className="document-preview-page">
+    <div className={styles.page}>
       <Viewport />
     </div>
   );

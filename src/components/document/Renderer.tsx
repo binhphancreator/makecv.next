@@ -13,6 +13,7 @@ import {
 } from "~/redux/documentSlice";
 import { ShownNameComponents } from "~/components/document";
 import { ViewportStatusEnum } from "~/types/viewport";
+import styles from "@/components/document/renderer.module.scss";
 
 interface RendererProps {
   keyRender: string;
@@ -105,8 +106,8 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
       return (
         <div
           className={classNames({
-            "rendered-name": true,
-            active: selecting,
+            [styles["rendered-name"]]: true,
+            [styles.active]: selecting,
           })}
         >
           {nameComponent}
@@ -177,13 +178,13 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
   const ComponentRender = resolveComponent(data.component);
   if (ComponentRender) {
     return (
-      <div style={renderedBlockStyle} className="rendered-block" onMouseDown={handleMouseDown}>
-        {showActiveBorder && <div className="active-border" style={activeBorderStyle} />}
+      <div style={renderedBlockStyle} className={styles["rendered-block"]} onMouseDown={handleMouseDown}>
+        {showActiveBorder && <div className={styles["active-border"]} style={activeBorderStyle} />}
         <div
           ref={renderedComponentRef}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className="rendered-component"
+          className={styles["rendered-component"]}
           style={renderedComponentStyle}
         >
           {renderedNameElement}

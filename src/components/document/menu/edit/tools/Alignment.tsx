@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import SvgIcon from "~/components/icon/SvgIcon";
 import ColorPalettes from "~/constants/colors";
 import { useAppSelector } from "~/hooks/app";
+import styles from "@/components/document/edit-menu.module.scss";
 
 interface AlignmentProps {}
 
@@ -16,9 +17,9 @@ const Alignment = ({}: AlignmentProps) => {
   }, [selectingKeys]);
 
   return (
-    <div className="tool-alignment">
-      <div className="triggers-list">
-        <button className="btn-trigger">
+    <div className={styles["tool-alignment"]}>
+      <div className={styles["triggers-list"]}>
+        <button className={styles["btn-trigger"]}>
           <SvgIcon
             type="solid"
             name="objects-align-left"
@@ -26,7 +27,7 @@ const Alignment = ({}: AlignmentProps) => {
             color={existSelected ? activeColor : blurColor}
           />
         </button>
-        <button className="btn-trigger">
+        <button className={styles["btn-trigger"]}>
           <SvgIcon
             type="solid"
             name="objects-align-center-horizontal"
@@ -34,7 +35,7 @@ const Alignment = ({}: AlignmentProps) => {
             color={existSelected ? activeColor : blurColor}
           />
         </button>
-        <button className="btn-trigger">
+        <button className={styles["btn-trigger"]}>
           <SvgIcon
             type="solid"
             name="objects-align-right"
@@ -42,7 +43,7 @@ const Alignment = ({}: AlignmentProps) => {
             color={existSelected ? activeColor : blurColor}
           />
         </button>
-        <button className="btn-trigger">
+        <button className={styles["btn-trigger"]}>
           <SvgIcon
             type="solid"
             name="objects-align-top"
@@ -50,7 +51,7 @@ const Alignment = ({}: AlignmentProps) => {
             color={existSelected ? activeColor : blurColor}
           />
         </button>
-        <button className="btn-trigger">
+        <button className={styles["btn-trigger"]}>
           <SvgIcon
             type="solid"
             name="objects-align-center-vertical"
@@ -58,7 +59,7 @@ const Alignment = ({}: AlignmentProps) => {
             color={existSelected ? activeColor : blurColor}
           />
         </button>
-        <button className="btn-trigger">
+        <button className={styles["btn-trigger"]}>
           <SvgIcon
             type="solid"
             name="objects-align-bottom"
@@ -66,7 +67,7 @@ const Alignment = ({}: AlignmentProps) => {
             color={existSelected ? activeColor : blurColor}
           />
         </button>
-        <button className="btn-trigger">
+        <button className={styles["btn-trigger"]}>
           <SvgIcon
             type="solid"
             name="distribute-spacing-horizontal"

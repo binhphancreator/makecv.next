@@ -5,6 +5,7 @@ import { ComponentIconMap } from "~/components/document";
 import classNames from "classnames";
 import { SvgName } from "~/components/icon/svg";
 import { addSelectingKey } from "~/redux/documentSlice";
+import styles from "@/components/document/layer-menu.module.scss";
 
 interface LayerItemProps {
   keyRender: string;
@@ -58,19 +59,19 @@ const LayerItem = ({ keyRender, hierarchy }: LayerItemProps) => {
   }
 
   return (
-    <div className="layer-item">
+    <div className={styles["layer-item"]}>
       <div
         style={layerItemInnerStyle}
         className={classNames({
-          "layer-item-inner": true,
-          selected,
+          [styles["layer-item-inner"]]: true,
+          [styles.selected]: selected,
         })}
       >
-        <div className="layer-overlay" onClick={handleOnLayerClick} />
-        <div className="layer-icon">
+        <div className={styles["layer-overlay"]} onClick={handleOnLayerClick} />
+        <div className={styles["layer-icon"]}>
           <SvgIcon name={layerIconName} width={16} height={16} />
         </div>
-        <div className="layer-name">{dataRender.name ?? dataRender.component}</div>
+        <div className={styles["layer-name"]}>{dataRender.name ?? dataRender.component}</div>
       </div>
       {renderLayerItemChild()}
     </div>

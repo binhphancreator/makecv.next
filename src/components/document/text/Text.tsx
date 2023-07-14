@@ -3,6 +3,7 @@ import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import { addEditingKey, removeEditingKey } from "~/redux/documentSlice";
 import { Size } from "~/types/document";
 import { useTextEditor } from "./hooks/editor";
+import styles from "@/components/document/editor.module.scss";
 
 interface TextProps {
   size?: Size;
@@ -60,12 +61,12 @@ const TextComponent = ({ size, content, keyRender }: TextProps) => {
   };
 
   return (
-    <div className="editor">
-      <div onDoubleClick={handleOnDoubleClick} className="editor-cover" style={editorCoverStyle} />
+    <div className={styles.editor}>
+      <div onDoubleClick={handleOnDoubleClick} className={styles["editor-cover"]} style={editorCoverStyle} />
       <div
         onBlur={handleOnBlur}
         ref={editor.ref}
-        className="editor-input"
+        className={styles["editor-input"]}
         style={editorContainerStyle}
         contentEditable={true}
         spellCheck={false}

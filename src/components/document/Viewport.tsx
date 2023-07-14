@@ -15,6 +15,7 @@ import TopMenu from "./menu/top/TopMenu";
 import { calcNewPositionAfterScale } from "~/utils/document";
 import { MIN_SCALE_VIEWPORT, MAX_SCALE_VIEWPORT } from "~/constants/document";
 import { ViewportStatusEnum } from "~/types/viewport";
+import styles from "@/components/document/viewport.module.scss";
 
 interface ViewportProps {}
 
@@ -143,19 +144,19 @@ const ViewportComponent = ({}: ViewportProps, forwardRef: ForwardedRef<ViewportM
   };
 
   return (
-    <div className="viewport" onWheel={handleOnWheel} onMouseDown={refreshOnClickOutside} ref={viewportRef}>
+    <div className={styles["viewport"]} onWheel={handleOnWheel} onMouseDown={refreshOnClickOutside} ref={viewportRef}>
       <LayerMenu />
       <EditMenu />
       <TopMenu />
-      <div className="scrollbar-vertical" />
-      <div className="scrollbar-horizontal" />
-      <div className={"touch-area"} ref={touchAreaRef}>
-        <div style={contentAreaStyle} className="content-area">
+      <div className={styles["scrollbar-vertical"]} />
+      <div className={styles["scrollbar-horizontal"]} />
+      <div className={styles["touch-area"]} ref={touchAreaRef}>
+        <div style={contentAreaStyle} className={styles["content-area"]}>
           {Object.keys(flatDataRender).map((key) => (
             <Renderer key={key} keyRender={key} />
           ))}
         </div>
-        <div className="trigger-area" />
+        <div className={styles["trigger-area"]} />
       </div>
     </div>
   );
