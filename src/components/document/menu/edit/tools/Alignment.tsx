@@ -23,7 +23,6 @@ const Alignment = ({}: AlignmentProps) => {
             type="solid"
             name="objects-align-left"
             width={sizeIcon}
-            height={sizeIcon}
             color={existSelected ? activeColor : blurColor}
           />
         </button>
@@ -32,7 +31,6 @@ const Alignment = ({}: AlignmentProps) => {
             type="solid"
             name="objects-align-center-horizontal"
             width={sizeIcon}
-            height={sizeIcon}
             color={existSelected ? activeColor : blurColor}
           />
         </button>
@@ -41,7 +39,6 @@ const Alignment = ({}: AlignmentProps) => {
             type="solid"
             name="objects-align-right"
             width={sizeIcon}
-            height={sizeIcon}
             color={existSelected ? activeColor : blurColor}
           />
         </button>
@@ -50,7 +47,6 @@ const Alignment = ({}: AlignmentProps) => {
             type="solid"
             name="objects-align-top"
             width={sizeIcon}
-            height={sizeIcon}
             color={existSelected ? activeColor : blurColor}
           />
         </button>
@@ -59,7 +55,6 @@ const Alignment = ({}: AlignmentProps) => {
             type="solid"
             name="objects-align-center-vertical"
             width={sizeIcon}
-            height={sizeIcon}
             color={existSelected ? activeColor : blurColor}
           />
         </button>
@@ -68,7 +63,6 @@ const Alignment = ({}: AlignmentProps) => {
             type="solid"
             name="objects-align-bottom"
             width={sizeIcon}
-            height={sizeIcon}
             color={existSelected ? activeColor : blurColor}
           />
         </button>
@@ -77,7 +71,6 @@ const Alignment = ({}: AlignmentProps) => {
             type="solid"
             name="distribute-spacing-horizontal"
             width={sizeIcon}
-            height={sizeIcon}
             color={existSelected ? activeColor : blurColor}
           />
         </button>
