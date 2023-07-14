@@ -6,6 +6,21 @@ import Text from "./regular/Text";
 import Shapes from "./regular/Shapes";
 import Image from "./regular/Image";
 import LayerGroup from "./regular/LayerGroup";
+import X from "./regular/X";
+import Y from "./regular/Y";
+import W from "./regular/W";
+import H from "./regular/H";
+import Radius from "./regular/Radius";
+import LineHeight from "./regular/LineHeight";
+import Angle90 from "./regular/Angle90";
+import ArrowsToLine from "./regular/ArrowsToLine";
+import ArrowUpToLine from "./regular/ArrowUpToLine";
+import ArrowDownToLine from "./regular/ArrowDownToLine";
+import AlignLeft from "./regular/AlignLeft";
+import AlignCenter from "./regular/AlignCenter";
+import AlignRight from "./regular/AlignRight";
+import ArrowsLeftRight from "./regular/ArrowsLeftRight";
+import ArrowsUpDown from "./regular/ArrowsUpDown";
 
 import SolidObjectsAlignLeft from "./solid/ObjectsAlignLeft";
 import SolidObjectsAlignRight from "./solid/ObjectsAlignRight";
@@ -25,6 +40,21 @@ const IconsMap = {
     shapes: Shapes,
     image: Image,
     "layer-group": LayerGroup,
+    x: X,
+    y: Y,
+    w: W,
+    h: H,
+    radius: Radius,
+    "angle-90": Angle90,
+    "line-height": LineHeight,
+    "align-left": AlignLeft,
+    "align-center": AlignCenter,
+    "align-right": AlignRight,
+    "arrows-to-line": ArrowsToLine,
+    "arrow-up-to-line": ArrowUpToLine,
+    "arrow-down-to-line": ArrowDownToLine,
+    "arrows-left-right": ArrowsLeftRight,
+    "arrows-up-down": ArrowsUpDown,
   },
   solid: {
     "objects-align-left": SolidObjectsAlignLeft,
