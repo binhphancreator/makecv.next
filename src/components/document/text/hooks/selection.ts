@@ -89,8 +89,11 @@ export const useEditorSelection = (container: EditorContainerHook) => {
     const range = document.createRange();
     range.selectNodeContents(container.ref.current);
     const selection = window.getSelection();
-    selection?.removeAllRanges();
-    selection?.addRange(range);
+    if (!selection) {
+      return;
+    }
+    selection.removeAllRanges();
+    selection.addRange(range);
   };
 
   return {
