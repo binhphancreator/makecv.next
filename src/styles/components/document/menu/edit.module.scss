@@ -1,0 +1,23 @@
+@import "@/global";
+
+.container {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  background-color: $white;
+  box-shadow: -1px 0 50px -3px rgb(0 0 0 / 1%);
+  border-right: 1px solide $gray200;
+  z-index: 10;
+  padding: 16px 0;
+  overflow-x: hidden;
+  font-family: Inter, sans-serif;
+}
+
+.divider {
+  height: 1px;
+  width: 100%;
+  background: $neutral100;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}

@@ -5,7 +5,7 @@ import { ComponentIconMap } from "~/components/document";
 import classNames from "classnames";
 import { SvgName } from "~/components/icon/svg";
 import { addSelectingKey } from "~/redux/documentSlice";
-import styles from "@/components/document/layer-menu.module.scss";
+import styles from "@/components/document/menu/layer.module.scss";
 
 interface LayerItemProps {
   keyRender: string;

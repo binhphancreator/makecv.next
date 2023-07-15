@@ -1,7 +1,7 @@
 import React, { useMemo } from "react";
 import LayerItem from "./LayerItem";
 import { useAppSelector } from "~/hooks/app";
-import styles from "@/components/document/layer-menu.module.scss";
+import styles from "@/components/document/menu/layer.module.scss";
 
 interface LayersListTabProps {}
 

@@ -4,7 +4,7 @@ import classNames from "classnames";
 import ColorPalettes from "~/constants/colors";
 import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import { setTabActiveIndexLayerMenu } from "~/redux/documentSlice";
-import styles from "@/components/document/top-menu.module.scss";
+import styles from "@/components/document/menu/top.module.scss";
 
 interface TopMenuProps {}
 
