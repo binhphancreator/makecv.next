@@ -1,0 +1,32 @@
+@import "@/global";
+
+.container {
+  display: block;
+  padding: 0 12px;
+  padding-right: 16px;
+
+  .row {
+    display: flex;
+    align-items: center;
+    column-gap: 8px;
+
+    .option-button {
+      width: 28px;
+      height: 28px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-left: auto;
+
+      &.active {
+        border-radius: 8px;
+        background: $gray100;
+      }
+    }
+  }
+
+  .row:not(:last-child) {
+    margin-bottom: 8px;
+  }
+}

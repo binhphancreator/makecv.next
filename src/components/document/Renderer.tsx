@@ -128,6 +128,12 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
       return;
     }
 
+    if (!event.shiftKey) {
+      dispatch(refreshSelectingKeys({ key: data.key }));
+    } else {
+      dispatch(addSelectingKey({ key: data.key }));
+    }
+
     event.stopPropagation();
     const startX = event.pageX - data.position.x;
     const startY = event.pageY - data.position.y;
@@ -148,10 +154,6 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
     const handleMouseUp = () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
-      if (!event.shiftKey) {
-        dispatch(refreshSelectingKeys());
-      }
-      dispatch(addSelectingKey({ key: data.key }));
       dispatch(setViewportStatus({ status: ViewportStatusEnum.Idle }));
     };
 

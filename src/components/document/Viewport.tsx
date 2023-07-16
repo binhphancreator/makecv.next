@@ -140,7 +140,7 @@ const ViewportComponent = ({}: ViewportProps, forwardRef: ForwardedRef<ViewportM
   };
 
   const refreshOnClickOutside = () => {
-    dispatch(refreshSelectingKeys());
+    dispatch(refreshSelectingKeys({ key: undefined }));
   };
 
   return (

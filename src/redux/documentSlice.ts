@@ -95,6 +95,13 @@ const slice = createSlice({
         state.selectingKeys = state.selectingKeys.filter((key) => key !== payload.key);
       }
     },
+    refreshSelectingKeys(state, { payload }: PayloadAction<{ key?: string }>) {
+      if (payload.key && payload.key.length) {
+        state.selectingKeys = [payload.key];
+      } else {
+        state.selectingKeys = [];
+      }
+    },
     addEditingKey(state, { payload }: PayloadAction<{ key?: string; context: EditingContext }>) {
       if (!payload.key || !payload.key.length) return;
       state.editingContexts[payload.key] = payload.context;
@@ -102,9 +109,6 @@ const slice = createSlice({
     removeEditingKey(state, { payload }: PayloadAction<{ key?: string }>) {
       if (!payload.key || !payload.key.length) return;
       delete state.editingContexts[payload.key];
-    },
-    refreshSelectingKeys(state) {
-      state.selectingKeys = [];
     },
     setViewportStatus(state, { payload }: PayloadAction<{ status: ViewportStatusEnum }>) {
       state.viewport.status = payload.status;

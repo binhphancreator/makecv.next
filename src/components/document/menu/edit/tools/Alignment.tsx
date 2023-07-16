@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import SvgIcon from "~/components/icon/SvgIcon";
 import ColorPalettes from "~/constants/colors";
 import { useAppSelector } from "~/hooks/app";
-import styles from "@/components/document/menu/tools/alignment.module.scss";
+import styles from "@/components/document/menu/edit/tools/alignment.module.scss";
 
 interface AlignmentProps {}
 
