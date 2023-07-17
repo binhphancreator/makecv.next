@@ -139,6 +139,7 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
     const startY = event.pageY - data.position.y;
 
     const handleMouseMove = (eventMove: MouseEvent) => {
+      eventMove.preventDefault();
       dispatch(setViewportStatus({ status: ViewportStatusEnum.MovingComponent }));
       dispatch(
         setPositionComponentByKey({
