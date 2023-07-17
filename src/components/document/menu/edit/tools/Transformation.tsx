@@ -122,14 +122,14 @@ const Transformation = () => {
           })}
           onClick={() => setLinkedSize(!linkedSize)}
         >
-          <SvgIcon name={linkedSize ? "link-simple" : "unlink-simple"} width={22} color={ColorPalettes.gray800} />
+          <SvgIcon name={linkedSize ? "link-simple" : "unlink-simple"} width={20} color={ColorPalettes.gray800} />
         </div>
       </div>
       <div className={styles.row}>
         <EditInput label={<SvgIcon name="angle-90" color={ColorPalettes.gray400} width={14} />} defaultValue={0} />
         <EditInput label={<SvgIcon name="radius" color={ColorPalettes.gray400} width={12} />} defaultValue={0} />
         <div className={styles["option-button"]}>
-          <SvgIcon name="setting" width={22} color={ColorPalettes.gray800} />
+          <SvgIcon name="maximize-2" width={20} color={ColorPalettes.gray800} />
         </div>
       </div>
     </div>
