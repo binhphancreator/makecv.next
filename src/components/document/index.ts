@@ -1,30 +1,31 @@
 import Paper from "~/components/document/paper/Paper";
-import DocumentImage from "~/components/document/image/Image";
+import Image from "~/components/document/image/Image";
 import Text from "~/components/document/text/Text";
 import Shape from "~/components/document/shape/Shape";
 import { SvgName } from "~/components/icon/svg";
 
-export const ComponentName = {
+export const ComponentNameMap = {
   Paper: "Paper",
-  PaperBackground: "PaperBackground",
-  DocumentImage: "DocumentImage",
+  Image: "Image",
   Text: "Text",
   Shape: "Shape",
 };
 
 export const ComponentMap: { [key: string]: React.FC<any> } = {
-  [ComponentName.Paper]: Paper,
-  [ComponentName.DocumentImage]: DocumentImage,
-  [ComponentName.Text]: Text,
-  [ComponentName.Shape]: Shape,
+  [ComponentNameMap.Paper]: Paper,
+  [ComponentNameMap.Image]: Image,
+  [ComponentNameMap.Text]: Text,
+  [ComponentNameMap.Shape]: Shape,
 };
 
 export const ComponentIconMap: { [key: string]: SvgName } = {
-  [ComponentName.Paper]: "frame",
-  [ComponentName.Text]: "text",
-  [ComponentName.DocumentImage]: "image",
-  [ComponentName.Shape]: "shapes",
+  [ComponentNameMap.Paper]: "frame",
+  [ComponentNameMap.Text]: "text",
+  [ComponentNameMap.Image]: "image",
+  [ComponentNameMap.Shape]: "shapes",
   default: "shapes",
 };
 
-export const ShownNameComponents = [ComponentName.Paper];
+export const ShownNameComponents = [ComponentNameMap.Paper];
+
+export type ComponentName = keyof typeof ComponentNameMap;

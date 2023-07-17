@@ -31,7 +31,7 @@ const data: TemplateDataRender[] = [
     ],
   },
   {
-    component: "DocumentImage",
+    component: "Image",
     size: {
       width: 250,
       height: 250,
