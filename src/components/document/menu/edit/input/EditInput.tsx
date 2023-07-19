@@ -1,5 +1,5 @@
 import React, { Ref, useImperativeHandle, useRef, useState } from "react";
-import styles from "@/components/document/menu/edit/input.module.scss";
+import styles from "@/components/document/menu/edit/input/input.module.scss";
 import classNames from "classnames";
 
 interface EditInputProps {
