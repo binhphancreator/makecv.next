@@ -23,6 +23,7 @@ import LinkSimple from "./regular/LinkSimple";
 import UnlinkSimple from "./regular/UnlinkSimple";
 import Setting from "./regular/Setting";
 import Maximize2 from "./regular/Maximize2";
+import ChevronDown from "./regular/ChevronDown";
 
 import SolidObjectsAlignLeft from "./solid/ObjectsAlignLeft";
 import SolidObjectsAlignRight from "./solid/ObjectsAlignRight";
@@ -59,6 +60,7 @@ const IconsMap = {
     "unlink-simple": UnlinkSimple,
     setting: Setting,
     "maximize-2": Maximize2,
+    "chevron-down": ChevronDown,
   },
   solid: {
     "objects-align-left": SolidObjectsAlignLeft,
