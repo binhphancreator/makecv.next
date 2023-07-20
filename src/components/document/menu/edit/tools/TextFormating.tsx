@@ -15,7 +15,7 @@ const TextFormating = () => {
       <div className={styles.body}>
         <div className={styles["format-font"]}>Inter</div>
         <div className={styles.row}>
-          <EditSelect.Input value="Regular" width={94}>
+          <EditSelect.Input value="Regular" width={120}>
             <EditSelect.Option>Thin</EditSelect.Option>
             <EditSelect.Option>Light</EditSelect.Option>
             <EditSelect.Option>ExtraLight</EditSelect.Option>

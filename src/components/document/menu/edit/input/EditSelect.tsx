@@ -1,10 +1,10 @@
-import React, { useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import styles from "@/components/document/menu/edit/input/select-dropdown.module.scss";
 import SvgIcon from "~/components/icon/SvgIcon";
 import ColorPalettes from "~/constants/colors";
 import classNames from "classnames";
-import { createPortal } from "react-dom";
+import FloatPortal from "~/components/float/FloatPortal";
 
 interface InputProps {
   value: string;
@@ -13,27 +13,35 @@ interface InputProps {
   children?: React.ReactElement<OptionProps> | React.ReactElement<OptionProps>[];
 }
 
-const Input = ({ value: defaultValue, width, children }: InputProps) => {
+const Input = ({ value: defaultValue, width, height, children }: InputProps) => {
   const [hover, setHover] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
   const [value, setValue] = useState<string | number>(defaultValue);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [positionDropdown, setPositionDropdown] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
+
+  useEffect(() => {
+    if (containerRef.current) {
+      const boundingClientRect = containerRef.current.getBoundingClientRect();
+      setPositionDropdown({
+        x: boundingClientRect.left,
+        y: boundingClientRect.top,
+      });
+    }
+  }, []);
 
   const inputContainerStyle = useMemo<React.CSSProperties>(() => {
     return {
       width: typeof width === "number" ? `${width}px` : width,
+      height: typeof height === "number" ? `${height}px` : height,
     };
-  }, [width]);
+  }, [width, height]);
 
   const handleOnMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     event.preventDefault();
-
     setShowDropdown(true);
     setHover(false);
-    if (containerRef.current) {
-      const boundingClientRect = containerRef.current.getBoundingClientRect();
-    }
   };
 
   const handleOnBackdrop = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -54,7 +62,11 @@ const Input = ({ value: defaultValue, width, children }: InputProps) => {
             [styles["dropdown-item"]]: true,
             [styles.selected]: value === (child.props.value || child.props.children),
           })}
-          onMouseDown={() => setValue(child.props.value ?? child.props.children)}
+          onMouseDown={() => {
+            setValue(child.props.value ?? child.props.children);
+            setShowDropdown(false);
+            setHover(false);
+          }}
         >
           <div className={styles["icon-check"]}>
             <SvgIcon name="check" width={12} />
@@ -91,25 +103,12 @@ const Input = ({ value: defaultValue, width, children }: InputProps) => {
           <SvgIcon type="regular" name="chevron-down" color={ColorPalettes.gray400} width={10} />
         </motion.div>
       </motion.div>
-      {showDropdown && createPortal(<div className={styles.backdrop} onMouseDown={handleOnBackdrop} />, document.body)}
-      {dropdownItems &&
-        createPortal(
-          <AnimatePresence>
-            {showDropdown && (
-              <motion.div
-                onMouseDown={(e) => e.stopPropagation()}
-                key={"modal"}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                className={styles["dropdown-container"]}
-              >
-                <div className={styles["dropdown-list"]}>{dropdownItems}</div>
-              </motion.div>
-            )}
-          </AnimatePresence>,
-          document.body
-        )}
+
+      <FloatPortal show={showDropdown} x={positionDropdown.x} y={positionDropdown.y} onPressBackdrop={handleOnBackdrop}>
+        <div onMouseDown={(e) => e.stopPropagation()} className={styles["dropdown-container"]}>
+          <div className={styles["dropdown-list"]}>{dropdownItems}</div>
+        </div>
+      </FloatPortal>
     </div>
   );
 };
