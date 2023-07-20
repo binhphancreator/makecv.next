@@ -24,6 +24,7 @@ import UnlinkSimple from "./regular/UnlinkSimple";
 import Setting from "./regular/Setting";
 import Maximize2 from "./regular/Maximize2";
 import ChevronDown from "./regular/ChevronDown";
+import Check from "./regular/Check";
 
 import SolidObjectsAlignLeft from "./solid/ObjectsAlignLeft";
 import SolidObjectsAlignRight from "./solid/ObjectsAlignRight";
@@ -61,6 +62,7 @@ const IconsMap = {
     setting: Setting,
     "maximize-2": Maximize2,
     "chevron-down": ChevronDown,
+    check: Check,
   },
   solid: {
     "objects-align-left": SolidObjectsAlignLeft,
