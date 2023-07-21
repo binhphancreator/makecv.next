@@ -94,7 +94,7 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
   }, [data.size, data.boundingSize, scale]);
 
   const renderedNameElement = useMemo<JSX.Element | null>(() => {
-    var nameComponent = data.component;
+    var nameComponent: string = data.component;
     if (!ShownNameComponents.includes(nameComponent)) {
       return null;
     }
