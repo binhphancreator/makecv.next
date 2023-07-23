@@ -27,6 +27,7 @@
       color: $gray700;
       padding: 4px 16px;
       cursor: pointer;
+      margin-bottom: 4px;
 
       &:hover {
         background: $gray100;
@@ -34,10 +35,14 @@
     }
 
     .row {
-      padding: 0 8px;
+      padding: 0 16px;
       display: flex;
       align-items: center;
       column-gap: 8px;
+
+      &:not(:last-child) {
+        margin-bottom: 4px;
+      }
     }
   }
 }

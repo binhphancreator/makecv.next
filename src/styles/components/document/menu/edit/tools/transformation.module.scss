@@ -2,7 +2,7 @@
 
 .container {
   display: block;
-  padding: 0 12px;
+  padding: 0 16px;
 
   .row {
     display: flex;
@@ -26,6 +26,6 @@
   }
 
   .row:not(:last-child) {
-    margin-bottom: 8px;
+    margin-bottom: 4px;
   }
 }

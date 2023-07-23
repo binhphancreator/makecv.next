@@ -1,4 +1,5 @@
-import React, { Ref, useImperativeHandle, useRef, useState } from "react";
+import React, { Ref, useImperativeHandle, useMemo, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import styles from "@/components/document/menu/edit/input/input.module.scss";
 import classNames from "classnames";
 
@@ -7,16 +8,28 @@ interface EditInputProps {
   defaultValue?: string | number;
   onChange?(value: number): void;
   disabled?: boolean;
+  width?: number;
+  height?: number;
 }
 
 export interface EditInputMethods {
   setValue(value: string | number): void;
 }
 
-const EditInputComponent = ({ defaultValue, label, disabled }: EditInputProps, forwardRef: Ref<EditInputMethods>) => {
+const EditInputComponent = (
+  { defaultValue, label, disabled, width, height }: EditInputProps,
+  forwardRef: Ref<EditInputMethods>
+) => {
   const [focus, setFocus] = useState(false);
   const [hover, setHover] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const inputContainerStyle = useMemo<React.CSSProperties>(() => {
+    return {
+      width: typeof width === "number" ? `${width}px` : width,
+      height: typeof height === "number" ? `${height}px` : height,
+    };
+  }, [width, height]);
 
   const handleMouseEnter = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     if (focus) {
@@ -43,7 +56,7 @@ const EditInputComponent = ({ defaultValue, label, disabled }: EditInputProps, f
   }));
 
   return (
-    <div
+    <motion.div
       className={classNames({
         [styles.container]: true,
         [styles.hover]: hover,
@@ -52,6 +65,8 @@ const EditInputComponent = ({ defaultValue, label, disabled }: EditInputProps, f
       })}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      style={inputContainerStyle}
+      animate={{ paddingLeft: hover || focus ? "8px" : 0 }}
     >
       <div className={styles.border} />
       <div className={styles.label}>{label}</div>
@@ -66,7 +81,7 @@ const EditInputComponent = ({ defaultValue, label, disabled }: EditInputProps, f
           disabled={disabled}
         />
       </div>
-    </div>
+    </motion.div>
   );
 };
 

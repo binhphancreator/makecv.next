@@ -1,12 +1,12 @@
 import React from "react";
 import { SvgProps } from "~/types/app";
 
-const LineHeight = ({ width, height, color }: SvgProps) => (
+const LetterSpacing = ({ width, height, color }: SvgProps) => (
   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width={width} height={height} fill={color}>
     <path d="M12.7929 4.53214C12.6607 4.21071 12.35 4 12 4C11.65 4 11.3393 4.21071 11.2071 4.53214L5.59286 18.2857H4.85714C4.38214 18.2857 4 18.6679 4 19.1429C4 19.6179 4.38214 20 4.85714 20H8.85714C9.33214 20 9.71429 19.6179 9.71429 19.1429C9.71429 18.6679 9.33214 18.2857 8.85714 18.2857H7.44643L8.61429 15.4286H15.3893L16.5571 18.2857H15.1429C14.6679 18.2857 14.2857 18.6679 14.2857 19.1429C14.2857 19.6179 14.6679 20 15.1429 20H19.1429C19.6179 20 20 19.6179 20 19.1429C20 18.6679 19.6179 18.2857 19.1429 18.2857H18.4071L12.7929 4.53214ZM14.6893 13.7143H9.31071L12 7.125L14.6893 13.7143Z" />
-    <rect width="24" height="2" />
-    <rect y="22" width="24" height="2" />
+    <rect width="2" height="24" />
+    <rect x="22" width="2" height="24" />
   </svg>
 );
 
-export default LineHeight;
+export default LetterSpacing;

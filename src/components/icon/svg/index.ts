@@ -25,6 +25,9 @@ import Setting from "./regular/Setting";
 import Maximize2 from "./regular/Maximize2";
 import ChevronDown from "./regular/ChevronDown";
 import Check from "./regular/Check";
+import LetterSpacing from "./regular/LetterSpacing";
+import Square from "./regular/Square";
+import PharagraphSpacing from "./regular/PharagraphSpacing";
 
 import SolidObjectsAlignLeft from "./solid/ObjectsAlignLeft";
 import SolidObjectsAlignRight from "./solid/ObjectsAlignRight";
@@ -35,6 +38,10 @@ import SolidObjectsAlignCenterVertical from "./solid/ObjectsAlignCenterVertical"
 import SolidDistributeSpacingHorizontal from "./solid/DistributeSpacingHorizontal";
 import SolidDistributeSpacingVertical from "./solid/DistributeSpacingVertical";
 import SolidBox from "./solid/Box";
+
+import LightArrowsLeftRight from "./light/ArrowsLeftRight";
+import LightArrowsUpDown from "./light/ArrowsUpDown";
+import LightSquare from "./light/Square";
 
 const IconsMap = {
   regular: {
@@ -63,6 +70,9 @@ const IconsMap = {
     "maximize-2": Maximize2,
     "chevron-down": ChevronDown,
     check: Check,
+    "letter-spacing": LetterSpacing,
+    square: Square,
+    "pharagraph-spacing": PharagraphSpacing,
   },
   solid: {
     "objects-align-left": SolidObjectsAlignLeft,
@@ -75,9 +85,14 @@ const IconsMap = {
     "distribute-spacing-vertical": SolidDistributeSpacingVertical,
     box: SolidBox,
   },
+  light: {
+    "arrows-left-right": LightArrowsLeftRight,
+    "arrows-up-down": LightArrowsUpDown,
+    square: LightSquare,
+  },
 };
 
-export type SvgName = keyof typeof IconsMap.regular | keyof typeof IconsMap.solid;
+export type SvgName = keyof typeof IconsMap.regular | keyof typeof IconsMap.solid | keyof typeof IconsMap.light;
 
 export type SvgType = keyof typeof IconsMap;
 

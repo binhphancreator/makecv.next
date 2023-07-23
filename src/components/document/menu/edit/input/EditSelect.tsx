@@ -8,8 +8,8 @@ import FloatPortal from "~/components/float/FloatPortal";
 
 interface InputProps {
   value: string;
-  width?: number | string;
-  height?: number | string;
+  width?: number;
+  height?: number;
   children?: React.ReactElement<OptionProps> | React.ReactElement<OptionProps>[];
 }
 
@@ -82,7 +82,7 @@ const Input = ({ value: defaultValue, width, height, children }: InputProps) => 
   }, [children, value]);
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
@@ -96,6 +96,7 @@ const Input = ({ value: defaultValue, width, height, children }: InputProps) => 
           [styles["input-container"]]: true,
           [styles.hover]: hover || showDropdown,
         })}
+        animate={{ paddingLeft: hover || showDropdown ? "8px" : 0 }}
       >
         <div className={styles.border} />
         <motion.div className={styles.input}>{value}</motion.div>
@@ -109,7 +110,7 @@ const Input = ({ value: defaultValue, width, height, children }: InputProps) => 
           <div className={styles["dropdown-list"]}>{dropdownItems}</div>
         </div>
       </FloatPortal>
-    </div>
+    </motion.div>
   );
 };
 

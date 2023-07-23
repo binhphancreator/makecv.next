@@ -2,6 +2,8 @@ import React from "react";
 import SvgIcon from "~/components/icon/SvgIcon";
 import ColorPalettes from "~/constants/colors";
 import EditSelect from "../input/EditSelect";
+import EditInput from "../input/EditInput";
+import EditSegment from "../input/EditSegment";
 import styles from "@/components/document/menu/edit/tools/text-formating.module.scss";
 
 const TextFormating = () => {
@@ -25,6 +27,36 @@ const TextFormating = () => {
             <EditSelect.Option>Bold</EditSelect.Option>
           </EditSelect.Input>
           <EditSelect.Input value="12" width={80} />
+        </div>
+        <div className={styles.row}>
+          <EditInput
+            width={72}
+            label={<SvgIcon name="letter-spacing" color={ColorPalettes.gray400} width={14} />}
+            defaultValue={0}
+          />
+          <EditInput
+            width={72}
+            label={<SvgIcon name="line-height" color={ColorPalettes.gray400} width={14} />}
+            defaultValue={0}
+          />
+        </div>
+        <div className={styles.row}>
+          <EditInput
+            width={72}
+            label={<SvgIcon name="pharagraph-spacing" color={ColorPalettes.gray400} width={14} />}
+            defaultValue={0}
+          />
+          <EditSegment.Line>
+            <EditSegment.Item width={24} height={24} value={"auto-width"}>
+              <SvgIcon type="light" name="arrows-left-right" color={ColorPalettes.gray600} height={16} />
+            </EditSegment.Item>
+            <EditSegment.Item width={24} height={24} value={"auto-height"}>
+              <SvgIcon type="light" name="arrows-up-down" color={ColorPalettes.gray600} height={16} />
+            </EditSegment.Item>
+            <EditSegment.Item width={24} height={24} value={"fixed"}>
+              <SvgIcon type="light" name="square" color={ColorPalettes.gray600} height={16} />
+            </EditSegment.Item>
+          </EditSegment.Line>
         </div>
       </div>
     </div>
