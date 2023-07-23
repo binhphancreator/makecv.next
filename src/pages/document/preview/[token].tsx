@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import Viewport from "~/components/document/Viewport";
+import Viewport from "~/components/document/viewport/Viewport";
 import data from "~/data/render";
 import { useAppDispatch } from "~/hooks/app";
 import { initDataRender } from "~/redux/documentSlice";

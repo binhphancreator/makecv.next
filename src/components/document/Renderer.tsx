@@ -24,7 +24,7 @@ export interface RendererMethods {}
 const RendererComponent = ({ keyRender }: RendererProps) => {
   const dispatch = useAppDispatch();
   const viewportStatus = useAppSelector((state) => state.documentState.viewport.status);
-  const scale = useAppSelector((state) => state.documentState.viewport.scale);
+  const scale = useAppSelector((state) => state.documentState.viewport.renderAreaScale);
   const selectingKeys = useAppSelector((state) => state.documentState.selectingKeys);
   const flatDataRender = useAppSelector((state) => state.documentState.flatDataRender);
   const editingContexts = useAppSelector((state) => state.documentState.editingContexts);
@@ -129,9 +129,9 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
     }
 
     if (!event.shiftKey) {
-      dispatch(refreshSelectingKeys({ key: data.key }));
+      dispatch(refreshSelectingKeys({ key: keyRender }));
     } else {
-      dispatch(addSelectingKey({ key: data.key }));
+      dispatch(addSelectingKey({ key: keyRender }));
     }
 
     event.stopPropagation();
@@ -147,7 +147,7 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
             x: eventMove.pageX - startX,
             y: eventMove.pageY - startY,
           },
-          key: data.key,
+          key: keyRender,
         })
       );
     };
@@ -179,7 +179,7 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
   };
 
   const ComponentRender = resolveComponent(data.component);
-  if (ComponentRender) {
+  if (ComponentRender && data) {
     return (
       <div style={renderedBlockStyle} className={styles["rendered-block"]} onMouseDown={handleMouseDown}>
         {showActiveBorder && <div className={styles["active-border"]} style={activeBorderStyle} />}

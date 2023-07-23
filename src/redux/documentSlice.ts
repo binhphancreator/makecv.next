@@ -11,10 +11,10 @@ import {
 export interface DocumentState {
   flatDataRender: FlatMapDataRender;
   viewport: {
-    scale: number;
     scrollSpeed: number;
     scaleSpeed: number;
-    position: Position;
+    renderAreaScale: number;
+    renderAreaPosition: Position;
     heightTopMenu: number;
     widthLayerMenu: number;
     tabActiveIndexLayerMenu: number;
@@ -29,13 +29,13 @@ export interface DocumentState {
 const initialState: DocumentState = {
   flatDataRender: {},
   viewport: {
-    scale: DEFAULT_SCALE_VIEWPORT,
+    renderAreaScale: DEFAULT_SCALE_VIEWPORT,
     scrollSpeed: 0.5,
     scaleSpeed: DEFAULT_SCALE_SPEED_VIEWPORT,
     heightTopMenu: DEFAULT_HEIGHT_TOP_MENU,
     widthLayerMenu: MIN_WIDTH_LAYER_MENU,
     tabActiveIndexLayerMenu: 0,
-    position: {
+    renderAreaPosition: {
       x: 0,
       y: 0,
     },
@@ -59,11 +59,11 @@ const slice = createSlice({
         state.flatDataRender[payload.key].position = payload.position;
       }
     },
-    setViewportScale(state, { payload }: PayloadAction<{ scale: number }>) {
-      state.viewport.scale = payload.scale;
+    setRenderAreaScale(state, { payload }: PayloadAction<{ scale: number }>) {
+      state.viewport.renderAreaScale = payload.scale;
     },
-    setViewportPosition(state, { payload }: PayloadAction<{ position: Position }>) {
-      state.viewport.position = payload.position;
+    setRenderAreaPosition(state, { payload }: PayloadAction<{ position: Position }>) {
+      state.viewport.renderAreaPosition = payload.position;
     },
     setWidthLayerMenu(state, { payload }: PayloadAction<{ width: number }>) {
       state.viewport.widthLayerMenu = payload.width;
@@ -124,8 +124,8 @@ const slice = createSlice({
 export const {
   initDataRender,
   setPositionComponentByKey,
-  setViewportScale,
-  setViewportPosition,
+  setRenderAreaScale,
+  setRenderAreaPosition,
   addHoveringKey,
   removeHoveringKey,
   addSelectingKey,

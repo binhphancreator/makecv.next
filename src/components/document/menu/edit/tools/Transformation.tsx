@@ -76,31 +76,21 @@ const Transformation = () => {
       }
     }
     return null;
-  }, [selectingKeys, flatDataRender]);
+  }, [selectingKeys]);
 
   useEffect(() => {
-    if (position?.x) {
+    if (position) {
       positionXInputRef.current?.setValue(position.x);
-    }
-  }, [position?.x]);
-
-  useEffect(() => {
-    if (position?.y) {
       positionYInputRef.current?.setValue(position.y);
     }
-  }, [position?.y]);
+  }, [position]);
 
   useEffect(() => {
-    if (size?.width) {
+    if (size) {
       widthInputRef.current?.setValue(size.width);
-    }
-  }, [size?.width]);
-
-  useEffect(() => {
-    if (size?.height) {
       heightInputRef.current?.setValue(size.height);
     }
-  }, [size?.height]);
+  }, [size]);
 
   if (!selectingKeys.length) {
     return null;
