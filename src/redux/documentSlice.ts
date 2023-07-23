@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { EditingContext, FlatMapDataRender, Position, Size } from "~/types/document";
-import { ViewportStatusEnum } from "~/types/viewport";
+import { ViewportStatusEnum } from "~/enums/viewport";
 import {
   DEFAULT_HEIGHT_TOP_MENU,
   MIN_WIDTH_LAYER_MENU,

@@ -12,7 +12,7 @@ import {
   updateBoundingSizeComponent,
 } from "~/redux/documentSlice";
 import { ShownNameComponents } from "~/components/document";
-import { ViewportStatusEnum } from "~/types/viewport";
+import { ViewportStatusEnum } from "~/enums/viewport";
 import styles from "@/components/document/renderer.module.scss";
 
 interface RendererProps {

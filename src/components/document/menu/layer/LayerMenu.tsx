@@ -6,7 +6,7 @@ import AssetsTab from "./tabs/AssetsTab";
 import { MIN_WIDTH_LAYER_MENU, MAX_WIDTH_LAYER_MENU } from "~/constants/document";
 import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import { setViewportStatus, setWidthLayerMenu } from "~/redux/documentSlice";
-import { ViewportStatusEnum } from "~/types/viewport";
+import { ViewportStatusEnum } from "~/enums/viewport";
 import styles from "@/components/document/menu/layer.module.scss";
 
 interface LayerMenuProps {}

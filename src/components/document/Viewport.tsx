@@ -14,7 +14,7 @@ import EditMenu from "./menu/edit/EditMenu";
 import TopMenu from "./menu/top/TopMenu";
 import { calcNewPositionAfterScale } from "~/utils/document";
 import { MIN_SCALE_VIEWPORT, MAX_SCALE_VIEWPORT } from "~/constants/document";
-import { ViewportStatusEnum } from "~/types/viewport";
+import { ViewportStatusEnum } from "~/enums/viewport";
 import styles from "@/components/document/viewport.module.scss";
 
 interface ViewportProps {}
