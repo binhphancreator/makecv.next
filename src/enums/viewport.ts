@@ -4,4 +4,5 @@ export enum ViewportStatusEnum {
   ResizingLayerMenu,
   ResizingEditMenu,
   ZoomingTouchArea,
+  MoveByKeyPress,
 }

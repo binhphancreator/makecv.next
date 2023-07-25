@@ -14,6 +14,7 @@ import {
 import { ShownNameComponents } from "~/components/document";
 import { ViewportStatusEnum } from "~/enums/viewport";
 import styles from "@/components/document/renderer.module.scss";
+import { log } from "console";
 
 interface RendererProps {
   keyRender: string;
@@ -177,6 +178,96 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
     }
     dispatch(removeHoveringKey({ key: data.key }));
   };
+
+  const handleMove = (direction: any) => {
+    // Move the block in the specified direction
+    switch (direction) {
+      case "up":
+        dispatch(setViewportStatus({ status: ViewportStatusEnum.MoveByKeyPress }));
+        dispatch(
+          setPositionComponentByKey({
+            position: {
+              x: data.position.x,
+              y: data.position.y + 10,
+            },
+            key: data.key,
+          })
+        );
+        break;
+      case "down":
+        dispatch(setViewportStatus({ status: ViewportStatusEnum.MoveByKeyPress }));
+        dispatch(
+          setPositionComponentByKey({
+            position: {
+              x: data.position.x,
+              y: data.position.y - 10,
+            },
+            key: data.key,
+          })
+        );
+        break;
+      case "left":
+        dispatch(setViewportStatus({ status: ViewportStatusEnum.MoveByKeyPress }));
+        dispatch(
+          setPositionComponentByKey({
+            position: {
+              x: data.position.x - 10,
+              y: data.position.y,
+            },
+            key: data.key,
+          })
+        );
+        break;
+      case "right":
+        dispatch(setViewportStatus({ status: ViewportStatusEnum.MoveByKeyPress }));
+        dispatch(
+          setPositionComponentByKey({
+            position: {
+              x: data.position.x + 10,
+              y: data.position.y,
+            },
+            key: data.key,
+          })
+        );
+        break;
+      default:
+        break;
+    }
+  };
+
+  const handleKeyPress = (event: any) => {
+    switch (event.code) {
+      case "ArrowUp":
+        console.log(data);
+        handleMove("up");
+        break;
+      case "ArrowDown":
+        console.log(2);
+        handleMove("down");
+        break;
+      case "ArrowLeft":
+        console.log(3);
+        handleMove("left");
+        break;
+      case "ArrowRight":
+        console.log(4);
+        handleMove("right");
+        break;
+      default:
+        break;
+    }
+  };
+
+  useEffect(() => {
+    // Add event listener for keyboard input
+    document.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      // Clean up event listener on component unmount
+      document.removeEventListener("keydown", handleKeyPress);
+      dispatch(setViewportStatus({ status: ViewportStatusEnum.Idle }));
+    };
+  }, [data.key, data.position]);
 
   const ComponentRender = resolveComponent(data.component);
   if (ComponentRender) {
