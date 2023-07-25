@@ -2,13 +2,12 @@ import React, { useEffect, useRef } from "react";
 import { useAppDispatch } from "~/hooks/app";
 import { refreshSelectingKeys } from "~/redux/documentSlice";
 import BarArea from "./areas/BarArea";
-import TouchArea, { TouchAreaMethods } from "./areas/TouchArea";
+import TouchArea from "./areas/TouchArea";
+import emitter from "~/components/document/event";
 import styles from "@/components/document/viewport/viewport.module.scss";
 
 const Viewport = () => {
   const dispatch = useAppDispatch();
-
-  const scaleAreaRef = useRef<TouchAreaMethods>(null);
   const viewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -23,7 +22,11 @@ const Viewport = () => {
   }, []);
 
   const handleOnWheel = (event: React.WheelEvent<HTMLDivElement>) => {
-    scaleAreaRef.current?.scale(event);
+    if (event.ctrlKey) {
+      emitter.dispatch("viewport.scale", event);
+    } else {
+      emitter.dispatch("viewport.scroll", event);
+    }
   };
 
   const refreshOnClickOutside = () => {
@@ -33,7 +36,7 @@ const Viewport = () => {
   return (
     <div className={styles.container} onWheel={handleOnWheel} onMouseDown={refreshOnClickOutside} ref={viewportRef}>
       <BarArea />
-      <TouchArea ref={scaleAreaRef} />
+      <TouchArea />
     </div>
   );
 };
