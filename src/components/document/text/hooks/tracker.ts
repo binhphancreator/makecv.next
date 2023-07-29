@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { FormatNameProp } from "../formats";
+import { FormatNameProp } from "~/components/document/text/formats";
 
 export type ContentAlteration = {
   content: string;

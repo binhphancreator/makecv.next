@@ -1,7 +1,7 @@
 import React from "react";
-import LayerMenu from "../../menu/layer/LayerMenu";
-import EditMenu from "../../menu/edit/EditMenu";
-import TopMenu from "../../menu/top/TopMenu";
+import LayerMenu from "~/components/document/menu/layer/LayerMenu";
+import EditMenu from "~/components/document/menu/edit/EditMenu";
+import TopMenu from "~/components/document/menu/top/TopMenu";
 
 const BarArea = () => {
   return (

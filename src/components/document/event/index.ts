@@ -1,4 +1,4 @@
-import { DocumentEventMap } from "./map";
+import { DocumentEventMap } from "~/components/document/event/map";
 import EventEmitter from "eventemitter3";
 
 const e2 = new EventEmitter();

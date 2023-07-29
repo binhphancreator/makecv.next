@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useAppSelector } from "~/hooks/app";
-import EditInput, { EditInputMethods } from "../input/EditInput";
+import EditInput, { EditInputMethods } from "~/components/document/menu/edit/input/EditInput";
 import styles from "@/components/document/menu/edit/tools/transformation.module.scss";
 import SvgIcon from "~/components/icon/SvgIcon";
 import ColorPalettes from "~/constants/colors";

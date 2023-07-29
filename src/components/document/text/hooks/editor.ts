@@ -3,8 +3,8 @@ import { useEditorContainer } from "./container";
 import { useEditorKeyboard } from "./keyboard";
 import { useEffect } from "react";
 import { ContentAlteration, useEditorTracker } from "./tracker";
-import FormaterMap from "../formats";
-import { surroundLine, surroundText } from "../formats/formater";
+import FormaterMap from "~/components/document/text/formats";
+import { surroundLine, surroundText } from "~/components/document/text/formats/formater";
 
 export const useTextEditor = () => {
   const container = useEditorContainer();
