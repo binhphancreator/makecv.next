@@ -110,6 +110,9 @@ const slice = createSlice({
       if (!payload.key || !payload.key.length) return;
       delete state.editingContexts[payload.key];
     },
+    refreshEdittingContexts(state) {
+      state.editingContexts = {};
+    },
     setViewportStatus(state, { payload }: PayloadAction<{ status: ViewportStatusEnum }>) {
       state.viewport.status = payload.status;
     },
@@ -136,6 +139,7 @@ export const {
   setViewportStatus,
   addEditingKey,
   removeEditingKey,
+  refreshEdittingContexts,
   updateBoundingSizeComponent,
 } = slice.actions;
 

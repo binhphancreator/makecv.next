@@ -11,16 +11,17 @@ export interface NormalizedRange {
   start: RangePosition;
   end: RangePosition;
   native: NativeRange;
+  collapsed?: boolean;
 }
 
 export const useEditorSelection = (container: EditorContainerHook) => {
   const getRange = () => {
     const nativeRange = getNativeRange();
     if (!nativeRange) {
-      return [null, null];
+      return null;
     }
     const range = normalizeNative(nativeRange);
-    console.log(range);
+    return range;
   };
 
   const getNativeRange = () => {
@@ -43,6 +44,7 @@ export const useEditorSelection = (container: EditorContainerHook) => {
       },
       end: { node: nativeRange.endContainer, offset: nativeRange.endOffset },
       native: nativeRange,
+      collapsed: nativeRange.collapsed,
     };
 
     range.start = walkRangePosition(range.start);

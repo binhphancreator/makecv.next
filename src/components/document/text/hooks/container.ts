@@ -48,6 +48,22 @@ export const useEditorContainer = () => {
     ref.current.removeChild(node);
   };
 
+  const findSpan = (node: Node): Node | null => {
+    if (node.nodeName?.toLowerCase() === "span") {
+      return node;
+    }
+
+    if (!node.parentNode) {
+      return null;
+    }
+
+    if (node.parentNode?.nodeName?.toLowerCase() === "span") {
+      return node.parentNode;
+    }
+
+    return findSpan(node.parentNode);
+  };
+
   const clear = () => {
     if (!ref.current) {
       return;
@@ -62,6 +78,7 @@ export const useEditorContainer = () => {
     insertLine,
     removeLine,
     clear,
+    findSpan,
   };
 };
 

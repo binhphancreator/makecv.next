@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { DocumentEventMap } from "~/components/document/event/map";
 import emitter from "~/components/document/event";
 
-export const useDocumentEvent = <K extends keyof DocumentEventMap>(
+export const useDocumentEventListener = <K extends keyof DocumentEventMap>(
   type: K,
   listener: (arg: DocumentEventMap[K]) => any
 ) => {

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "~/hooks/app";
-import { addEditingKey, removeEditingKey } from "~/redux/documentSlice";
+import { addEditingKey } from "~/redux/documentSlice";
 import { Size } from "~/types/document";
 import { useTextEditor } from "./hooks/editor";
 import styles from "@/components/document/editor.module.scss";
@@ -21,9 +21,7 @@ const TextComponent = ({ size, content, keyRender }: TextProps) => {
 
   useEffect(() => {
     editor.empty();
-    editor.insertText(0, {
-      content,
-    });
+    editor.insertText(0, content);
   }, []);
 
   const editorContainerStyle = useMemo<React.CSSProperties>(() => {
@@ -56,15 +54,10 @@ const TextComponent = ({ size, content, keyRender }: TextProps) => {
     editor.focus(true);
   };
 
-  const handleOnBlur = () => {
-    dispatch(removeEditingKey({ key: keyRender }));
-  };
-
   return (
     <div className={styles.editor}>
       <div onDoubleClick={handleOnDoubleClick} className={styles["editor-cover"]} style={editorCoverStyle} />
       <div
-        onBlur={handleOnBlur}
         ref={editor.ref}
         className={styles["editor-input"]}
         style={editorContainerStyle}

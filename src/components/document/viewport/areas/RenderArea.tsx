@@ -2,7 +2,7 @@ import React, { useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import Renderer from "~/components/document/Renderer";
 import { setRenderAreaPosition } from "~/redux/documentSlice";
-import { useDocumentEvent } from "~/components/document/event/hooks";
+import { useDocumentEventListener } from "~/components/document/event/hooks";
 import styles from "@/components/document/viewport/areas/render-area.module.scss";
 
 const RenderArea = () => {
@@ -19,7 +19,7 @@ const RenderArea = () => {
     return style;
   }, [renderAreaPosition]);
 
-  useDocumentEvent("viewport.scroll", (event: React.WheelEvent<HTMLDivElement>) => {
+  useDocumentEventListener("viewport.scroll", (event: React.WheelEvent<HTMLDivElement>) => {
     dispatch(
       setRenderAreaPosition({
         position: {

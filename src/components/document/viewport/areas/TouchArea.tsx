@@ -11,7 +11,7 @@ import {
 import { ViewportStatusEnum } from "~/enums/viewport";
 import { MAX_SCALE_VIEWPORT, MIN_SCALE_VIEWPORT } from "~/constants/document";
 import RenderArea from "./RenderArea";
-import { useDocumentEvent } from "~/components/document/event/hooks";
+import { useDocumentEventListener } from "~/components/document/event/hooks";
 import styles from "@/components/document/viewport/areas/touch-area.module.scss";
 
 const TouchAreaComponent = () => {
@@ -30,7 +30,7 @@ const TouchAreaComponent = () => {
     y: 0,
   });
 
-  useDocumentEvent("viewport.scale", (event) => {
+  useDocumentEventListener("viewport.scale", (event) => {
     const deltaY = Math.sign(event.deltaY);
     const newScale = scaleRef.current - scaleRef.current * deltaY * scaleSpeed;
     scaleRef.current = Math.max(MIN_SCALE_VIEWPORT / renderAreaScale, newScale);

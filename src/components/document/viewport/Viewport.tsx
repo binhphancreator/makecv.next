@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { useAppDispatch } from "~/hooks/app";
-import { refreshSelectingKeys } from "~/redux/documentSlice";
+import { refreshEdittingContexts, refreshSelectingKeys } from "~/redux/documentSlice";
 import BarArea from "./areas/BarArea";
 import TouchArea from "./areas/TouchArea";
 import emitter from "~/components/document/event";
@@ -31,6 +31,7 @@ const Viewport = () => {
 
   const refreshOnClickOutside = () => {
     dispatch(refreshSelectingKeys({}));
+    dispatch(refreshEdittingContexts());
   };
 
   return (

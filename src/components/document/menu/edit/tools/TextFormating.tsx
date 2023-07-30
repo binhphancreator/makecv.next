@@ -4,9 +4,15 @@ import ColorPalettes from "~/constants/colors";
 import EditSelect from "~/components/document/menu/edit/input/EditSelect";
 import EditInput from "~/components/document/menu/edit/input/EditInput";
 import EditSegment from "~/components/document/menu/edit/input/EditSegment";
+import emitter from "~/components/document/event";
 import styles from "@/components/document/menu/edit/tools/text-formating.module.scss";
 
 const TextFormating = () => {
+  const handleOnPressFont = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
+    emitter.dispatch("editor.text.format", { format: "color", value: "red" });
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.border} />
@@ -15,7 +21,9 @@ const TextFormating = () => {
         <SvgIcon name="setting" color={ColorPalettes.gray600} width={24} />
       </div>
       <div className={styles.body}>
-        <div className={styles["format-font"]}>Inter</div>
+        <div className={styles["format-font"]} onMouseDown={handleOnPressFont}>
+          Inter
+        </div>
         <div className={styles.row}>
           <EditSelect.Input value="Regular" width={120}>
             <EditSelect.Option>Thin</EditSelect.Option>
