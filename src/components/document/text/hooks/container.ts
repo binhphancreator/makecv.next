@@ -29,12 +29,19 @@ export const useEditorContainer = () => {
     ref.current.removeEventListener(type, listener, options);
   };
 
-  const insertLine = (index: number, line: HTMLParagraphElement) => {
+  const insertLineBefore = (line: HTMLParagraphElement, reference?: Node) => {
     if (!ref.current) {
       return;
     }
-    const afterNode = ref.current.childNodes[index] ?? null;
-    ref.current.insertBefore(line, afterNode);
+    ref.current.insertBefore(line, reference || null);
+  };
+
+  const insertLineBeforeAt = (line: HTMLParagraphElement, index: number) => {
+    if (!ref.current) {
+      return;
+    }
+    const reference = ref.current.childNodes[index] ?? null;
+    ref.current.insertBefore(line, reference);
   };
 
   const removeLine = (index: number) => {
@@ -46,6 +53,39 @@ export const useEditorContainer = () => {
       return;
     }
     ref.current.removeChild(node);
+  };
+
+  const insertSpanAfter = (line: Node, span: Node, reference?: Node) => {
+    if (!ref.current || !line) {
+      return;
+    }
+    const index = Array.prototype.indexOf.call(line.childNodes, reference);
+    if (index >= 0) {
+      insertSpanBefore(line, span, line.childNodes.item(index + 1));
+    } else {
+      line.appendChild(span);
+    }
+  };
+
+  const insertSpanBefore = (line: Node, span: Node, reference?: Node) => {
+    if (!ref.current) {
+      return;
+    }
+    line.insertBefore(span, reference || null);
+  };
+
+  const insertSpanBeforeAt = (line: Node, span: Node, index: number) => {
+    if (!ref.current) {
+      return;
+    }
+
+    if (!line) {
+      return;
+    }
+
+    const reference = line.childNodes.item(index);
+
+    insertSpanBefore(line, span, reference);
   };
 
   const findSpan = (node: Node): Node | null => {
@@ -64,6 +104,20 @@ export const useEditorContainer = () => {
     return findSpan(node.parentNode);
   };
 
+  const replaceSpanWith = (span: HTMLSpanElement, replaced: Node) => {
+    if (span !== replaced) {
+      span.replaceWith(replaced);
+    }
+  };
+
+  const getIndexSpanOfLine = (span: HTMLSpanElement) => {
+    const line = span.parentNode;
+    if (!line) {
+      return -1;
+    }
+    return Array.prototype.indexOf.call(line.childNodes, span);
+  };
+
   const clear = () => {
     if (!ref.current) {
       return;
@@ -75,10 +129,16 @@ export const useEditorContainer = () => {
     ref,
     on,
     removeListener,
-    insertLine,
+    insertLineBefore,
+    insertLineBeforeAt,
+    insertSpanAfter,
     removeLine,
     clear,
     findSpan,
+    replaceSpanWith,
+    insertSpanBeforeAt,
+    insertSpanBefore,
+    getIndexSpanOfLine,
   };
 };
 

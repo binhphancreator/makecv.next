@@ -2,17 +2,52 @@ import { useEffect } from "react";
 import { useEditorSelection } from "./selection";
 import { useEditorContainer } from "./container";
 import { useEditorKeyboard } from "./keyboard";
-import { useEditorModel } from "./model";
+import { Alteration, useEditorModel } from "./model";
 import { useDocumentEventListener } from "~/components/document/event/hooks";
 import FormaterMap from "~/components/document/text/formats";
-import { surroundLine, surroundText } from "~/components/document/text/formats/formater";
+import { surroundText } from "~/components/document/text/formats/formater";
+
+export type AlterationRange = {
+  start: {
+    alteration: Alteration;
+    offset: number;
+  };
+  end: {
+    alteration: Alteration;
+    offset: number;
+  };
+  collapsed?: boolean;
+};
 
 export const useTextEditor = () => {
   const container = useEditorContainer();
   const selection = useEditorSelection(container);
   const keyboard = useEditorKeyboard(container);
-  const model = useEditorModel();
+  const model = useEditorModel(container);
   useDocumentEventListener("editor.text.format", (event) => {
+    const range = getRangeAlteration();
+
+    if (!range) {
+      return;
+    }
+
+    if (range.collapsed) {
+      const seperatedAlterations = model.seperate(range.start.alteration, [range.start.offset, range.end.offset]);
+      if (range.start.offset > 0) {
+        format(seperatedAlterations[1], { [event.format]: event.value });
+      } else {
+        format(seperatedAlterations[0], { [event.format]: event.value });
+      }
+      model.replaceMany(range.start.alteration, seperatedAlterations);
+    }
+  });
+
+  useEffect(() => {
+    keyboard.listen();
+    return () => keyboard.destroy();
+  }, []);
+
+  const getRangeAlteration = (): AlterationRange | undefined => {
     const range = selection.getRange();
     if (!range || range.collapsed) {
       return;
@@ -32,34 +67,41 @@ export const useTextEditor = () => {
       return;
     }
 
-    if (startAlteration.index === endAlteration.index) {
-      const subAlteration = model.subAlteration(startAlteration.index, [range.start.offset, range.end.offset]);
-    }
-  });
+    return {
+      start: {
+        alteration: startAlteration,
+        offset: range.start.offset,
+      },
+      end: {
+        alteration: endAlteration,
+        offset: range.end.offset,
+      },
+      collapsed: startAlteration === endAlteration,
+    };
+  };
 
-  useEffect(() => {
-    keyboard.listen();
-    return () => keyboard.destroy();
-  }, []);
+  const getRange = () => {
+    return selection.getRange();
+  };
 
   const insertText = (index: number, initialContent: string, formats?: { [key: string]: any }) => {
     const content = initialContent.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
     const span = surroundText(content);
 
-    formatSpan(span, formats);
+    const insertedAlteration = model.insertBeforeAt(
+      {
+        content,
+        formats,
+        span,
+      },
+      index
+    );
 
-    const line = surroundLine(span);
-
-    model.insertAlteration(index, {
-      content,
-      formats,
-      span,
-    });
-
-    container.insertLine(index, line);
+    format(insertedAlteration);
   };
 
-  const formatSpan = (span: HTMLSpanElement, formats?: { [key: string]: any }) => {
+  const format = (alteration: Alteration, formats?: { [key: string]: any }) => {
+    const span = alteration.span;
     if (formats && Object.keys(formats).length) {
       for (const name in formats) {
         const formater = FormaterMap[name];
@@ -69,7 +111,10 @@ export const useTextEditor = () => {
         }
         formater.formatSpan(span, value);
       }
+      model.mergeFormat(alteration, formats);
     }
+
+    return alteration;
   };
 
   const empty = () => {
@@ -89,6 +134,8 @@ export const useTextEditor = () => {
     insertText,
     empty,
     focus,
-    formatSpan,
+    format,
+    getRangeAlteration,
+    getRange,
   };
 };
