@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import FormaterMap, { FormatNameProp } from "~/components/document/text/formats";
 import { surroundText, surroundLine } from "~/components/document/text/formats/formater";
 import { EditorContainerHook } from "~/components/document/text/hooks/container";
 
@@ -93,6 +94,19 @@ export const useEditorModel = (container: EditorContainerHook) => {
   const insertBeforeAt = (alteration: Alteration, index: number) => {
     const reference = indexAt(index);
     return insertBefore(alteration, reference);
+  };
+
+  const appendRaw = (rawContent: string, formats?: { [Property in FormatNameProp]?: any }) => {
+    const content = rawContent.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
+    const span = surroundText(content);
+
+    const insertedAlteration = insertBefore({
+      content,
+      formats,
+      span,
+    });
+
+    format(insertedAlteration);
   };
 
   const getLineIndex = (alterationIndex: number) => {
@@ -221,6 +235,23 @@ export const useEditorModel = (container: EditorContainerHook) => {
     return undefined;
   };
 
+  const format = (alteration: Alteration, formats?: { [key: string]: any }) => {
+    const span = alteration.span;
+    if (formats && Object.keys(formats).length) {
+      for (const name in formats) {
+        const formater = FormaterMap[name];
+        const value = formats[name];
+        if (!formater) {
+          continue;
+        }
+        formater.formatSpan(span, value);
+      }
+      mergeFormat(alteration, formats);
+    }
+
+    return alteration;
+  };
+
   return {
     alterations,
     insertBefore,
@@ -243,6 +274,8 @@ export const useEditorModel = (container: EditorContainerHook) => {
     mergeFormat,
     lineOf,
     lineAt,
+    format,
+    appendRaw,
   };
 };
 

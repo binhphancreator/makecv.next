@@ -1,8 +1,9 @@
 import React, { useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import { addEditingKey } from "~/redux/documentSlice";
-import { Size } from "~/types/document";
 import { useTextEditor } from "./hooks/editor";
+import { useDocumentEventListener } from "~/components/document/event/hooks";
+import { Size } from "~/types/document";
 import styles from "@/components/document/editor.module.scss";
 
 interface TextProps {
@@ -18,10 +19,13 @@ const TextComponent = ({ size, content, keyRender }: TextProps) => {
   const editingContexts = useAppSelector((state) => state.documentState.editingContexts);
 
   const editor = useTextEditor();
+  useDocumentEventListener("editor.text.format", (event) => {
+    editor.format({ [event.format]: event.value });
+  });
 
   useEffect(() => {
     editor.empty();
-    editor.insertText(0, content);
+    editor.appendText(content);
   }, []);
 
   const editorContainerStyle = useMemo<React.CSSProperties>(() => {

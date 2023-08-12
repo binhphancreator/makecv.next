@@ -3,9 +3,7 @@ import { useEditorSelection } from "./selection";
 import { useEditorContainer } from "./container";
 import { useEditorKeyboard } from "./keyboard";
 import { Alteration, useEditorModel } from "./model";
-import { useDocumentEventListener } from "~/components/document/event/hooks";
-import FormaterMap from "~/components/document/text/formats";
-import { surroundText } from "~/components/document/text/formats/formater";
+import { FormatNameProp } from "~/components/document/text/formats";
 
 export type AlterationRange = {
   start: {
@@ -24,23 +22,6 @@ export const useTextEditor = () => {
   const selection = useEditorSelection(container);
   const keyboard = useEditorKeyboard(container);
   const model = useEditorModel(container);
-  useDocumentEventListener("editor.text.format", (event) => {
-    const range = getRangeAlteration();
-
-    if (!range) {
-      return;
-    }
-
-    if (range.collapsed) {
-      const seperatedAlterations = model.seperate(range.start.alteration, [range.start.offset, range.end.offset]);
-      if (range.start.offset > 0) {
-        format(seperatedAlterations[1], { [event.format]: event.value });
-      } else {
-        format(seperatedAlterations[0], { [event.format]: event.value });
-      }
-      model.replaceMany(range.start.alteration, seperatedAlterations);
-    }
-  });
 
   useEffect(() => {
     keyboard.listen();
@@ -84,37 +65,26 @@ export const useTextEditor = () => {
     return selection.getRange();
   };
 
-  const insertText = (index: number, initialContent: string, formats?: { [key: string]: any }) => {
-    const content = initialContent.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-    const span = surroundText(content);
-
-    const insertedAlteration = model.insertBeforeAt(
-      {
-        content,
-        formats,
-        span,
-      },
-      index
-    );
-
-    format(insertedAlteration);
+  const appendText = (content: string, formats?: { [Property in FormatNameProp]?: any }) => {
+    model.appendRaw(content, formats);
   };
 
-  const format = (alteration: Alteration, formats?: { [key: string]: any }) => {
-    const span = alteration.span;
-    if (formats && Object.keys(formats).length) {
-      for (const name in formats) {
-        const formater = FormaterMap[name];
-        const value = formats[name];
-        if (!formater) {
-          continue;
-        }
-        formater.formatSpan(span, value);
-      }
-      model.mergeFormat(alteration, formats);
+  const format = (formats?: { [Property in FormatNameProp]?: any }) => {
+    const range = getRangeAlteration();
+
+    if (!range) {
+      return;
     }
 
-    return alteration;
+    if (range.collapsed) {
+      const seperatedAlterations = model.seperate(range.start.alteration, [range.start.offset, range.end.offset]);
+      if (range.start.offset > 0) {
+        model.format(seperatedAlterations[1], formats);
+      } else {
+        model.format(seperatedAlterations[0], formats);
+      }
+      model.replaceMany(range.start.alteration, seperatedAlterations);
+    }
   };
 
   const empty = () => {
@@ -131,11 +101,11 @@ export const useTextEditor = () => {
 
   return {
     ref: container.ref,
-    insertText,
+    appendText,
     empty,
     focus,
-    format,
     getRangeAlteration,
     getRange,
+    format,
   };
 };
