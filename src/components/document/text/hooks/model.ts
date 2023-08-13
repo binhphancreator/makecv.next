@@ -2,6 +2,7 @@ import { useRef } from "react";
 import FormaterMap, { FormatNameProp } from "~/components/document/text/formats";
 import { surroundText, surroundLine } from "~/components/document/text/formats/formater";
 import { EditorContainerHook } from "~/components/document/text/hooks/container";
+import { EditorSelectionHook } from "~/components/document/text/hooks/selection";
 
 export type Alteration = {
   content: string;
@@ -12,7 +13,19 @@ export type Alteration = {
   span: HTMLSpanElement;
 };
 
-export const useEditorModel = (container: EditorContainerHook) => {
+export type AlterationRange = {
+  start: {
+    alteration: Alteration;
+    offset: number;
+  };
+  end: {
+    alteration: Alteration;
+    offset: number;
+  };
+  collapsed?: boolean;
+};
+
+export const useEditorModel = (container: EditorContainerHook, selection: EditorSelectionHook) => {
   const alterationsRef = useRef<Alteration[]>([]);
 
   const alterations = () => {
@@ -252,6 +265,39 @@ export const useEditorModel = (container: EditorContainerHook) => {
     return alteration;
   };
 
+  const getRangeAlteration = (): AlterationRange | undefined => {
+    const range = selection.getRange();
+    if (!range || range.collapsed) {
+      return;
+    }
+
+    const startSpan = container.findSpan(range.start.node);
+    const endSpan = container.findSpan(range.end.node);
+
+    if (!startSpan || !endSpan) {
+      return;
+    }
+
+    const startAlteration = findBySpan(startSpan);
+    const endAlteration = findBySpan(endSpan);
+
+    if (!startAlteration || !endAlteration) {
+      return;
+    }
+
+    return {
+      start: {
+        alteration: startAlteration,
+        offset: range.start.offset,
+      },
+      end: {
+        alteration: endAlteration,
+        offset: range.end.offset,
+      },
+      collapsed: startAlteration === endAlteration,
+    };
+  };
+
   return {
     alterations,
     insertBefore,
@@ -276,6 +322,7 @@ export const useEditorModel = (container: EditorContainerHook) => {
     lineAt,
     format,
     appendRaw,
+    getRangeAlteration,
   };
 };
 

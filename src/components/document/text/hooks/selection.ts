@@ -105,3 +105,5 @@ export const useEditorSelection = (container: EditorContainerHook) => {
     selectAll,
   };
 };
+
+export type EditorSelectionHook = ReturnType<typeof useEditorSelection>;

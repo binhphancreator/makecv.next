@@ -2,64 +2,19 @@ import { useEffect } from "react";
 import { useEditorSelection } from "./selection";
 import { useEditorContainer } from "./container";
 import { useEditorKeyboard } from "./keyboard";
-import { Alteration, useEditorModel } from "./model";
+import { useEditorModel } from "./model";
 import { FormatNameProp } from "~/components/document/text/formats";
-
-export type AlterationRange = {
-  start: {
-    alteration: Alteration;
-    offset: number;
-  };
-  end: {
-    alteration: Alteration;
-    offset: number;
-  };
-  collapsed?: boolean;
-};
 
 export const useTextEditor = () => {
   const container = useEditorContainer();
   const selection = useEditorSelection(container);
   const keyboard = useEditorKeyboard(container);
-  const model = useEditorModel(container);
+  const model = useEditorModel(container, selection);
 
   useEffect(() => {
     keyboard.listen();
     return () => keyboard.destroy();
   }, []);
-
-  const getRangeAlteration = (): AlterationRange | undefined => {
-    const range = selection.getRange();
-    if (!range || range.collapsed) {
-      return;
-    }
-
-    const startSpan = container.findSpan(range.start.node);
-    const endSpan = container.findSpan(range.end.node);
-
-    if (!startSpan || !endSpan) {
-      return;
-    }
-
-    const startAlteration = model.findBySpan(startSpan);
-    const endAlteration = model.findBySpan(endSpan);
-
-    if (!startAlteration || !endAlteration) {
-      return;
-    }
-
-    return {
-      start: {
-        alteration: startAlteration,
-        offset: range.start.offset,
-      },
-      end: {
-        alteration: endAlteration,
-        offset: range.end.offset,
-      },
-      collapsed: startAlteration === endAlteration,
-    };
-  };
 
   const getRange = () => {
     return selection.getRange();
@@ -70,7 +25,7 @@ export const useTextEditor = () => {
   };
 
   const format = (formats?: { [Property in FormatNameProp]?: any }) => {
-    const range = getRangeAlteration();
+    const range = model.getRangeAlteration();
 
     if (!range) {
       return;
@@ -104,7 +59,6 @@ export const useTextEditor = () => {
     appendText,
     empty,
     focus,
-    getRangeAlteration,
     getRange,
     format,
   };
