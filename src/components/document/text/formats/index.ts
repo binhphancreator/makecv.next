@@ -1,5 +1,5 @@
 import Color from "./color";
-import { EditorFormater } from "./formater";
+import { EditorFormater } from "../types/formater";
 
 const FormaterMap = {
   color: Color,

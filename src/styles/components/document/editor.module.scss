@@ -6,6 +6,7 @@
   [contenteditable="true"] {
     outline: none;
     border: none;
+    white-space: pre-wrap;
   }
 
   &-cover {

@@ -1,29 +1,8 @@
 import { useRef } from "react";
-import FormaterMap, { FormatNameProp } from "~/components/document/text/formats";
-import { surroundText, surroundLine } from "~/components/document/text/formats/formater";
 import { EditorContainerHook } from "~/components/document/text/hooks/container";
 import { EditorSelectionHook } from "~/components/document/text/hooks/selection";
-
-export type Alteration = {
-  content: string;
-  formats?: {
-    [key: string]: any;
-  };
-  breakline?: boolean;
-  span: HTMLSpanElement;
-};
-
-export type AlterationRange = {
-  start: {
-    alteration: Alteration;
-    offset: number;
-  };
-  end: {
-    alteration: Alteration;
-    offset: number;
-  };
-  collapsed?: boolean;
-};
+import FormaterMap, { FormatNameProp } from "~/components/document/text/formats";
+import { Alteration, AlterationRange } from "~/components/document/text/types/model";
 
 export const useEditorModel = (container: EditorContainerHook, selection: EditorSelectionHook) => {
   const alterationsRef = useRef<Alteration[]>([]);
@@ -70,38 +49,43 @@ export const useEditorModel = (container: EditorContainerHook, selection: Editor
   };
 
   const insertBefore = (alteration: Alteration, reference?: Alteration) => {
-    const span = alteration.span;
+    const node = alteration.node;
     const index = reference ? indexOf(reference) : alterationsRef.current.length;
+    const beforeAlteration = indexAt(index - 1);
     const lastAlteration = last();
 
-    let line = null;
-
-    if (reference) {
-      line = lineOf(reference);
-      if (line) {
-        container.insertSpanBefore(line, span, reference.span);
-      }
-    } else {
-      if (lastAlteration) {
-        line = lineOf(lastAlteration);
-        if (line) {
-          container.insertSpanAfter(line, span, lastAlteration.span);
-        }
-      } else {
-        line = surroundLine(span);
-        container.insertLineBeforeAt(line, getLineIndex(index));
-      }
+    if (isEmpty()) {
+      alteration.breakline = true;
     }
-
-    const insertedAlteration = alteration;
 
     alterationsRef.current = [
       ...alterationsRef.current.slice(0, index),
-      insertedAlteration,
+      alteration,
       ...alterationsRef.current.slice(index),
     ];
 
-    return insertedAlteration;
+    if (alteration.breakline) {
+      const line = container.createLine();
+      const nextAlterationsSameLine = getNextAlterationsSameLineWith(alteration);
+      if (nextAlterationsSameLine.length) {
+        nextAlterationsSameLine.forEach((alterationSameLine) => {
+          container.appendTextNode(line, alterationSameLine.node);
+        });
+      }
+      container.insertLineBefore(line, reference ? lineOf(reference) : undefined);
+    } else if (beforeAlteration) {
+      const line = lineAt(index - 1);
+      if (line) {
+        container.insertTextNodeAfter(line, node, beforeAlteration.node);
+      }
+    } else if (lastAlteration) {
+      const line = lineOf(lastAlteration);
+      if (line) {
+        container.insertTextNodeAfter(line, node, lastAlteration.node);
+      }
+    }
+
+    return alteration;
   };
 
   const insertBeforeAt = (alteration: Alteration, index: number) => {
@@ -111,22 +95,23 @@ export const useEditorModel = (container: EditorContainerHook, selection: Editor
 
   const appendRaw = (rawContent: string, formats?: { [Property in FormatNameProp]?: any }) => {
     const content = rawContent.replace(/\r\n/g, "\n").replace(/\r/g, "\n");
-    const span = surroundText(content);
+    const node = container.surroundText(content);
 
     const insertedAlteration = insertBefore({
       content,
       formats,
-      span,
+      node,
+      breakline: isEmpty() ? true : false,
     });
 
     format(insertedAlteration);
   };
 
   const getLineIndex = (alterationIndex: number) => {
-    let lineIndex = 0;
+    let lineIndex = -1;
 
-    for (let index = 1; index <= Math.min(alterationIndex, alterationsRef.current.length - 1); index++) {
-      if (indexAt(index - 1)?.breakline) {
+    for (let index = 0; index <= Math.min(alterationIndex, alterationsRef.current.length - 1); index++) {
+      if (indexAt(index)?.breakline) {
         lineIndex++;
       }
     }
@@ -134,11 +119,30 @@ export const useEditorModel = (container: EditorContainerHook, selection: Editor
     return lineIndex;
   };
 
-  const findBySpan = (span: Node) => {
+  const getNextAlterationsSameLineWith = (reference: Alteration): Alteration[] => {
+    let startIndex = indexOf(reference);
+
+    if (startIndex < 0) {
+      return [];
+    }
+
+    const alterationsSameLine: Alteration[] = [reference];
+
+    while (++startIndex < alterationsRef.current.length) {
+      if (alterationsRef.current[startIndex].breakline) {
+        break;
+      }
+      alterationsSameLine.push(alterationsRef.current[startIndex]);
+    }
+
+    return alterationsSameLine;
+  };
+
+  const findBySpan = (node: Node) => {
     if (!alterationsRef.current) {
       return null;
     }
-    const index = alterationsRef.current.findIndex((alteration) => alteration.span === span);
+    const index = alterationsRef.current.findIndex((alteration) => alteration.node === node);
     if (index >= 0) {
       return indexAt(index);
     }
@@ -196,30 +200,34 @@ export const useEditorModel = (container: EditorContainerHook, selection: Editor
     const [start, end] = offset;
     const content = alteration.content;
 
-    return {
-      content: content.substring(start, end),
-      formats: alteration.formats,
-      span: surroundText(content.substring(start, end)),
-    };
+    return format(
+      {
+        content: content.substring(start, end),
+        formats: alteration.formats,
+        node: container.surroundText(content.substring(start, end)),
+      },
+      alteration.formats
+    );
   };
 
   const replace = (alteration: Alteration, replacedValue: Alteration) => {
-    if (!alteration || !alteration.span || !replacedValue.span) {
+    const index = indexOf(alteration);
+
+    if (index < 0) {
       return;
     }
 
-    container.replaceSpanWith(alteration.span, replacedValue.span);
+    container.replaceTextNodeWith(alteration.node, replacedValue.node);
     Object.assign(alteration, { ...replacedValue });
     return alteration;
   };
 
   const replaceMany = (alteration: Alteration, replacedValues: Alteration[]) => {
-    if (!alteration || !alteration.span || !replacedValues.length) {
+    if (!alteration || !alteration.node || !replacedValues.length) {
       return;
     }
 
-    replace(alteration, replacedValues[0]);
-    let prevAlteration = alteration;
+    let prevAlteration = replace(alteration, replacedValues[0]);
     for (let index = 1; index < replacedValues.length; index++) {
       prevAlteration = insertAfter(replacedValues[index], prevAlteration);
     }
@@ -227,11 +235,6 @@ export const useEditorModel = (container: EditorContainerHook, selection: Editor
 
   const clear = () => {
     alterationsRef.current = [];
-  };
-
-  const mergeFormat = (alteration: Alteration, formats: { [key: string]: any }) => {
-    alteration.formats = { ...alteration.formats, ...formats };
-    return alteration;
   };
 
   const lineAt = (index: number) => {
@@ -242,14 +245,19 @@ export const useEditorModel = (container: EditorContainerHook, selection: Editor
   };
 
   const lineOf = (alteration: Alteration) => {
-    if (alteration.span && alteration.span.parentNode) {
-      return alteration.span.parentNode;
+    if (alteration.node && alteration.node.parentNode) {
+      return alteration.node.parentNode;
     }
     return undefined;
   };
 
+  const mergeFormat = (alteration: Alteration, formats: { [key: string]: any }) => {
+    alteration.formats = { ...alteration.formats, ...formats };
+    return alteration;
+  };
+
   const format = (alteration: Alteration, formats?: { [key: string]: any }) => {
-    const span = alteration.span;
+    const node = alteration.node;
     if (formats && Object.keys(formats).length) {
       for (const name in formats) {
         const formater = FormaterMap[name];
@@ -257,7 +265,7 @@ export const useEditorModel = (container: EditorContainerHook, selection: Editor
         if (!formater) {
           continue;
         }
-        formater.formatSpan(span, value);
+        formater.formatSpan(node, value);
       }
       mergeFormat(alteration, formats);
     }
@@ -265,14 +273,22 @@ export const useEditorModel = (container: EditorContainerHook, selection: Editor
     return alteration;
   };
 
+  const formatAt = (index: number, formats?: { [key: string]: any }) => {
+    const alteration = indexAt(index);
+    if (!alteration) {
+      return;
+    }
+    return format(alteration, formats);
+  };
+
   const getRangeAlteration = (): AlterationRange | undefined => {
     const range = selection.getRange();
-    if (!range || range.collapsed) {
+    if (!range) {
       return;
     }
 
-    const startSpan = container.findSpan(range.start.node);
-    const endSpan = container.findSpan(range.end.node);
+    const startSpan = container.findAlterationNode(range.start.node);
+    const endSpan = container.findAlterationNode(range.end.node);
 
     if (!startSpan || !endSpan) {
       return;
@@ -289,13 +305,44 @@ export const useEditorModel = (container: EditorContainerHook, selection: Editor
       start: {
         alteration: startAlteration,
         offset: range.start.offset,
+        index: indexOf(startAlteration),
       },
       end: {
         alteration: endAlteration,
         offset: range.end.offset,
+        index: indexOf(endAlteration),
       },
-      collapsed: startAlteration === endAlteration,
+      collapsed: startAlteration === endAlteration && startAlteration === endAlteration,
     };
+  };
+
+  const breakLine = (alteration: Alteration) => {
+    const index = indexOf(alteration);
+    if (index < 0) {
+      return;
+    }
+    const afterLineIndex = getLineIndex(index) + 1;
+    const line = container.createLine();
+
+    const nextAlterationsSameLine = getNextAlterationsSameLineWith(alteration);
+    nextAlterationsSameLine.forEach((alterationSameLine) => container.appendTextNode(line, alterationSameLine.node));
+
+    container.insertLineBeforeAt(line, afterLineIndex);
+
+    Object.assign(alteration, { breakLine: true });
+    return alteration;
+  };
+
+  const syncContent = (alteration: Alteration) => {
+    const index = indexOf(alteration);
+    if (index < 0) {
+      return;
+    }
+    alteration.content = alteration.node.innerText;
+  };
+
+  const isEmpty = () => {
+    return !alterationsRef.current.length;
   };
 
   return {
@@ -310,6 +357,7 @@ export const useEditorModel = (container: EditorContainerHook, selection: Editor
     replace,
     replaceMany,
     getLineIndex,
+    getNextAlterationsSameLineWith,
     indexOf,
     next,
     first,
@@ -321,8 +369,12 @@ export const useEditorModel = (container: EditorContainerHook, selection: Editor
     lineOf,
     lineAt,
     format,
+    formatAt,
     appendRaw,
     getRangeAlteration,
+    isEmpty,
+    breakLine,
+    syncContent,
   };
 };
 

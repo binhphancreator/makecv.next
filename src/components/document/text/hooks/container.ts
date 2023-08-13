@@ -1,4 +1,5 @@
 import { useRef } from "react";
+import { AlterationNode, AlterationNodeType } from "~/components/document/text/types/model";
 
 export type TextContainerEventMap = HTMLElementEventMap;
 
@@ -44,6 +45,80 @@ export const useEditorContainer = () => {
     ref.current.insertBefore(line, reference);
   };
 
+  const insertTextNodeAfter = (line: Node, span: Node, reference?: Node) => {
+    if (!ref.current || !line) {
+      return;
+    }
+    const index = Array.prototype.indexOf.call(line.childNodes, reference);
+    if (index >= 0) {
+      insertTextNodeBefore(line, span, line.childNodes.item(index + 1));
+    } else {
+      line.appendChild(span);
+    }
+  };
+
+  const insertTextNodeBefore = (line: Node, span: Node, reference?: Node) => {
+    if (!ref.current) {
+      return;
+    }
+
+    if (reference && !line.contains(reference)) {
+      return;
+    }
+
+    line.insertBefore(span, reference || null);
+  };
+
+  const insertTextNodeBeforeAt = (line: Node, span: Node, index: number) => {
+    if (!ref.current) {
+      return;
+    }
+
+    if (!line) {
+      return;
+    }
+
+    const reference = line.childNodes.item(index);
+
+    insertTextNodeBefore(line, span, reference);
+  };
+
+  const appendTextNode = (line: Node, span: Node) => {
+    line.appendChild(span);
+  };
+
+  const findAlterationNode = (node: Node): Node | null => {
+    const parentNode = node?.parentNode;
+
+    if (!parentNode) {
+      return null;
+    }
+
+    if (parentNode.nodeName.toLocaleLowerCase() === "p") {
+      return node;
+    }
+
+    return findAlterationNode(node.parentNode);
+  };
+
+  const replaceTextNodeWith = (node: AlterationNode, replaced: Node) => {
+    if (node !== replaced) {
+      node.replaceWith(replaced);
+    }
+  };
+
+  const getIndexAlterationNodeOfLine = (node: AlterationNode) => {
+    const line = node.parentNode;
+    if (!line) {
+      return -1;
+    }
+    return Array.prototype.indexOf.call(line.childNodes, node);
+  };
+
+  const createLine = () => {
+    return document.createElement("p");
+  };
+
   const removeLine = (index: number) => {
     if (!ref.current) {
       return;
@@ -55,67 +130,63 @@ export const useEditorContainer = () => {
     ref.current.removeChild(node);
   };
 
-  const insertSpanAfter = (line: Node, span: Node, reference?: Node) => {
-    if (!ref.current || !line) {
-      return;
-    }
-    const index = Array.prototype.indexOf.call(line.childNodes, reference);
-    if (index >= 0) {
-      insertSpanBefore(line, span, line.childNodes.item(index + 1));
+  const removeTextNode = (node: AlterationNode) => {
+    const line = node.parentElement;
+    node.remove();
+    if (line && line.childNodes.length <= 1) {
+      line.remove();
     } else {
-      line.appendChild(span);
+      node.remove();
     }
   };
 
-  const insertSpanBefore = (line: Node, span: Node, reference?: Node) => {
-    if (!ref.current) {
-      return;
+  const surroundText = (text: string): AlterationNode => {
+    if (!text || !text.length) {
+      const br = document.createElement("br");
+      return br;
+    } else {
+      const span = document.createElement("span");
+      span.innerText = text;
+      return span;
     }
-    line.insertBefore(span, reference || null);
   };
 
-  const insertSpanBeforeAt = (line: Node, span: Node, index: number) => {
-    if (!ref.current) {
-      return;
-    }
-
-    if (!line) {
-      return;
-    }
-
-    const reference = line.childNodes.item(index);
-
-    insertSpanBefore(line, span, reference);
+  const createSpan = (text: string): HTMLSpanElement => {
+    const span = document.createElement("span");
+    span.innerText = text;
+    return span;
   };
 
-  const findSpan = (node: Node): Node | null => {
-    if (node.nodeName?.toLowerCase() === "span") {
+  const getAlterationNodeType = (node: AlterationNode): AlterationNodeType | undefined => {
+    if (!node || !node.nodeName) {
+      return;
+    }
+
+    if (node.nodeName.toLowerCase() === "span") {
+      return "span";
+    }
+
+    if (node.nodeName.toLowerCase() === "br") {
+      return "br";
+    }
+
+    return "text";
+  };
+
+  const findTextNode = (node: Node): Node | null | undefined => {
+    if (!node || !node.nodeName) {
+      return;
+    }
+
+    if (node.nodeName.toString() === "#text") {
       return node;
     }
 
-    if (!node.parentNode) {
-      return null;
-    }
+    const child = node.childNodes[0];
 
-    if (node.parentNode?.nodeName?.toLowerCase() === "span") {
-      return node.parentNode;
+    if (child) {
+      return findTextNode(child);
     }
-
-    return findSpan(node.parentNode);
-  };
-
-  const replaceSpanWith = (span: HTMLSpanElement, replaced: Node) => {
-    if (span !== replaced) {
-      span.replaceWith(replaced);
-    }
-  };
-
-  const getIndexSpanOfLine = (span: HTMLSpanElement) => {
-    const line = span.parentNode;
-    if (!line) {
-      return -1;
-    }
-    return Array.prototype.indexOf.call(line.childNodes, span);
   };
 
   const clear = () => {
@@ -131,14 +202,21 @@ export const useEditorContainer = () => {
     removeListener,
     insertLineBefore,
     insertLineBeforeAt,
-    insertSpanAfter,
+    insertTextNodeAfter,
     removeLine,
     clear,
-    findSpan,
-    replaceSpanWith,
-    insertSpanBeforeAt,
-    insertSpanBefore,
-    getIndexSpanOfLine,
+    findAlterationNode,
+    replaceTextNodeWith,
+    insertTextNodeBeforeAt,
+    insertTextNodeBefore,
+    appendTextNode,
+    createLine,
+    getIndexAlterationNodeOfLine,
+    removeTextNode,
+    surroundText,
+    createSpan,
+    getAlterationNodeType,
+    findTextNode,
   };
 };
 

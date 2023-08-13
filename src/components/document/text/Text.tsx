@@ -34,7 +34,7 @@ const TextComponent = ({ size, content, keyRender }: TextProps) => {
       style.width = `${size.width}px`;
       style.height = `${size.height}px`;
     } else {
-      style.whiteSpace = "nowrap";
+      style.whiteSpace = "pre";
     }
     return style;
   }, [size]);

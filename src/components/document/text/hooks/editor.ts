@@ -8,8 +8,8 @@ import { FormatNameProp } from "~/components/document/text/formats";
 export const useTextEditor = () => {
   const container = useEditorContainer();
   const selection = useEditorSelection(container);
-  const keyboard = useEditorKeyboard(container);
   const model = useEditorModel(container, selection);
+  const keyboard = useEditorKeyboard(container, model, selection);
 
   useEffect(() => {
     keyboard.listen();
@@ -27,18 +27,38 @@ export const useTextEditor = () => {
   const format = (formats?: { [Property in FormatNameProp]?: any }) => {
     const range = model.getRangeAlteration();
 
-    if (!range) {
+    if (!range || range.collapsed) {
       return;
     }
 
-    if (range.collapsed) {
-      const seperatedAlterations = model.seperate(range.start.alteration, [range.start.offset, range.end.offset]);
-      if (range.start.offset > 0) {
-        model.format(seperatedAlterations[1], formats);
-      } else {
-        model.format(seperatedAlterations[0], formats);
+    for (let index = range.start.index; index <= range.end.index; index++) {
+      if (index === range.start.index && index === range.end.index) {
+        const seperatedAlterations = model.seperate(range.start.alteration, [range.start.offset, range.end.offset]);
+        if (range.start.offset > 0) {
+          model.format(seperatedAlterations[1], formats);
+        } else {
+          model.format(seperatedAlterations[0], formats);
+        }
+        model.replaceMany(range.start.alteration, seperatedAlterations);
+        continue;
       }
-      model.replaceMany(range.start.alteration, seperatedAlterations);
+      if (index === range.start.index) {
+        const seperatedAlterations = model.seperate(range.start.alteration, [range.start.offset]);
+        if (index === range.start.index && seperatedAlterations.length) {
+          model.format(seperatedAlterations[seperatedAlterations.length - 1], formats);
+        }
+        model.replaceMany(range.start.alteration, seperatedAlterations);
+        continue;
+      }
+      if (index === range.end.index) {
+        const seperatedAlterations = model.seperate(range.end.alteration, [range.end.offset]);
+        if (index === range.end.index && seperatedAlterations.length) {
+          model.format(seperatedAlterations[0], formats);
+        }
+        model.replaceMany(range.end.alteration, seperatedAlterations);
+        continue;
+      }
+      model.formatAt(index, formats);
     }
   };
 

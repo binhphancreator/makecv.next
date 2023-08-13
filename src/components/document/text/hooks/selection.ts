@@ -84,6 +84,25 @@ export const useEditorSelection = (container: EditorContainerHook) => {
     container.ref.current.focus({ preventScroll: true });
   };
 
+  function setCaret(node: Node, start: number) {
+    if (!container.ref.current) {
+      return;
+    }
+
+    const selection = window.getSelection();
+    if (!selection) {
+      return;
+    }
+
+    const range = document.createRange();
+
+    range.setStart(node, start);
+    range.collapse(true);
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
   const selectAll = () => {
     if (!container.ref.current) {
       return null;
@@ -103,6 +122,7 @@ export const useEditorSelection = (container: EditorContainerHook) => {
     getNativeRange,
     focus,
     selectAll,
+    setCaret,
   };
 };
 
