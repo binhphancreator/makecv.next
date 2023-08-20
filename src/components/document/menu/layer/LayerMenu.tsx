@@ -6,7 +6,8 @@ import AssetsTab from "./tabs/AssetsTab";
 import { MIN_WIDTH_LAYER_MENU, MAX_WIDTH_LAYER_MENU } from "~/constants/document";
 import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import { setViewportStatus, setWidthLayerMenu } from "~/redux/documentSlice";
-import { ViewportStatusEnum } from "~/types/viewport";
+import { ViewportStatusEnum } from "~/enums/viewport";
+import styles from "@/components/document/menu/layer.module.scss";
 
 interface LayerMenuProps {}
 
@@ -79,9 +80,9 @@ const LayerMenu = ({}: LayerMenuProps) => {
   };
 
   return (
-    <div ref={refLayerMenu} className="layer-menu" style={layerMenuStyle}>
-      <div className="resize-area" onMouseDown={handleOnMouseDownResize} />
-      <div className="tabs-view">
+    <div ref={refLayerMenu} className={styles["layer-menu"]} style={layerMenuStyle}>
+      <div className={styles["resize-area"]} onMouseDown={handleOnMouseDownResize} />
+      <div className={styles["tabs-view"]}>
         <motion.div
           animate={{ x: -tabActiveIndex * width }}
           transition={{

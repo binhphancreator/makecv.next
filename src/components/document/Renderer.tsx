@@ -12,7 +12,8 @@ import {
   updateBoundingSizeComponent,
 } from "~/redux/documentSlice";
 import { ShownNameComponents } from "~/components/document";
-import { ViewportStatusEnum } from "~/types/viewport";
+import { ViewportStatusEnum } from "~/enums/viewport";
+import styles from "@/components/document/renderer.module.scss";
 
 interface RendererProps {
   keyRender: string;
@@ -23,7 +24,7 @@ export interface RendererMethods {}
 const RendererComponent = ({ keyRender }: RendererProps) => {
   const dispatch = useAppDispatch();
   const viewportStatus = useAppSelector((state) => state.documentState.viewport.status);
-  const scale = useAppSelector((state) => state.documentState.viewport.scale);
+  const scale = useAppSelector((state) => state.documentState.viewport.renderAreaScale);
   const selectingKeys = useAppSelector((state) => state.documentState.selectingKeys);
   const flatDataRender = useAppSelector((state) => state.documentState.flatDataRender);
   const editingContexts = useAppSelector((state) => state.documentState.editingContexts);
@@ -93,7 +94,7 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
   }, [data.size, data.boundingSize, scale]);
 
   const renderedNameElement = useMemo<JSX.Element | null>(() => {
-    var nameComponent = data.component;
+    var nameComponent: string = data.component;
     if (!ShownNameComponents.includes(nameComponent)) {
       return null;
     }
@@ -105,8 +106,8 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
       return (
         <div
           className={classNames({
-            "rendered-name": true,
-            active: selecting,
+            [styles["rendered-name"]]: true,
+            [styles.active]: selecting,
           })}
         >
           {nameComponent}
@@ -127,11 +128,18 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
       return;
     }
 
+    if (!event.shiftKey) {
+      dispatch(refreshSelectingKeys({ key: keyRender }));
+    } else {
+      dispatch(addSelectingKey({ key: keyRender }));
+    }
+
     event.stopPropagation();
     const startX = event.pageX - data.position.x;
     const startY = event.pageY - data.position.y;
 
     const handleMouseMove = (eventMove: MouseEvent) => {
+      eventMove.preventDefault();
       dispatch(setViewportStatus({ status: ViewportStatusEnum.MovingComponent }));
       dispatch(
         setPositionComponentByKey({
@@ -139,7 +147,7 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
             x: eventMove.pageX - startX,
             y: eventMove.pageY - startY,
           },
-          key: data.key,
+          key: keyRender,
         })
       );
     };
@@ -147,10 +155,6 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
     const handleMouseUp = () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mouseup", handleMouseUp);
-      if (!event.shiftKey) {
-        dispatch(refreshSelectingKeys());
-      }
-      dispatch(addSelectingKey({ key: data.key }));
       dispatch(setViewportStatus({ status: ViewportStatusEnum.Idle }));
     };
 
@@ -175,15 +179,15 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
   };
 
   const ComponentRender = resolveComponent(data.component);
-  if (ComponentRender) {
+  if (ComponentRender && data) {
     return (
-      <div style={renderedBlockStyle} className="rendered-block" onMouseDown={handleMouseDown}>
-        {showActiveBorder && <div className="active-border" style={activeBorderStyle} />}
+      <div style={renderedBlockStyle} className={styles["rendered-block"]} onMouseDown={handleMouseDown}>
+        {showActiveBorder && <div className={styles["active-border"]} style={activeBorderStyle} />}
         <div
           ref={renderedComponentRef}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
-          className="rendered-component"
+          className={styles["rendered-component"]}
           style={renderedComponentStyle}
         >
           {renderedNameElement}

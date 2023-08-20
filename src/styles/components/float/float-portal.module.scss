@@ -1,0 +1,16 @@
+.container {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  width: fit-content;
+  height: fit-content;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: transparent;
+  z-index: 1;
+}

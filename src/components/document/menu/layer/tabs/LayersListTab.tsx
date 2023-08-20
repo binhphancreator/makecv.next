@@ -1,6 +1,7 @@
 import React, { useMemo } from "react";
 import LayerItem from "./LayerItem";
 import { useAppSelector } from "~/hooks/app";
+import styles from "@/components/document/menu/layer.module.scss";
 
 interface LayersListTabProps {}
 
@@ -15,7 +16,7 @@ const LayersListTab = ({}: LayersListTabProps) => {
       });
   }, [flatDataRender]);
 
-  return <div className="layer-list">{layerList}</div>;
+  return <div className={styles["layer-list"]}>{layerList}</div>;
 };
 
 export default LayersListTab;

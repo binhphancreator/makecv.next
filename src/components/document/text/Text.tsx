@@ -1,8 +1,10 @@
 import React, { useEffect, useMemo } from "react";
 import { useAppDispatch, useAppSelector } from "~/hooks/app";
-import { addEditingKey, removeEditingKey } from "~/redux/documentSlice";
-import { Size } from "~/types/document";
+import { addEditingKey } from "~/redux/documentSlice";
 import { useTextEditor } from "./hooks/editor";
+import { useDocumentEventListener } from "~/components/document/event/hooks";
+import { Size } from "~/types/document";
+import styles from "@/components/document/editor.module.scss";
 
 interface TextProps {
   size?: Size;
@@ -16,15 +18,14 @@ const TextComponent = ({ size, content, keyRender }: TextProps) => {
   const dispatch = useAppDispatch();
   const editingContexts = useAppSelector((state) => state.documentState.editingContexts);
 
-  const {
-    editorRef: editorInputRef,
-    selection: { selectAll },
-  } = useTextEditor();
+  const editor = useTextEditor();
+  useDocumentEventListener("editor.text.format", (event) => {
+    editor.format({ [event.format]: event.value });
+  });
 
   useEffect(() => {
-    if (editorInputRef.current) {
-      editorInputRef.current.innerHTML = `<p>${content}<strong>&#xfeff;</strong></p>`;
-    }
+    editor.empty();
+    editor.appendText(content);
   }, []);
 
   const editorContainerStyle = useMemo<React.CSSProperties>(() => {
@@ -33,7 +34,7 @@ const TextComponent = ({ size, content, keyRender }: TextProps) => {
       style.width = `${size.width}px`;
       style.height = `${size.height}px`;
     } else {
-      style.whiteSpace = "nowrap";
+      style.whiteSpace = "pre";
     }
     return style;
   }, [size]);
@@ -54,20 +55,15 @@ const TextComponent = ({ size, content, keyRender }: TextProps) => {
         },
       })
     );
-    selectAll();
-  };
-
-  const handleOnBlur = () => {
-    dispatch(removeEditingKey({ key: keyRender }));
+    editor.focus(true);
   };
 
   return (
-    <div className="editor">
-      <div onDoubleClick={handleOnDoubleClick} className="editor-cover" style={editorCoverStyle} />
+    <div className={styles.editor}>
+      <div onDoubleClick={handleOnDoubleClick} className={styles["editor-cover"]} style={editorCoverStyle} />
       <div
-        onBlur={handleOnBlur}
-        ref={editorInputRef}
-        className="editor-input"
+        ref={editor.ref}
+        className={styles["editor-input"]}
         style={editorContainerStyle}
         contentEditable={true}
         spellCheck={false}

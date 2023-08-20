@@ -1,24 +1,17 @@
-import React, { useEffect } from "react";
-import Viewport from "~/components/document/Viewport";
+import React from "react";
 import data from "~/data/render";
-import { useAppDispatch } from "~/hooks/app";
-import { initDataRender } from "~/redux/documentSlice";
 import { TemplateDataRender } from "~/types/document";
-import { transformTemplateDataRender } from "~/utils/document";
+import styles from "@/pages/document/preview.module.scss";
+import Document from "~/components/document/Document";
 
 interface PreviewProps {
   data: TemplateDataRender[];
 }
 
-const Preview = ({ data: initialData }: PreviewProps) => {
-  const dispatch = useAppDispatch();
-  useEffect(() => {
-    dispatch(initDataRender({ flatDataRender: transformTemplateDataRender(initialData) }));
-  }, []);
-
+const Preview = ({ data: templateData }: PreviewProps) => {
   return (
-    <div className="document-preview-page">
-      <Viewport />
+    <div className={styles.page}>
+      <Document templateData={templateData} />
     </div>
   );
 };

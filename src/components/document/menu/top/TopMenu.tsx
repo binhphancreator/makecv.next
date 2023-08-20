@@ -4,6 +4,7 @@ import classNames from "classnames";
 import ColorPalettes from "~/constants/colors";
 import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import { setTabActiveIndexLayerMenu } from "~/redux/documentSlice";
+import styles from "@/components/document/menu/top.module.scss";
 
 interface TopMenuProps {}
 
@@ -28,13 +29,13 @@ const TopMenu = ({}: TopMenuProps) => {
   };
 
   return (
-    <div className="top-menu" style={topMenuStyle}>
-      <div className="tabs-layer-menu">
+    <div className={styles["top-menu"]} style={topMenuStyle}>
+      <div className={styles["tabs-layer-menu"]}>
         <button
           onClick={() => handleChangeTabActiveIndexLayerMenu(0)}
           className={classNames({
-            "btn-tab": true,
-            active: tabActiveIndexLayerMenu === 0,
+            [styles["btn-tab"]]: true,
+            [styles.active]: tabActiveIndexLayerMenu === 0,
           })}
         >
           <SvgIcon name="layer-group" width={20} height={20} color={ColorPalettes.neutral100} />
@@ -42,8 +43,8 @@ const TopMenu = ({}: TopMenuProps) => {
         <button
           onClick={() => handleChangeTabActiveIndexLayerMenu(1)}
           className={classNames({
-            "btn-tab": true,
-            active: tabActiveIndexLayerMenu === 1,
+            [styles["btn-tab"]]: true,
+            [styles.active]: tabActiveIndexLayerMenu === 1,
           })}
         >
           <SvgIcon name="shapes" width={20} height={20} color={ColorPalettes.neutral100} />
@@ -51,8 +52,8 @@ const TopMenu = ({}: TopMenuProps) => {
         <button
           onClick={() => handleChangeTabActiveIndexLayerMenu(2)}
           className={classNames({
-            "btn-tab": true,
-            active: tabActiveIndexLayerMenu === 2,
+            [styles["btn-tab"]]: true,
+            [styles.active]: tabActiveIndexLayerMenu === 2,
           })}
         >
           <SvgIcon type="solid" name="box" width={20} height={20} color={ColorPalettes.neutral100} />

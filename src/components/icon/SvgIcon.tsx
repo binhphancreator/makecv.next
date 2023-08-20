@@ -18,11 +18,7 @@ const SvgIcon = ({ name, type, width, height, color }: SvgIconProps) => {
 
   return (
     <div className="svg-icon">
-      <SvgComponent
-        width={width}
-        height={height}
-        color={color ?? defaultColor}
-      />
+      <SvgComponent width={width} height={height} color={color ?? defaultColor} />
     </div>
   );
 };

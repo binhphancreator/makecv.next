@@ -25,7 +25,7 @@ export const transformTemplateDataRender = (initialData: TemplateDataRender[]): 
         component: _data.component,
         options: _data.options,
         style: _data.style,
-        position: _data.position,
+        position: _data.position || { x: 0, y: 0 },
         size: _data.size,
       };
       if (_data.children) {

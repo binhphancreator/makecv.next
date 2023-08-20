@@ -6,6 +6,28 @@ import Text from "./regular/Text";
 import Shapes from "./regular/Shapes";
 import Image from "./regular/Image";
 import LayerGroup from "./regular/LayerGroup";
+import Radius from "./regular/Radius";
+import LineHeight from "./regular/LineHeight";
+import Angle90 from "./regular/Angle90";
+import ArrowsToLine from "./regular/ArrowsToLine";
+import ArrowUpToLine from "./regular/ArrowUpToLine";
+import ArrowDownToLine from "./regular/ArrowDownToLine";
+import AlignLeft from "./regular/AlignLeft";
+import AlignCenter from "./regular/AlignCenter";
+import AlignRight from "./regular/AlignRight";
+import ArrowsLeftRight from "./regular/ArrowsLeftRight";
+import ArrowsUpDown from "./regular/ArrowsUpDown";
+import LinkSimpleVertical from "./regular/LinkSimpleVertical";
+import UnlinkSimpleVertical from "./regular/UnlinkSimpleVertical";
+import LinkSimple from "./regular/LinkSimple";
+import UnlinkSimple from "./regular/UnlinkSimple";
+import Setting from "./regular/Setting";
+import Maximize2 from "./regular/Maximize2";
+import ChevronDown from "./regular/ChevronDown";
+import Check from "./regular/Check";
+import LetterSpacing from "./regular/LetterSpacing";
+import Square from "./regular/Square";
+import PharagraphSpacing from "./regular/PharagraphSpacing";
 
 import SolidObjectsAlignLeft from "./solid/ObjectsAlignLeft";
 import SolidObjectsAlignRight from "./solid/ObjectsAlignRight";
@@ -17,6 +39,10 @@ import SolidDistributeSpacingHorizontal from "./solid/DistributeSpacingHorizonta
 import SolidDistributeSpacingVertical from "./solid/DistributeSpacingVertical";
 import SolidBox from "./solid/Box";
 
+import LightArrowsLeftRight from "./light/ArrowsLeftRight";
+import LightArrowsUpDown from "./light/ArrowsUpDown";
+import LightSquare from "./light/Square";
+
 const IconsMap = {
   regular: {
     "default-image": DefaultImage,
@@ -25,6 +51,28 @@ const IconsMap = {
     shapes: Shapes,
     image: Image,
     "layer-group": LayerGroup,
+    radius: Radius,
+    "angle-90": Angle90,
+    "line-height": LineHeight,
+    "align-left": AlignLeft,
+    "align-center": AlignCenter,
+    "align-right": AlignRight,
+    "arrows-to-line": ArrowsToLine,
+    "arrow-up-to-line": ArrowUpToLine,
+    "arrow-down-to-line": ArrowDownToLine,
+    "arrows-left-right": ArrowsLeftRight,
+    "arrows-up-down": ArrowsUpDown,
+    "link-simple-vertical": LinkSimpleVertical,
+    "unlink-simple-vertical": UnlinkSimpleVertical,
+    "link-simple": LinkSimple,
+    "unlink-simple": UnlinkSimple,
+    setting: Setting,
+    "maximize-2": Maximize2,
+    "chevron-down": ChevronDown,
+    check: Check,
+    "letter-spacing": LetterSpacing,
+    square: Square,
+    "pharagraph-spacing": PharagraphSpacing,
   },
   solid: {
     "objects-align-left": SolidObjectsAlignLeft,
@@ -37,9 +85,14 @@ const IconsMap = {
     "distribute-spacing-vertical": SolidDistributeSpacingVertical,
     box: SolidBox,
   },
+  light: {
+    "arrows-left-right": LightArrowsLeftRight,
+    "arrows-up-down": LightArrowsUpDown,
+    square: LightSquare,
+  },
 };
 
-export type SvgName = keyof typeof IconsMap.regular | keyof typeof IconsMap.solid;
+export type SvgName = keyof typeof IconsMap.regular | keyof typeof IconsMap.solid | keyof typeof IconsMap.light;
 
 export type SvgType = keyof typeof IconsMap;
 

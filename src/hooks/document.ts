@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useAppSelector } from "~/hooks/app";
-import { Color } from "~/types/document";
+import { Color, DataRender } from "~/types/document";
 
 export const useDocumentColor = (color?: Color, defaultColor?: Color) => {
   const colorPalettes = useAppSelector((state) => state.documentState.colorPalettes);
@@ -19,4 +19,26 @@ export const useDocumentColor = (color?: Color, defaultColor?: Color) => {
 
     return color;
   }, [color, colorPalettes]);
+};
+
+export const useDocumentSelecting = () => {
+  const flatDataRender = useAppSelector((state) => state.documentState.flatDataRender);
+  const selectingKeys = useAppSelector((state) => state.documentState.selectingKeys);
+
+  const first = useMemo<DataRender | null>(() => {
+    if (!selectingKeys || !selectingKeys.length) {
+      return null;
+    }
+
+    const firstKey = selectingKeys[0];
+    if (flatDataRender[firstKey]) {
+      return flatDataRender[firstKey];
+    }
+
+    return null;
+  }, [selectingKeys, flatDataRender]);
+
+  const length = selectingKeys.length;
+
+  return { first, length };
 };

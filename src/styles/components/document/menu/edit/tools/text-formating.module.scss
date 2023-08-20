@@ -1,0 +1,48 @@
+@import "@/global";
+
+.container {
+  display: block;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    padding: 0 16px;
+
+    .title {
+      font-weight: 600;
+      color: $gray700;
+      font-size: 14px;
+    }
+  }
+
+  .body {
+    display: block;
+
+    .format-font {
+      font-size: 13px;
+      font-weight: 500;
+      line-height: 20px;
+      color: $gray700;
+      padding: 4px 16px;
+      cursor: pointer;
+      margin-bottom: 4px;
+
+      &:hover {
+        background: $gray100;
+      }
+    }
+
+    .row {
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      column-gap: 8px;
+
+      &:not(:last-child) {
+        margin-bottom: 4px;
+      }
+    }
+  }
+}

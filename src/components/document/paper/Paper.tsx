@@ -2,6 +2,7 @@ import React, { useMemo } from "react";
 import ColorPalettes from "~/constants/colors";
 import { useDocumentColor } from "~/hooks/document";
 import { Color, Size } from "~/types/document";
+import styles from "@/components/document/paper.module.scss";
 
 interface PaperProps {
   size: Size;
@@ -24,7 +25,7 @@ const Paper = ({ size, fill }: PaperProps) => {
     return style;
   }, [size, background]);
 
-  return <div ref={paperRef} className="paper" style={paperStyle} />;
+  return <div ref={paperRef} className={styles["paper"]} style={paperStyle} />;
 };
 
 export default Paper;

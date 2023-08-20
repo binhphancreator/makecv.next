@@ -11,16 +11,17 @@ export interface NormalizedRange {
   start: RangePosition;
   end: RangePosition;
   native: NativeRange;
+  collapsed?: boolean;
 }
 
 export const useEditorSelection = (container: EditorContainerHook) => {
   const getRange = () => {
     const nativeRange = getNativeRange();
     if (!nativeRange) {
-      return [null, null];
+      return null;
     }
     const range = normalizeNative(nativeRange);
-    console.log(range);
+    return range;
   };
 
   const getNativeRange = () => {
@@ -43,6 +44,7 @@ export const useEditorSelection = (container: EditorContainerHook) => {
       },
       end: { node: nativeRange.endContainer, offset: nativeRange.endOffset },
       native: nativeRange,
+      collapsed: nativeRange.collapsed,
     };
 
     range.start = walkRangePosition(range.start);
@@ -82,6 +84,25 @@ export const useEditorSelection = (container: EditorContainerHook) => {
     container.ref.current.focus({ preventScroll: true });
   };
 
+  function setCaret(node: Node, start: number) {
+    if (!container.ref.current) {
+      return;
+    }
+
+    const selection = window.getSelection();
+    if (!selection) {
+      return;
+    }
+
+    const range = document.createRange();
+
+    range.setStart(node, start);
+    range.collapse(true);
+
+    selection.removeAllRanges();
+    selection.addRange(range);
+  }
+
   const selectAll = () => {
     if (!container.ref.current) {
       return null;
@@ -89,8 +110,11 @@ export const useEditorSelection = (container: EditorContainerHook) => {
     const range = document.createRange();
     range.selectNodeContents(container.ref.current);
     const selection = window.getSelection();
-    selection?.removeAllRanges();
-    selection?.addRange(range);
+    if (!selection) {
+      return;
+    }
+    selection.removeAllRanges();
+    selection.addRange(range);
   };
 
   return {
@@ -98,5 +122,8 @@ export const useEditorSelection = (container: EditorContainerHook) => {
     getNativeRange,
     focus,
     selectAll,
+    setCaret,
   };
 };
+
+export type EditorSelectionHook = ReturnType<typeof useEditorSelection>;

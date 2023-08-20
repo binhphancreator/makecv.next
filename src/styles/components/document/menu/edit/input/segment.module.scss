@@ -1,0 +1,37 @@
+@import "@/global";
+
+.container {
+  display: flex;
+  align-items: center;
+  padding: 1px;
+  column-gap: 0;
+  position: relative;
+
+  .border {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    border: 1px solid $gray200;
+    z-index: -1;
+  }
+
+  &.hover .border {
+    opacity: 1;
+  }
+
+  .item {
+    width: fit-content;
+    height: fit-content;
+    cursor: pointer;
+
+    &-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    &.active {
+      background: $silver100;
+    }
+  }
+}

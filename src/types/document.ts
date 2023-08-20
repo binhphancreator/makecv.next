@@ -1,10 +1,10 @@
-import React from "react";
+import { ComponentName } from "~/components/document";
 
 export type TemplateDataRender = {
   key?: string;
   parentKey?: string;
   name?: string;
-  component: string;
+  component: ComponentName;
   options?: {
     [key: string]: any;
   };
@@ -18,6 +18,7 @@ export type DataRender = TemplateDataRender & {
   key: string;
   boundingSize?: Size;
   children?: DataRender[];
+  position: Position;
 };
 
 export type FlatMapDataRender = {
