@@ -60,8 +60,8 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
     const style: React.CSSProperties = {};
     style.transform = `scale(${scale})`;
     if (data.size) {
-      style.width = `${data.size.width}px`;
-      style.height = `${data.size.height}px`;
+      style.width = typeof data.size.width === "number" ? `${data.size.width}px` : "";
+      style.height = typeof data.size.height === "number" ? `${data.size.height}px` : "";
     }
     return style;
   }, [scale, data.size, data.parentKey]);
@@ -84,12 +84,14 @@ const RendererComponent = ({ keyRender }: RendererProps) => {
   const activeBorderStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
     const size = data.size || data.boundingSize;
-    if (size) {
+
+    if (size && typeof size.width === "number" && typeof size.height === "number") {
       style.left = "-2px";
       style.top = "-2px";
       style.width = `${size.width * scale + 4}px`;
       style.height = `${size.height * scale + 4}px`;
     }
+
     return style;
   }, [data.size, data.boundingSize, scale]);
 

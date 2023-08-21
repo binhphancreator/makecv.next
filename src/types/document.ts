@@ -16,7 +16,7 @@ export type TemplateDataRender = {
 
 export type DataRender = TemplateDataRender & {
   key: string;
-  boundingSize?: Size;
+  boundingSize?: BoundingSize;
   children?: DataRender[];
   position: Position;
 };
@@ -31,6 +31,11 @@ export type Position = {
 };
 
 export type Size = {
+  width?: number;
+  height?: number;
+};
+
+export type BoundingSize = {
   width: number;
   height: number;
 };

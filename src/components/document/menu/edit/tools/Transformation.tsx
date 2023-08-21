@@ -64,8 +64,8 @@ const Transformation = () => {
       }
       if (dataRender.size) {
         return {
-          width: dataRender.size.width,
-          height: dataRender.size.height,
+          width: dataRender.size.width || dataRender.boundingSize?.width || 0,
+          height: dataRender.size.height || dataRender.boundingSize?.height || 0,
         };
       }
       if (dataRender.boundingSize) {
