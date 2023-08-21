@@ -1,0 +1,87 @@
+html {
+  box-sizing: border-box;
+  text-size-adjust: 100%;
+  font-feature-settings: normal;
+  font-family: Arial, Helvetica, sans-serif;
+  font-variation-settings: normal;
+  line-height: 1.5;
+  tab-size: 4;
+}
+
+body {
+  line-height: inherit;
+  margin: 0;
+}
+
+*, ::after, ::before {
+  border: 0 solid #e5e7eb;
+  box-sizing: border-box;
+}
+
+button,
+[type='button'],
+[type='reset'],
+[type='submit'] {
+  appearance: button;
+  background-color: transparent;
+  background-image: none;
+}
+
+[type='search'] {
+  appearance: textfield;
+  outline-offset: -2px;
+}
+
+hr {
+  height: 0;
+  color: inherit;
+  border-top-width: 1px;
+}
+
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+b,
+strong {
+  font-weight: bolder;
+}
+
+blockquote,
+dl,
+dd,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+hr,
+figure,
+p,
+pre {
+  margin: 0;
+}
+
+ol,
+ul,
+menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+dialog {
+  padding: 0;
+}
