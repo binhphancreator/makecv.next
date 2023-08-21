@@ -28,6 +28,7 @@ import Check from "./regular/Check";
 import LetterSpacing from "./regular/LetterSpacing";
 import Square from "./regular/Square";
 import PharagraphSpacing from "./regular/PharagraphSpacing";
+import XMark from "~/components/icon/svg/regular/XMark";
 
 import SolidObjectsAlignLeft from "./solid/ObjectsAlignLeft";
 import SolidObjectsAlignRight from "./solid/ObjectsAlignRight";
@@ -73,6 +74,7 @@ const IconsMap = {
     "letter-spacing": LetterSpacing,
     square: Square,
     "pharagraph-spacing": PharagraphSpacing,
+    xmark: XMark,
   },
   solid: {
     "objects-align-left": SolidObjectsAlignLeft,

@@ -3,6 +3,7 @@ import { useAppDispatch } from "~/hooks/app";
 import { refreshEdittingContexts, refreshSelectingKeys } from "~/redux/documentSlice";
 import BarArea from "./areas/BarArea";
 import TouchArea from "./areas/TouchArea";
+import FloatArea from "~/components/document/viewport/areas/FloatArea";
 import emitter from "~/components/document/event";
 import styles from "@/components/document/viewport/viewport.module.scss";
 
@@ -36,8 +37,9 @@ const Viewport = () => {
 
   return (
     <div className={styles.container} onWheel={handleOnWheel} onMouseDown={refreshOnClickOutside} ref={viewportRef}>
-      <BarArea />
       <TouchArea />
+      <BarArea />
+      <FloatArea />
     </div>
   );
 };

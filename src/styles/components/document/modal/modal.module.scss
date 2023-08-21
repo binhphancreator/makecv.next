@@ -1,0 +1,42 @@
+@import "@/global";
+
+.container {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: fit-content;
+  height: fit-content;
+  background: $white;
+  box-shadow: rgb(149 157 165 / 20%) 0 8px 24px;
+  font-family: Inter, sans-serif;
+  border-radius: 4px;
+
+  .header {
+    padding: 8px 16px;
+    border-bottom: 1px solid $gray100;
+    display: flex;
+    align-items: center;
+    column-gap: 16px;
+
+    .title {
+      font-size: 12px;
+      font-weight: 600;
+      color: $gray700;
+      flex: 1;
+      user-select: none;
+    }
+
+    .btn-close {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+    }
+  }
+
+  .body {
+    display: block;
+  }
+}
