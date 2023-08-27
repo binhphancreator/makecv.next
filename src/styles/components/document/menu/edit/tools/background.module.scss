@@ -7,13 +7,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
     padding: 0 16px;
 
     .title {
       font-weight: 600;
-      color: $gray700;
-      font-size: 14px;
+      color: $gray600;
+      font-size: 12px;
     }
   }
 
@@ -40,7 +40,7 @@
       .preview {
         width: 16px;
         height: 16px;
-        border: 1px solid $gray300;
+        border: 1px solid $gray200;
       }
 
       .input {

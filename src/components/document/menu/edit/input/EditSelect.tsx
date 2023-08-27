@@ -98,7 +98,6 @@ const Input = ({ value: defaultValue, width, height, children }: InputProps) => 
         })}
         animate={{ paddingLeft: hover || showDropdown ? "8px" : 0 }}
       >
-        <div className={styles.border} />
         <motion.div className={styles.input}>{value}</motion.div>
         <motion.div layout className={styles["icon-wrap"]}>
           <SvgIcon type="regular" name="chevron-down" color={ColorPalettes.gray400} width={10} />

@@ -43,7 +43,7 @@ const SketchPicker = () => {
         />
         <div className={styles.h16} />
         <div className={styles.px16}>
-          <Hue hsbColor={hsbColor} size={{ height: 20 }} onChange={(hue) => setHSBColor({ ...hsbColor, hue })} />
+          <Hue hsbColor={hsbColor} size={{ height: 16 }} onChange={(hue) => setHSBColor({ ...hsbColor, hue })} />
         </div>
       </div>
     </Modal>
