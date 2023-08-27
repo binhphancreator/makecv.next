@@ -1,7 +1,8 @@
-import React, { useMemo, useState } from "react";
+import React, { ForwardedRef, useMemo, useState } from "react";
 import ColorPalettes from "~/constants/colors";
 import SvgIcon from "~/components/icon/SvgIcon";
 import { Position, Size } from "~/types/document";
+import { AnimatePresence, motion } from "framer-motion";
 import styles from "@/components/document/modal/modal.module.scss";
 
 interface ModalProps {
@@ -10,11 +11,17 @@ interface ModalProps {
   size: Size;
 }
 
-const Modal = ({ title, children, size }: ModalProps) => {
+export interface ModalMethods {
+  show(): any;
+  hide(): any;
+}
+
+const ModalComponent = ({ title, children, size }: ModalProps, forwardRef: ForwardedRef<ModalMethods>) => {
   const [position, setPosition] = useState<Position>({
     x: 200,
     y: 200,
   });
+  const [visible, setVisible] = useState<boolean>(false);
 
   const containerStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
@@ -32,6 +39,14 @@ const Modal = ({ title, children, size }: ModalProps) => {
 
     return style;
   }, [size, position]);
+
+  const hide = () => {
+    setVisible(false);
+  };
+
+  const show = () => {
+    setVisible(true);
+  };
 
   const handleHeaderOnMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     const startPosition: Position = {
@@ -56,20 +71,36 @@ const Modal = ({ title, children, size }: ModalProps) => {
     window.addEventListener("mouseup", onMouseUp);
   };
 
+  React.useImperativeHandle(forwardRef, () => ({
+    show,
+    hide,
+  }));
+
   return (
-    <div className={styles.container} style={containerStyle}>
-      <Header title={title} onMouseDown={handleHeaderOnMouseDown} />
-      <div className={styles.body}>{children}</div>
-    </div>
+    <AnimatePresence>
+      {visible && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          className={styles.container}
+          style={containerStyle}
+        >
+          <Header title={title} onMouseDown={handleHeaderOnMouseDown} onClose={hide} />
+          <div className={styles.body}>{children}</div>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 
 interface HeaderProps {
   title: string;
   onMouseDown?(event: React.MouseEvent<HTMLDivElement, MouseEvent>): void;
+  onClose?(): void;
 }
 
-const Header = ({ title, onMouseDown }: HeaderProps) => {
+const Header = ({ title, onMouseDown, onClose }: HeaderProps) => {
   const handleOnMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
     onMouseDown && onMouseDown(event);
@@ -78,11 +109,13 @@ const Header = ({ title, onMouseDown }: HeaderProps) => {
   return (
     <div className={styles.header} onMouseDown={handleOnMouseDown}>
       <h3 className={styles.title}>{title}</h3>
-      <button className={styles["btn-close"]}>
+      <button className={styles["btn-close"]} onClick={() => onClose && onClose()}>
         <SvgIcon name="xmark" height={16} color={ColorPalettes.gray600} />
       </button>
     </div>
   );
 };
+
+const Modal = React.forwardRef<ModalMethods, ModalProps>(ModalComponent);
 
 export default Modal;

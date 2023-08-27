@@ -1,12 +1,14 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { EditingContext, FlatMapDataRender, Position, Size } from "~/types/document";
+import { BoundingSize, EditingContext, FlatMapDataRender, Position, Size } from "~/types/document";
 import { ViewportStatusEnum } from "~/enums/viewport";
 import {
   DEFAULT_HEIGHT_TOP_MENU,
   MIN_WIDTH_LAYER_MENU,
   DEFAULT_SCALE_SPEED_VIEWPORT,
   DEFAULT_SCALE_VIEWPORT,
+  DEFAULT_FILL_VIEWPORT,
 } from "~/constants/document";
+import { ColorValue } from "~/components/color/types";
 
 export interface DocumentState {
   flatDataRender: FlatMapDataRender;
@@ -19,6 +21,7 @@ export interface DocumentState {
     widthLayerMenu: number;
     tabActiveIndexLayerMenu: number;
     status: ViewportStatusEnum;
+    fill: ColorValue;
   };
   colorPalettes: string[];
   hoveringKeys: string[];
@@ -40,6 +43,7 @@ const initialState: DocumentState = {
       y: 0,
     },
     status: ViewportStatusEnum.Idle,
+    fill: DEFAULT_FILL_VIEWPORT,
   },
   colorPalettes: ["#000000", "#262A56", "#B8621B", "#E3CCAE"],
   hoveringKeys: [],
@@ -116,10 +120,13 @@ const slice = createSlice({
     setViewportStatus(state, { payload }: PayloadAction<{ status: ViewportStatusEnum }>) {
       state.viewport.status = payload.status;
     },
-    updateBoundingSizeComponent(state, { payload }: PayloadAction<{ key: string; boundingSize: Size }>) {
+    updateBoundingSizeComponent(state, { payload }: PayloadAction<{ key: string; boundingSize: BoundingSize }>) {
       if (state.flatDataRender[payload.key]) {
         state.flatDataRender[payload.key].boundingSize = payload.boundingSize;
       }
+    },
+    updateViewportFill(state, { payload }: PayloadAction<{ fill: ColorValue }>) {
+      state.viewport.fill = payload.fill;
     },
   },
 });
@@ -141,6 +148,7 @@ export const {
   removeEditingKey,
   refreshEdittingContexts,
   updateBoundingSizeComponent,
+  updateViewportFill,
 } = slice.actions;
 
 export default slice.reducer;

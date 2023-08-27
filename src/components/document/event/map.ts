@@ -1,4 +1,5 @@
 import { WheelEvent } from "react";
+import { ColorValue, HSBColor } from "~/components/color/types";
 import { FormatNameProp } from "~/components/document/text/formats";
 
 export type FormatTextEvent = {
@@ -6,9 +7,15 @@ export type FormatTextEvent = {
   value?: any;
 };
 
+export type ShowColorModalEvent = {
+  onChange?(hsb: HSBColor): any;
+  color?: ColorValue;
+};
+
 export interface DocumentEventMap {
   "viewport.scale": WheelEvent<HTMLDivElement>;
   "viewport.scroll": WheelEvent<HTMLDivElement>;
   "document.keypress": KeyboardEvent;
   "editor.text.format": FormatTextEvent;
+  "modal.color.show": ShowColorModalEvent;
 }

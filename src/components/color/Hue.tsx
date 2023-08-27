@@ -1,18 +1,20 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
-import { BoundingSize, Position, Size } from "~/types/document";
 import { HSBColor } from "~/components/color/types";
-import styles from "@/components/color/saturation.module.scss";
+import { BoundingSize, Position, Size } from "~/types/document";
+import classNames from "classnames";
+import styles from "@/components/color/hue.module.scss";
 
-interface SaturationProps {
-  size: Size;
+export type HueDirection = "vertical" | "horizontal";
+
+interface HueProps {
   hsbColor: HSBColor;
-  onChange?(saturation: number, bright: number): any;
+  size?: Size;
+  onChange?(hue: number): any;
 }
 
-const Saturation = ({ size, hsbColor, onChange }: SaturationProps) => {
-  const [saturation, setSaturation] = useState<number>(hsbColor.saturation);
-  const [bright, setBright] = useState<number>(hsbColor.bright);
-  const boundingSizeRef = useRef<BoundingSize>({ height: 0, width: 0 });
+const Hue = ({ hsbColor, size, onChange }: HueProps) => {
+  const [hue, setHue] = useState<number>(hsbColor.hue);
+  const [boundingSize, setBoundingSize] = useState<BoundingSize>({ height: 0, width: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -21,15 +23,15 @@ const Saturation = ({ size, hsbColor, onChange }: SaturationProps) => {
     }
     const boundingClientRect = containerRef.current.getBoundingClientRect();
     const { width, height } = boundingClientRect;
-    boundingSizeRef.current = {
+    setBoundingSize({
       width,
       height,
-    };
+    });
   }, []);
 
   useEffect(() => {
-    onChange && onChange(saturation, bright);
-  }, [saturation, bright]);
+    onChange && onChange(hue);
+  }, [hue]);
 
   const containerStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
@@ -42,18 +44,15 @@ const Saturation = ({ size, hsbColor, onChange }: SaturationProps) => {
     return style;
   }, [size]);
 
-  const hueStyle = useMemo<React.CSSProperties>(() => {
-    return {
-      background: `hsl(${hsbColor.hue},100%, 50%)`,
-    };
-  }, [hsbColor]);
-
   const pointerStyle = useMemo<React.CSSProperties>(() => {
+    const r = Math.min(boundingSize.width, boundingSize.height);
+
     return {
-      top: `${-bright * 100 + 100}%`,
-      left: `${saturation * 100}%`,
+      left: `${(hue / 360) * 100}%`,
+      width: `${r}px`,
+      height: `${r}px`,
     };
-  }, [bright, saturation]);
+  }, [hue, boundingSize]);
 
   const handleOnMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -89,22 +88,17 @@ const Saturation = ({ size, hsbColor, onChange }: SaturationProps) => {
     if (!containerRef.current) {
       return;
     }
-    const { width: containerWidth, height: containerHeight } = boundingSizeRef.current;
+    const { width: containerWidth } = containerRef.current.getBoundingClientRect();
     const left = Math.min(Math.max(0, position.x), containerWidth);
-    const top = Math.min(Math.max(0, position.y), containerHeight);
-
-    setBright(1 - top / containerHeight);
-    setSaturation(left / containerWidth);
+    setHue((left / containerWidth) * 360);
   };
 
   return (
-    <div className={styles.container} style={containerStyle} onMouseDown={handleOnMouseDown} ref={containerRef}>
-      <div className={styles.hue} style={hueStyle} />
-      <div className={styles["white"]} />
-      <div className={styles["black"]} />
+    <div className={styles.container} ref={containerRef} style={containerStyle} onMouseDown={handleOnMouseDown}>
+      <div className={classNames([styles.hue, styles.horizontal])} />
       <div className={styles.pointer} style={pointerStyle} />
     </div>
   );
 };
 
-export default Saturation;
+export default Hue;

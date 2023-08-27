@@ -6,6 +6,7 @@ import styles from "@/components/document/menu/edit/edit.module.scss";
 import Transformation from "./tools/Transformation";
 import TextFormating from "./tools/TextFormating";
 import { useDocumentSelecting } from "~/hooks/document";
+import Background from "~/components/document/menu/edit/tools/Background";
 
 interface EditMenuProps {
   width?: number;
@@ -52,12 +53,25 @@ const EditMenu = ({ width: initialWidth }: EditMenuProps) => {
     );
   };
 
+  const renderBackground = () => {
+    if (documentSelecting.first) {
+      return null;
+    }
+    return (
+      <>
+        <Background />
+        <div className={styles.divider} />
+      </>
+    );
+  };
+
   return (
     <div ref={refEditMenu} onMouseDown={handleMouseDown} className={styles.container} style={editMenuStyle}>
       <Alignment />
       <div className={styles.divider} />
       {renderTransformation()}
       {renderTextFormating()}
+      {renderBackground()}
     </div>
   );
 };
