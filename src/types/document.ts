@@ -1,4 +1,5 @@
 import { ComponentName } from "~/components/document";
+import { ColorValue } from "~/components/color/types";
 
 export type TemplateDataRender = {
   key?: string;
@@ -40,12 +41,12 @@ export type BoundingSize = {
   height: number;
 };
 
-export type Color = string;
+export type DocumentColor = ColorValue | string;
 
 export type VectorProps = {
   size: Size;
   radius?: number | number[];
-  fill: Color;
+  fill: DocumentColor;
 };
 
 export type EditingContext = {

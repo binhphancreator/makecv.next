@@ -1,23 +1,24 @@
 import { useMemo } from "react";
 import { useAppSelector } from "~/hooks/app";
-import { Color, DataRender } from "~/types/document";
+import { DocumentColor, DataRender } from "~/types/document";
+import { color2css } from "~/utils/color";
 
-export const useDocumentColor = (color?: Color, defaultColor?: Color) => {
+export const useDocumentColor = (color?: DocumentColor, defaultColor?: DocumentColor) => {
   const colorPalettes = useAppSelector((state) => state.documentState.colorPalettes);
 
   return useMemo<string>(() => {
-    if (!color || !color.length) {
-      return defaultColor || "#000000";
+    if (!color) {
+      return color2css(defaultColor || "#000000");
     }
 
-    if (/color_palette\.[0-9]+/.test(color)) {
+    if (typeof color === "string" && /color_palette\.[0-9]+/.test(color)) {
       const colorIndex = parseInt(color.split(".")[1]);
       if (colorPalettes[colorIndex]) {
         return colorPalettes[colorIndex];
       }
     }
 
-    return color;
+    return color2css(color);
   }, [color, colorPalettes]);
 };
 

@@ -1,13 +1,13 @@
 import React, { useMemo } from "react";
 import ColorPalettes from "~/constants/colors";
 import { useDocumentColor } from "~/hooks/document";
-import { Color, Size } from "~/types/document";
+import { DocumentColor, Size } from "~/types/document";
 import styles from "@/components/document/paper.module.scss";
 
 interface PaperProps {
   size: Size;
   style?: React.CSSProperties;
-  fill?: Color;
+  fill?: DocumentColor;
 }
 
 const Paper = ({ size, fill }: PaperProps) => {
