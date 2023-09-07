@@ -6,7 +6,7 @@ import TouchArea from "./areas/TouchArea";
 import FloatArea from "~/components/document/viewport/areas/FloatArea";
 import emitter from "~/components/document/event";
 import styles from "@/components/document/viewport/viewport.module.scss";
-import { color2css, color2hex } from "~/utils/color";
+import { color2css } from "~/utils/color";
 
 const Viewport = () => {
   const dispatch = useAppDispatch();
@@ -25,7 +25,7 @@ const Viewport = () => {
     };
   }, []);
 
-  const viewportStyle = useMemo<React.CSSProperties>(() => {
+  const backgroundStyle = useMemo<React.CSSProperties>(() => {
     return {
       background: color2css(fill),
     };
@@ -45,13 +45,8 @@ const Viewport = () => {
   };
 
   return (
-    <div
-      className={styles.container}
-      style={viewportStyle}
-      onWheel={handleOnWheel}
-      onMouseDown={refreshOnClickOutside}
-      ref={viewportRef}
-    >
+    <div className={styles.container} onWheel={handleOnWheel} onMouseDown={refreshOnClickOutside} ref={viewportRef}>
+      <div className={styles.background} style={backgroundStyle} />
       <TouchArea />
       <BarArea />
       <FloatArea />

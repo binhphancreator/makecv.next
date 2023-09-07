@@ -7,6 +7,7 @@ import { color2hsb, raw2hsb } from "~/utils/color";
 import { HSBColor } from "~/components/color/types";
 import styles from "@/components/document/modal/sketch-picker.module.scss";
 import { useDocumentEventListener } from "~/components/document/event/hooks";
+import Alpha from "~/components/color/Alpha";
 
 const SketchPicker = () => {
   const modalRef = useRef<ModalMethods>(null);
@@ -44,6 +45,8 @@ const SketchPicker = () => {
         <div className={styles.h16} />
         <div className={styles.px16}>
           <Hue hsbColor={hsbColor} size={{ height: 16 }} onChange={(hue) => setHSBColor({ ...hsbColor, hue })} />
+          <div className={styles.h16} />
+          <Alpha hsbColor={hsbColor} size={{ height: 16 }} onChange={(alpha) => setHSBColor({ ...hsbColor, alpha })} />
         </div>
       </div>
     </Modal>

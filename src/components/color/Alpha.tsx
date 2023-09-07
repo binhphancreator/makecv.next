@@ -1,17 +1,18 @@
-import React, { useEffect, useMemo, useRef } from "react";
-import { BoundingSize, Position, Size } from "~/types/document";
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import styles from "@/components/color/alpha.module.scss";
 import { HSBColor } from "~/components/color/types";
-import styles from "@/components/color/saturation.module.scss";
+import { BoundingSize, Position, Size } from "~/types/document";
+import { color2css } from "~/utils/color";
 
-interface SaturationProps {
-  size: Size;
+interface AlphaProps {
   hsbColor: HSBColor;
-  onChange?(saturation: number, bright: number): any;
+  size?: Size;
+  onChange?(alpha?: number): any;
 }
 
-const Saturation = ({ size, hsbColor, onChange }: SaturationProps) => {
-  const { saturation, bright } = hsbColor;
-  const boundingSizeRef = useRef<BoundingSize>({ height: 0, width: 0 });
+const Alpha = ({ hsbColor, size, onChange }: AlphaProps) => {
+  const { alpha } = hsbColor;
+  const [boundingSize, setBoundingSize] = useState<BoundingSize>({ height: 0, width: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -20,11 +21,15 @@ const Saturation = ({ size, hsbColor, onChange }: SaturationProps) => {
     }
     const boundingClientRect = containerRef.current.getBoundingClientRect();
     const { width, height } = boundingClientRect;
-    boundingSizeRef.current = {
+    setBoundingSize({
       width,
       height,
-    };
+    });
   }, []);
+
+  useEffect(() => {
+    onChange && onChange(alpha);
+  }, [alpha]);
 
   const containerStyle = useMemo<React.CSSProperties>(() => {
     const style: React.CSSProperties = {};
@@ -37,18 +42,25 @@ const Saturation = ({ size, hsbColor, onChange }: SaturationProps) => {
     return style;
   }, [size]);
 
-  const hueStyle = useMemo<React.CSSProperties>(() => {
+  const gradientStyle = useMemo<React.CSSProperties>(() => {
+    const colorFrom = color2css({ ...hsbColor, alpha: 0 });
+    const colorTo = color2css({ ...hsbColor, alpha: 1 });
+
     return {
-      background: `hsl(${hsbColor.hue},100%, 50%)`,
+      background: `linear-gradient(90deg, ${colorFrom}, ${colorTo})`,
     };
   }, [hsbColor]);
 
   const pointerStyle = useMemo<React.CSSProperties>(() => {
+    const r = Math.min(boundingSize.width, boundingSize.height);
+
     return {
-      top: `${-bright * 100 + 100}%`,
-      left: `${saturation * 100}%`,
+      left: `${(alpha ?? 1) * 100}%`,
+      width: `${r}px`,
+      height: `${r}px`,
+      background: color2css(hsbColor),
     };
-  }, [bright, saturation]);
+  }, [alpha, boundingSize, hsbColor]);
 
   const handleOnMouseDown = (event: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     event.stopPropagation();
@@ -84,21 +96,18 @@ const Saturation = ({ size, hsbColor, onChange }: SaturationProps) => {
     if (!containerRef.current) {
       return;
     }
-    const { width: containerWidth, height: containerHeight } = boundingSizeRef.current;
+    const { width: containerWidth } = containerRef.current.getBoundingClientRect();
     const left = Math.min(Math.max(0, position.x), containerWidth);
-    const top = Math.min(Math.max(0, position.y), containerHeight);
-
-    onChange && onChange(left / containerWidth, 1 - top / containerHeight);
+    onChange && onChange(left / containerWidth);
   };
 
   return (
-    <div className={styles.container} style={containerStyle} onMouseDown={handleOnMouseDown} ref={containerRef}>
-      <div className={styles.hue} style={hueStyle} />
-      <div className={styles["white"]} />
-      <div className={styles["black"]} />
+    <div className={styles.container} style={containerStyle} ref={containerRef} onMouseDown={handleOnMouseDown}>
+      <div className={styles.alpha} />
+      <div className={styles.gradient} style={gradientStyle} />
       <div className={styles.pointer} style={pointerStyle} />
     </div>
   );
 };
 
-export default Saturation;
+export default Alpha;

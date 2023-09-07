@@ -20,22 +20,22 @@ export const raw2 = (raw: string): Color => {
 };
 
 export const hsb2 = (hsb: HSBColor): Color => {
-  const color = Color.hsv(hsb.hue, hsb.saturation * 100, hsb.bright * 100);
+  const color = Color.hsv(hsb.hue, hsb.saturation * 100, hsb.bright * 100).alpha(hsb.alpha ?? 1);
   return color.rgb();
 };
 
 export const hsv2 = (hsv: HSVColor): Color => {
-  const color = Color.hsv(hsv.hue, hsv.saturation * 100, hsv.value * 100);
+  const color = Color.hsv(hsv.hue, hsv.saturation * 100, hsv.value * 100).alpha(hsv.alpha ?? 1);
   return color.rgb();
 };
 
 export const hsl2 = (hsl: HSLColor): Color => {
-  const color = Color.hsl(hsl.hue, hsl.saturation * 100, hsl.light * 100);
+  const color = Color.hsl(hsl.hue, hsl.saturation * 100, hsl.light * 100).alpha(hsl.alpha ?? 1);
   return color.rgb();
 };
 
 export const rgb2 = (rgb: RGBColor): Color => {
-  const color = Color.hsl(rgb.red, rgb.green, rgb.blue);
+  const color = Color.hsl(rgb.red, rgb.green, rgb.blue).alpha(rgb.alpha ?? 1);
   return color.rgb();
 };
 

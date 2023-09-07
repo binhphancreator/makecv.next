@@ -13,7 +13,7 @@ interface HueProps {
 }
 
 const Hue = ({ hsbColor, size, onChange }: HueProps) => {
-  const [hue, setHue] = useState<number>(hsbColor.hue);
+  const { hue } = hsbColor;
   const [boundingSize, setBoundingSize] = useState<BoundingSize>({ height: 0, width: 0 });
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -90,7 +90,7 @@ const Hue = ({ hsbColor, size, onChange }: HueProps) => {
     }
     const { width: containerWidth } = containerRef.current.getBoundingClientRect();
     const left = Math.min(Math.max(0, position.x), containerWidth);
-    setHue((left / containerWidth) * 360);
+    onChange && onChange((left / containerWidth) * 360);
   };
 
   return (
