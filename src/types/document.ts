@@ -1,5 +1,6 @@
 import { ComponentName } from "~/components/document";
 import { ColorValue } from "~/components/color/types";
+import { AbsolutePosition, AbsoluteSize } from "~/types/values";
 
 export type TemplateDataRender = {
   key?: string;
@@ -26,28 +27,16 @@ export type FlatMapDataRender = {
   [key: string]: DataRender;
 };
 
-export type Position = {
-  x: number;
-  y: number;
-};
+export type Position = AbsolutePosition;
 
 export type Size = {
   width?: number;
   height?: number;
 };
 
-export type BoundingSize = {
-  width: number;
-  height: number;
-};
+export type BoundingSize = AbsoluteSize;
 
 export type DocumentColor = ColorValue | string;
-
-export type VectorProps = {
-  size: Size;
-  radius?: number | number[];
-  fill: DocumentColor;
-};
 
 export type EditingContext = {
   key: string;

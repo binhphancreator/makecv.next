@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { BoundingSize, EditingContext, FlatMapDataRender, Position, Size } from "~/types/document";
+import { BoundingSize, EditingContext, FlatMapDataRender, Position } from "~/types/document";
 import { ViewportStatusEnum } from "~/enums/viewport";
 import {
   DEFAULT_HEIGHT_TOP_MENU,
@@ -22,6 +22,7 @@ export interface DocumentState {
     tabActiveIndexLayerMenu: number;
     status: ViewportStatusEnum;
     fill: ColorValue;
+    boundingSize?: BoundingSize;
   };
   colorPalettes: string[];
   hoveringKeys: string[];
@@ -128,6 +129,9 @@ const slice = createSlice({
     updateViewportFill(state, { payload }: PayloadAction<{ fill: ColorValue }>) {
       state.viewport.fill = payload.fill;
     },
+    setViewportBoundingSize(state, { payload }: PayloadAction<{ boundingSize: BoundingSize }>) {
+      state.viewport.boundingSize = payload.boundingSize;
+    },
   },
 });
 
@@ -149,6 +153,7 @@ export const {
   refreshEdittingContexts,
   updateBoundingSizeComponent,
   updateViewportFill,
+  setViewportBoundingSize,
 } = slice.actions;
 
 export default slice.reducer;

@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { useAppDispatch, useAppSelector } from "~/hooks/app";
-import { refreshEdittingContexts, refreshSelectingKeys } from "~/redux/documentSlice";
+import { refreshEdittingContexts, refreshSelectingKeys, setViewportBoundingSize } from "~/redux/documentSlice";
 import BarArea from "./areas/BarArea";
 import TouchArea from "./areas/TouchArea";
 import FloatArea from "~/components/document/viewport/areas/FloatArea";
@@ -19,6 +19,17 @@ const Viewport = () => {
     const preventDefaultContextMenu = (e: globalThis.MouseEvent) => e.ctrlKey && e.preventDefault();
     viewportRef.current?.addEventListener("wheel", preventDefaultScroll);
     viewportRef.current?.addEventListener("contextmenu", preventDefaultContextMenu);
+    if (viewportRef.current) {
+      const boundingClientRect = viewportRef.current.getBoundingClientRect();
+      dispatch(
+        setViewportBoundingSize({
+          boundingSize: {
+            width: boundingClientRect.width,
+            height: boundingClientRect.height,
+          },
+        })
+      );
+    }
     return () => {
       viewportRef.current?.removeEventListener("wheel", preventDefaultScroll);
       viewportRef.current?.removeEventListener("contextmenu", preventDefaultContextMenu);
