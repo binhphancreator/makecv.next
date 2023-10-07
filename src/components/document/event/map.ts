@@ -13,8 +13,8 @@ export type ShowColorModalEvent = {
 };
 
 export interface DocumentEventMap {
-  "viewport.scale": WheelEvent<HTMLDivElement>;
-  "viewport.scroll": WheelEvent<HTMLDivElement>;
+  "viewport.scale": WheelEvent<HTMLDivElement> | globalThis.WheelEvent;
+  "viewport.scroll": WheelEvent<HTMLDivElement> | globalThis.WheelEvent;
   "document.keypress": KeyboardEvent;
   "editor.text.format": FormatTextEvent;
   "modal.color.show": ShowColorModalEvent;
