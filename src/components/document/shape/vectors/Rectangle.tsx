@@ -1,8 +1,11 @@
 import React, { useMemo } from "react";
-import { VectorProps } from "~/types/document";
+import { VectorProps } from "~/components/document/shape/types";
+import { useDocumentColor } from "~/hooks/document";
 
 const Rectangle = ({ size, radius: initialRadius, fill }: VectorProps) => {
   const { width, height } = size;
+
+  const fillColor = useDocumentColor(fill);
 
   const radius = useMemo<number>(() => {
     if (!initialRadius) {
@@ -35,7 +38,7 @@ const Rectangle = ({ size, radius: initialRadius, fill }: VectorProps) => {
 
   return (
     <svg viewBox={`0 0 ${width} ${height}`} width={width} height={height}>
-      <path d={path.trim()} fill={fill} />
+      <path d={path.trim()} fill={fillColor} />
     </svg>
   );
 };

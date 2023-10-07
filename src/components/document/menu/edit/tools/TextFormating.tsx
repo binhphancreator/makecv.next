@@ -15,7 +15,6 @@ const TextFormating = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.border} />
       <div className={styles.header}>
         <div className={styles.title}>Text</div>
         <SvgIcon name="setting" color={ColorPalettes.gray600} width={24} />

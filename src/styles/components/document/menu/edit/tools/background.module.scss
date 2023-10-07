@@ -1,0 +1,56 @@
+@import "@/global";
+
+.container {
+  display: block;
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    padding: 0 16px;
+
+    .title {
+      font-weight: 600;
+      color: $gray600;
+      font-size: 12px;
+    }
+  }
+
+  .body {
+    display: block;
+
+    .row {
+      padding: 0 16px;
+      display: flex;
+      align-items: center;
+      column-gap: 8px;
+
+      &:not(:last-child) {
+        margin-bottom: 4px;
+      }
+    }
+
+    .color-panel {
+      display: flex;
+      align-items: center;
+      column-gap: 8px;
+      cursor: pointer;
+
+      .preview {
+        width: 16px;
+        height: 16px;
+        border: 1px solid $gray200;
+      }
+
+      .input {
+        color: $gray800;
+        font-size: 13px;
+        font-weight: 500;
+        font-family: Inter,sans-serif;
+        line-height: 20px;
+        user-select: none;
+      }
+    }
+  }
+}

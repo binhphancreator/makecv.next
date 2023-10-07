@@ -64,8 +64,8 @@ const Transformation = () => {
       }
       if (dataRender.size) {
         return {
-          width: dataRender.size.width,
-          height: dataRender.size.height,
+          width: dataRender.size.width || dataRender.boundingSize?.width || 0,
+          height: dataRender.size.height || dataRender.boundingSize?.height || 0,
         };
       }
       if (dataRender.boundingSize) {
@@ -117,7 +117,7 @@ const Transformation = () => {
       </div>
       <div className={styles.row}>
         <EditInput label={<SvgIcon name="angle-90" color={ColorPalettes.gray400} width={14} />} defaultValue={0} />
-        <EditInput label={<SvgIcon name="radius" color={ColorPalettes.gray400} width={14} />} defaultValue={0} />
+        <EditInput label={<SvgIcon name="radius" color={ColorPalettes.gray400} width={12} />} defaultValue={0} />
         <div className={styles["option-button"]}>
           <SvgIcon name="maximize-2" width={18} color={ColorPalettes.gray800} />
         </div>

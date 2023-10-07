@@ -1,0 +1,39 @@
+@import '@/global';
+
+.container {
+  display: block;
+  width: 100%;
+  height: 20px;
+  position: relative;
+  overflow: hidden;
+
+  .alpha {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    background-color: $white;
+    background-image: url("data:image/svg+xml;charset=utf-8,<svg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill-opacity='.05'><path d='M8 0h8v8H8zM0 8h8v8H0z'/></svg>");
+  }
+
+  .gradient {
+    position: absolute;
+    inset: 0;
+    border-radius: 9999px;
+    border: 1px solid $gray50;
+  }
+
+  .pointer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 20px;      
+    height: 20px;
+    border: 5px solid $white;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translate(-50%, 0%);
+    opacity: .9;
+  }
+}

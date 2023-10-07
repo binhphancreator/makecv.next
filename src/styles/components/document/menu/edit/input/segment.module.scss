@@ -3,20 +3,12 @@
 .container {
   display: flex;
   align-items: center;
-  padding: 1px;
   column-gap: 0;
   position: relative;
-
-  .border {
-    position: absolute;
-    inset: 0;
-    opacity: 0;
-    border: 1px solid $gray200;
-    z-index: -1;
-  }
-
-  &.hover .border {
-    opacity: 1;
+  border: 1px solid transparent;
+  
+  &.hover {
+    border-color: $gray200;
   }
 
   .item {

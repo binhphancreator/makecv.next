@@ -61,7 +61,6 @@ const Line = ({ children, defaultValue }: LineProps) => {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <div className={styles.border} />
       {items}
     </div>
   );

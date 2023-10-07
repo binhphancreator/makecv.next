@@ -1,5 +1,5 @@
 import React from "react";
-import { VectorProps } from "~/types/document";
+import { VectorProps } from "~/components/document/shape/types";
 import VECTOR_MAP, { VectorName } from "./vectors";
 import { useDocumentColor } from "~/hooks/document";
 

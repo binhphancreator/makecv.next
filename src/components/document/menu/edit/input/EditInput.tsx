@@ -68,7 +68,6 @@ const EditInputComponent = (
       style={inputContainerStyle}
       animate={{ paddingLeft: hover || focus ? "8px" : 0 }}
     >
-      <div className={styles.border} />
       <div className={styles.label}>{label}</div>
       <div className={styles["input-wrap"]}>
         <input

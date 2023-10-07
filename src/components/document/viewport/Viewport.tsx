@@ -1,33 +1,24 @@
-import React, { useEffect, useRef } from "react";
-import { useAppDispatch } from "~/hooks/app";
+import React, { useMemo } from "react";
+import { useAppDispatch, useAppSelector } from "~/hooks/app";
 import { refreshEdittingContexts, refreshSelectingKeys } from "~/redux/documentSlice";
 import BarArea from "./areas/BarArea";
 import TouchArea from "./areas/TouchArea";
-import emitter from "~/components/document/event";
+import FloatArea from "~/components/document/viewport/areas/FloatArea";
 import styles from "@/components/document/viewport/viewport.module.scss";
+import { color2css } from "~/utils/color";
+import { useDocumentViewport } from "~/components/document/viewport/hooks";
 
 const Viewport = () => {
   const dispatch = useAppDispatch();
-  const viewportRef = useRef<HTMLDivElement>(null);
+  const viewport = useDocumentViewport();
 
-  useEffect(() => {
-    const preventDefaultScroll = (e: globalThis.WheelEvent) => e.preventDefault();
-    const preventDefaultContextMenu = (e: globalThis.MouseEvent) => e.ctrlKey && e.preventDefault();
-    viewportRef.current?.addEventListener("wheel", preventDefaultScroll);
-    viewportRef.current?.addEventListener("contextmenu", preventDefaultContextMenu);
-    return () => {
-      viewportRef.current?.removeEventListener("wheel", preventDefaultScroll);
-      viewportRef.current?.removeEventListener("contextmenu", preventDefaultContextMenu);
+  const fill = useAppSelector((state) => state.documentState.viewport.fill);
+
+  const backgroundStyle = useMemo<React.CSSProperties>(() => {
+    return {
+      background: color2css(fill),
     };
-  }, []);
-
-  const handleOnWheel = (event: React.WheelEvent<HTMLDivElement>) => {
-    if (event.ctrlKey) {
-      emitter.dispatch("viewport.scale", event);
-    } else {
-      emitter.dispatch("viewport.scroll", event);
-    }
-  };
+  }, [fill]);
 
   const refreshOnClickOutside = () => {
     dispatch(refreshSelectingKeys({}));
@@ -35,9 +26,11 @@ const Viewport = () => {
   };
 
   return (
-    <div className={styles.container} onWheel={handleOnWheel} onMouseDown={refreshOnClickOutside} ref={viewportRef}>
-      <BarArea />
+    <div className={styles.container} onMouseDown={refreshOnClickOutside} ref={viewport.ref}>
+      <div className={styles.background} style={backgroundStyle} />
       <TouchArea />
+      <BarArea />
+      <FloatArea />
     </div>
   );
 };

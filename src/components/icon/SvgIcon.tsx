@@ -1,6 +1,7 @@
 import React from "react";
 import IconsMap, { SvgName, SvgType } from "./svg";
 import { SvgProps } from "~/types/app";
+import styles from "@/components/icon/svg.module.scss";
 
 type SvgIconProps = {
   name: SvgName;
@@ -17,7 +18,7 @@ const SvgIcon = ({ name, type, width, height, color }: SvgIconProps) => {
   const SvgComponent = IconsMap[type ?? "regular"][name];
 
   return (
-    <div className="svg-icon">
+    <div className={styles.container}>
       <SvgComponent width={width} height={height} color={color ?? defaultColor} />
     </div>
   );
